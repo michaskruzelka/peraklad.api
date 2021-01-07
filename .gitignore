@@ -1,4 +1,7 @@
 node_modules
+
+*.log
+
 /api.js
 /resolvers/index.js
 /query.schema.js
