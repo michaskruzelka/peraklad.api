@@ -2,6 +2,6 @@ node_modules
 
 *.log
 
-/api.js
-/resolvers/index.js
-/query.schema.js
+/index.js
+/resolvers/index.ts
+/schema/index.ts

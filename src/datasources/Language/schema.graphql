@@ -1,0 +1,21 @@
+type Query {
+    languages(limit: Int, type: ListType): [Language]
+    groupedLanguages: GroupedLanguages
+}
+
+type Language {
+    code: String!
+    name: String
+    native: String
+}
+
+type GroupedLanguages {
+    PRIMARY: [Language]!
+    REMAINING: [Language]
+}
+
+enum ListType {
+    ALL
+    PRIMARY
+    REMAINING
+}
