@@ -2,6 +2,20 @@ node_modules
 
 *.log
 
-/index.js
-/resolvers/index.ts
-/schema/index.ts
+/api.js
+/index.dev.js
+/neo4j-graphql.js
+/resolvers.js
+/schema.js
+/datasources/index.js
+/datasources/types.js
+/datasources/Language/config.js
+/datasources/Language/index.js
+/datasources/Language/Language.js
+/datasources/Language/languages.json
+/datasources/Language/resolver.js
+/datasources/Language/schema.graphql
+/datasources/Language/types.js
+/neo4j/driver.js
+/neo4j/index.js
+/services/index.js

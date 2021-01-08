@@ -4,7 +4,7 @@ import { IResolvers } from 'graphql-tools';
 import path from 'path';
 
 const resolversArray = loadFilesSync(
-    path.join(__dirname, './datasources/**/resolver.ts*'),
+    path.join(__dirname, './datasources/**/resolver.*'),
     {
         ignoreIndex: true,
     }
