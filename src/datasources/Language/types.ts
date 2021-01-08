@@ -1,7 +1,7 @@
 export interface IDataSource {
-    getList: () => ILanguage[];
+    getList: (limit: number, type: ListType) => ILanguage[];
+    get: (code: string) => ILanguage;
     getCurrentLocale: () => Locale;
-    getDefaultLocale: () => Locale;
 }
 
 export interface ILanguage {
@@ -15,18 +15,17 @@ export enum Locale {
     UK = 'uk',
 }
 
-export type ListParams = {
+export type ListArgs = {
     limit?: number;
     type?: ListType;
+};
+
+export type GetOneArg = {
+    code: string;
 };
 
 export enum ListType {
     ALL = 'ALL',
     PRIMARY = 'PRIMARY',
     REMAINING = 'REMAINING',
-}
-
-export interface GroupedLanguages {
-    PRIMARY: ILanguage[];
-    REMAINING: ILanguage[];
 }

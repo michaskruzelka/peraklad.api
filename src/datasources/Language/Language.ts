@@ -32,7 +32,24 @@ class Language extends DataSource implements IDataSource {
             });
         }
 
-        return langList.slice(0, limit);
+        return langList
+            .filter((lang) => lang.code !== this.getCurrentLocale())
+            .slice(0, limit);
+    }
+
+    /**
+     * @param code the code of language
+     *
+     * @returns finds language by code
+     *
+     * @throws when the language is not found
+     */
+    public get(code: string): ILanguage {
+        const language = languages.find((lang) => lang.code === code);
+        if (!language) {
+            throw new Error('Language not found.');
+        }
+        return language;
     }
 
     /**
@@ -45,7 +62,7 @@ class Language extends DataSource implements IDataSource {
     /**
      * @returns default language (be|uk)
      */
-    public getDefaultLocale(): Locale {
+    private getDefaultLocale(): Locale {
         return config.DEFAULT_LOCALE;
     }
 }

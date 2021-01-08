@@ -1,6 +1,8 @@
 type Query {
     languages(limit: Int, type: ListType): [Language]
     groupedLanguages: GroupedLanguages
+    locale: String!
+    language(code: String!): Language
 }
 
 type Language {
@@ -10,8 +12,8 @@ type Language {
 }
 
 type GroupedLanguages {
-    PRIMARY: [Language]!
-    REMAINING: [Language]
+    PRIMARY(limit: Int): [Language]!
+    REMAINING(limit: Int): [Language]!
 }
 
 enum ListType {
