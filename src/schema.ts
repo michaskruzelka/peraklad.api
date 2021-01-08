@@ -13,10 +13,10 @@ const schema = makeAugmentedSchema({
     resolvers,
     config: {
         query: {
-            exclude: ['Language', 'GroupedLanguages'],
+            exclude: ['Language', 'GroupedLanguages', 'Movie'],
         },
         mutation: {
-            exclude: ['Language', 'GroupedLanguages'],
+            exclude: ['Language', 'GroupedLanguages', 'Movie'],
         },
     },
 });

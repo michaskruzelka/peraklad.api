@@ -1,0 +1,13 @@
+type Query {
+    movieByImdbId(imdbId: String!): Movie
+    movieByTitleAndYear(title: String!, year: Int): Movie
+}
+
+type Movie {
+    imdbId: String
+    title: String!
+    year: Int!
+    imdbRating: Float
+    posterSrc: String
+    language: String!
+}
