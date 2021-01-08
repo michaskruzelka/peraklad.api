@@ -603,7 +603,7 @@
     is-promise "4.0.0"
     tslib "~2.0.1"
 
-"@graphql-tools/load-files@^6.2.4", "@graphql-tools/load-files@^6.2.5":
+"@graphql-tools/load-files@^6.2.4":
   version "6.2.5"
   resolved "https://registry.yarnpkg.com/@graphql-tools/load-files/-/load-files-6.2.5.tgz#d5240ab207e2288b499d1f32310a3d2b19e0386a"
   integrity sha512-mjfvrRrQZoXAtI/50KKy7WancqHRHBXfJMJa+Vn2TpMQV0uYlu32+WMa3ZM5yTOuT/ipifvjEQDhxOyTIoi67g==
