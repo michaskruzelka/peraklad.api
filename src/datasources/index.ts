@@ -7,7 +7,7 @@ const getDataSources = (): DataSources => {
 
     return {
         language,
-        movie: new Movie(language)
+        movie: new Movie(language),
     };
 };
 
