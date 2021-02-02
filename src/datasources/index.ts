@@ -2,9 +2,13 @@ import { Language } from './Language';
 import { Movie } from './Movie';
 import { DataSources } from './types';
 
-const getDataSources = (): DataSources => ({
-    language: new Language(),
-    movie: new Movie(),
-});
+const getDataSources = (): DataSources => {
+    const language = new Language();
 
-export { getDataSources, Language };
+    return {
+        language,
+        movie: new Movie(language)
+    };
+};
+
+export { getDataSources, Language, Movie };

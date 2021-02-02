@@ -10,4 +10,5 @@ type Movie {
     imdbRating: Float
     posterSrc: String
     language: String!
+    type: String!
 }
