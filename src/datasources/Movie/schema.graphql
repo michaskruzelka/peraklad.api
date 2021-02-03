@@ -1,14 +1,35 @@
 type Query {
-    movieByImdbId(imdbId: String!): Movie
-    movieByTitleAndYear(title: String!, year: Int): Movie
+    movieByImdbId(imdbId: String!): IMovie
+    movieByTitleAndYear(title: String!, year: Int): IMovie
 }
 
-type Movie {
-    imdbId: String
+interface IMovie {
+    imdbId: String!
     title: String!
-    year: Int!
+    year: Int
     imdbRating: Float
     posterSrc: String
     language: String!
     type: String!
+}
+
+type Movie implements IMovie {
+    imdbId: String!
+    title: String!
+    year: Int
+    imdbRating: Float
+    posterSrc: String
+    language: String!
+    type: String!
+}
+
+type Episode implements IMovie {
+    imdbId: String!
+    title: String!
+    year: Int
+    imdbRating: Float
+    posterSrc: String
+    language: String!
+    type: String!
+    series: Movie
 }

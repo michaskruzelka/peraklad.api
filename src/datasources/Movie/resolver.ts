@@ -1,5 +1,11 @@
 import { DataSources } from 'datasources/types';
-import { IMovie, SearchByIdArgs, SearchByTitlePlusYearArgs } from './types';
+import {
+    IEpisode,
+    IMovie,
+    MovieType,
+    SearchByIdArgs,
+    SearchByTitlePlusYearArgs,
+} from './types';
 
 const resolver = {
     Query: {
@@ -19,6 +25,28 @@ const resolver = {
                 args.title,
                 args.year
             );
+        },
+    },
+    Episode: {
+        series: async (
+            episode: IEpisode,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): Promise<IMovie> => {
+            let series: IMovie;
+
+            try {
+                series = await dataSources.movie.searchByImdbId(
+                    episode.seriesId
+                );
+            } catch (e) {
+                series = dataSources.movie.createEmptyObject(
+                    episode.seriesId,
+                    MovieType.SERIES
+                );
+            }
+
+            return series;
         },
     },
 };

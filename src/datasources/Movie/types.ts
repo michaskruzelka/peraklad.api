@@ -23,11 +23,15 @@ interface APIError {
     Error: string;
 }
 
-type MovieType = 'movie' | 'series' | 'episode';
-
 enum ResponseType {
     TRUE = 'True',
     FALSE = 'False',
+}
+
+enum MovieType {
+    MOVIE = 'movie',
+    SERIES = 'series',
+    EPISODE = 'episode',
 }
 
 interface APIResponse {
@@ -39,16 +43,32 @@ interface APIResponse {
     Language: string;
     imdbRating: string;
     Response: ResponseType;
+    seriesID: string;
 }
 
 interface IMovie {
-    imdbId?: string | null;
-    title: string;
-    year: number;
+    imdbId: string;
+    title?: string;
+    year?: number | null;
     imdbRating?: number | null;
     posterSrc?: string | null;
     language: string;
-    type: string;
+    type: MovieType;
+    seriesId?: string;
+}
+
+interface IEpisode extends IMovie {
+    series: IMovie;
+    seriesId: string;
+    type: MovieType.EPISODE;
+}
+
+interface IDataSource {
+    searchByImdbId: (imdbId: string | number) => Promise<IMovie | IEpisode>;
+    searchByTitleAndYear: (
+        title: string,
+        year: number | undefined
+    ) => Promise<IMovie | IEpisode>;
 }
 
 export {
@@ -58,6 +78,8 @@ export {
     MovieType,
     ResponseType,
     IMovie,
+    IEpisode,
+    IDataSource,
     SearchByIdArgs,
     SearchByTitlePlusYearArgs,
 };
