@@ -118,7 +118,7 @@ class Movie extends RESTDataSource implements IDataSource {
         response = response as APIResponse;
 
         if (!MOVIE_TYPES.includes(response.Type)) {
-            throw new Error('Movie not found.');
+            throw new Error('Not a movie.');
         }
 
         return this.castAPIResponse(response);
