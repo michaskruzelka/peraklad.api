@@ -19,3 +19,11 @@ node_modules
 /neo4j/driver.js
 /neo4j/index.js
 /services/index.js
+/datasources/Movie/config.js
+/datasources/Movie/index.js
+/datasources/Movie/Movie.js
+/datasources/Movie/resolver.js
+/datasources/Movie/schema.graphql
+/datasources/Movie/types.js
+/services/logger.js
+/services/typeResolver.js

@@ -9,7 +9,9 @@
         "apollo-server-lambda": "^2.19.0",
         "graphql": "^15.4.0",
         "neo4j-driver": "^4.2.1",
-        "neo4j-graphql-js": "2.18.0"
+        "neo4j-graphql-js": "2.18.0",
+        "winston": "^3.3.3",
+        "winston-logzio": "^5.1.2"
     },
     "devDependencies": {
         "apollo-server": "^2.19.1",

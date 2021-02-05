@@ -1,4 +1,5 @@
 import { DataSources } from 'datasources/types';
+import { Logger } from 'winston';
 import {
     IBaseMovie,
     IEpisode,
@@ -34,7 +35,10 @@ const resolver = {
         series: async (
             episode: IEpisode,
             __: any,
-            { dataSources }: { dataSources: DataSources }
+            {
+                dataSources,
+                logger,
+            }: { dataSources: DataSources; logger: Logger }
         ): Promise<IBaseMovie> => {
             let series: IBaseMovie;
 
@@ -43,6 +47,13 @@ const resolver = {
                     episode.seriesID
                 );
             } catch (e) {
+                logger.log(
+                    'info',
+                    'Could not find series with imdbId = ' +
+                        episode.seriesID +
+                        ': ' +
+                        e.message
+                );
                 series = dataSources.movie.createEmptyBaseMovieObject();
                 series.imdbId = dataSources.movie.asEmpty(episode.seriesID);
                 series.type = MovieType.SERIES;

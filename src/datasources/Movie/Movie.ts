@@ -84,7 +84,7 @@ class Movie extends RESTDataSource implements IDataSource {
      * @param seasonNum the number of season
      * @param episodeNum the number of episode
      *
-     * @returns a list of base movie objects found in omdb 
+     * @returns a list of base movie objects found in omdb
      */
     public async searchForEpisodes(
         imdbId: string | number,
@@ -99,7 +99,15 @@ class Movie extends RESTDataSource implements IDataSource {
                 result.push(
                     await this.searchForEpisode(imdbId, seasonNum, episodeNum)
                 );
-            } catch (e) {}
+            } catch (e) {
+                this.context.logger.log(
+                    'info',
+                    'Could not find an episode with series imdbId = ' +
+                        imdbId +
+                        ': ' +
+                        e.message
+                );
+            }
         } else {
             result = [
                 ...result,
@@ -180,7 +188,15 @@ class Movie extends RESTDataSource implements IDataSource {
                     return await this.searchForMovie(params);
                 })
             );
-        } catch (e) {}
+        } catch (e) {
+            this.context.logger.log(
+                'info',
+                'Could not find episodes with series imdbId = ' +
+                    imdbId +
+                    ': ' +
+                    e.message
+            );
+        }
 
         return episodes;
     }
@@ -214,7 +230,7 @@ class Movie extends RESTDataSource implements IDataSource {
      *
      * @returns api response enriched with base movie properties
      *
-     * @throws an error when movie type in response is unrecognized 
+     * @throws an error when movie type in response is unrecognized
      */
     private async searchForMovie(params: APIParams): Promise<IBaseMovie> {
         const response = (await this.performRequest(params)) as APIMovie;
