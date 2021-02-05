@@ -1,15 +1,15 @@
 import { loadFilesSync } from '@graphql-tools/load-files';
 import { mergeTypeDefs } from '@graphql-tools/merge';
-import { DocumentNode, GraphQLSchema, GraphQLInterfaceType } from 'graphql';
+import { DocumentNode, GraphQLSchema } from 'graphql';
 import { makeAugmentedSchema } from 'neo4j-graphql-js';
 
 import resolvers from './resolvers';
-import { MovieType } from './datasources/Movie/types';
+import { resolveTypes } from './services';
 
 const graphqlFiles: GraphQLSchema[] = loadFilesSync('./**/*.graphql');
 const typeDefs: DocumentNode = mergeTypeDefs(graphqlFiles);
 
-const schema = makeAugmentedSchema({
+const schema: GraphQLSchema = makeAugmentedSchema({
     typeDefs,
     resolvers,
     config: {
@@ -20,6 +20,7 @@ const schema = makeAugmentedSchema({
                 'Movie',
                 'Episode',
                 'IMovie',
+                'Series',
             ],
         },
         mutation: {
@@ -29,22 +30,12 @@ const schema = makeAugmentedSchema({
                 'Movie',
                 'Episode',
                 'IMovie',
+                'Series',
             ],
         },
     },
 });
 
-/**
- * Workaround to query unions and interfaces
- *
- * @see https://community.neo4j.com/t/how-to-query-an-interface/3486/14
- *
- * as it should work in general as described here:
- * https://www.apollographql.com/docs/apollo-server/schema/unions-interfaces/
- */
-const IMovieGraphQLType = schema.getTypeMap().IMovie as GraphQLInterfaceType;
-IMovieGraphQLType.resolveType = (obj: any) => {
-    return obj.type === MovieType.EPISODE ? 'Episode' : 'Movie';
-};
+resolveTypes(schema);
 
 export default schema;

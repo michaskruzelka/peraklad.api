@@ -3,11 +3,9 @@ import { Movie } from './Movie';
 import { DataSources } from './types';
 
 const getDataSources = (): DataSources => {
-    const language = new Language();
-
     return {
-        language,
-        movie: new Movie(language),
+        language: new Language(),
+        movie: new Movie(),
     };
 };
 

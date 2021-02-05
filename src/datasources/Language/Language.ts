@@ -56,15 +56,23 @@ class Language extends DataSource implements IDataSource {
 
     /**
      * @param name the english name of language
+     * @param returnDefaultOnError return default code in case of an error
      *
      * @returns finds language by english name
      *
      * @throws when the language is not found
      */
-    public getByName(name: string): ILanguage {
+    public getByName(
+        name: string,
+        returnDefaultOnError: boolean = true
+    ): ILanguage {
         const language = languages.find((lang) => lang.name === name);
 
         if (!language) {
+            if (returnDefaultOnError) {
+                return this.getDefaultLanguage();
+            }
+            
             throw new Error('Language not found.');
         }
 

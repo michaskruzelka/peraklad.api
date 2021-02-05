@@ -6,10 +6,8 @@ type Query {
 interface IMovie {
     imdbId: String!
     title: String!
-    year: Int
     imdbRating: Float
     posterSrc: String
-    language: String!
     type: String!
 }
 
@@ -29,7 +27,18 @@ type Episode implements IMovie {
     year: Int
     imdbRating: Float
     posterSrc: String
-    language: String!
     type: String!
-    series: Movie
+    series: Series
+    seasonNum: Int!
+    episodeNum: Int!
+}
+
+type Series implements IMovie {
+    imdbId: String!
+    title: String!
+    imdbRating: Float
+    posterSrc: String
+    type: String!
+    language: String!
+    episodes(season: Int, episode: Int): [Episode]
 }

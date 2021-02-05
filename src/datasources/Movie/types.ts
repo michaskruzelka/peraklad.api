@@ -7,7 +7,22 @@ type APIByTitlePlusYearParams = {
     y?: number;
 };
 
-type APIParams = APIByIdParams | APIByTitlePlusYearParams;
+type APIByIdPlushSeason = {
+    i: string;
+    Season: number;
+};
+
+type APIByIdPlushSeasonAndEpisode = {
+    i: string;
+    Season: number;
+    Episode: number;
+};
+
+type APIParams =
+    | APIByIdParams
+    | APIByTitlePlusYearParams
+    | APIByIdPlushSeason
+    | APIByIdPlushSeasonAndEpisode;
 
 type SearchByIdArgs = {
     imdbId: string;
@@ -18,10 +33,10 @@ type SearchByTitlePlusYearArgs = {
     year?: number;
 };
 
-interface APIError {
-    Response: ResponseType;
-    Error: string;
-}
+type EpisodesArgs = {
+    season?: number;
+    episode?: number;
+};
 
 enum ResponseType {
     TRUE = 'True',
@@ -35,51 +50,87 @@ enum MovieType {
 }
 
 interface APIResponse {
+    Response: ResponseType;
+}
+
+interface APIError extends APIResponse {
+    Error: string;
+}
+
+interface APIEpisode {
+    Title: string;
+    Episode: string;
+    imdbID: string;
+}
+
+interface APIEpisodes extends APIResponse {
+    Episodes: APIEpisode[];
+}
+
+interface APIMovie extends APIResponse {
+    Type: MovieType;
     Title: string;
     Year: string;
     imdbID: string;
-    Type: MovieType;
-    Poster: string | 'N/A';
+    Poster: string;
     Language: string;
     imdbRating: string;
-    Response: ResponseType;
-    seriesID: string;
 }
 
-interface IMovie {
+interface IBaseMovie extends APIMovie {
     imdbId: string;
-    title?: string;
-    year?: number | null;
-    imdbRating?: number | null;
-    posterSrc?: string | null;
-    language: string;
     type: MovieType;
-    seriesId?: string;
+    title: string;
+    posterSrc: string;
 }
 
-interface IEpisode extends IMovie {
-    series: IMovie;
-    seriesId: string;
+interface IMovie extends IBaseMovie {
+    type: MovieType.MOVIE;
+    language: string;
+    year: number;
+}
+
+interface IEpisode extends IBaseMovie {
+    seriesID: string;
+    Episode: string;
+    Season: string;
     type: MovieType.EPISODE;
+    series: ISeries;
+    seasonNum: number;
+    episodeNum: number;
+    year: number;
+}
+
+interface ISeries extends IBaseMovie {
+    type: MovieType.SERIES;
+    language: string;
+    totalSeasons: string;
+    episodes: IEpisode[];
 }
 
 interface IDataSource {
-    searchByImdbId: (imdbId: string | number) => Promise<IMovie | IEpisode>;
+    searchByImdbId: (imdbId: string | number) => Promise<APIResponse>;
     searchByTitleAndYear: (
         title: string,
         year: number | undefined
-    ) => Promise<IMovie | IEpisode>;
+    ) => Promise<APIResponse>;
 }
 
 export {
     APIParams,
+    APIByIdPlushSeason,
     APIResponse,
+    APIEpisodes,
     APIError,
+    APIMovie,
     MovieType,
     ResponseType,
     IMovie,
     IEpisode,
+    ISeries,
+    IBaseMovie,
     IDataSource,
     SearchByIdArgs,
     SearchByTitlePlusYearArgs,
+    EpisodesArgs,
 };
