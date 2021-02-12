@@ -4,7 +4,7 @@ import depthLimit from 'graphql-depth-limit';
 import { driver } from './neo4j';
 import schema from './schema';
 import { getDataSources } from './datasources';
-import { logger } from './services';
+import { getLogger } from './services';
 
 const server = new ApolloServer({
     context: ({ req }) => {
@@ -12,7 +12,7 @@ const server = new ApolloServer({
             req,
             driver,
             neo4jDatabase: process.env.NEO4J_DATABASE,
-            logger,
+            logger: getLogger(),
         };
     },
     schema,
