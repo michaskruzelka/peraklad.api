@@ -1,4 +1,5 @@
 import { ApolloServer } from 'apollo-server';
+import depthLimit from 'graphql-depth-limit';
 
 import { driver } from './neo4j';
 import schema from './schema';
@@ -18,6 +19,7 @@ const server = new ApolloServer({
     dataSources: getDataSources,
     introspection: true,
     playground: true,
+    validationRules: [depthLimit(10)],
 });
 
 if (process.env.NODE_ENV !== 'test') {
