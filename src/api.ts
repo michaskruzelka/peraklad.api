@@ -3,7 +3,7 @@ import { ApolloServer } from 'apollo-server-lambda';
 import { driver } from './neo4j';
 import schema from './schema';
 import { getDataSources } from './datasources';
-import { logger } from './services';
+import { getLogger } from './services';
 
 const server = new ApolloServer({
     context: ({ req }) => {
@@ -11,7 +11,7 @@ const server = new ApolloServer({
             req,
             driver,
             neo4jDatabase: process.env.NEO4J_DATABASE,
-            logger
+            logger: getLogger(),
         };
     },
     schema,
@@ -22,25 +22,18 @@ const server = new ApolloServer({
 
 exports.handler = server.createHandler();
 
-// logger.close()
+// Uncomment the code below in case you want to close some connections
+// (for example, logger.close()) after the run
 
-
-// ----- //
-// const runHandler = (event: any, context: any, handler: any) =>
-// 	new Promise((resolve, reject) => {
-// 		const callback = (error: any, body: any) => (error ? reject(error) : resolve(body));
-
-// 		handler(event, context, callback);
-// 	});
-
-// const run = async (event: any, context: any) => {
-// 	const server = new ApolloServer({
+// const handler = async (event: any, context: any) => {
+//     const logger = getLogger();
+//     const server = new ApolloServer({
 //         context: ({ req }) => {
 //             return {
 //                 req,
 //                 driver,
 //                 neo4jDatabase: process.env.NEO4J_DATABASE,
-//                 logger
+//                 logger,
 //             };
 //         },
 //         schema,
@@ -49,35 +42,18 @@ exports.handler = server.createHandler();
 //         playground: true,
 //     });
 
-// 	const handler = server.createHandler({ cors: { credentials: true, origin: '*' } });
-// 	const response = await runHandler(event, context, handler);
+//     const run = (event: any, context: any) => {
+//         return new Promise((resolve: any, reject: any) => {
+//             const callback = (error: any, body: any) =>
+//                 error ? reject(error) : resolve(body);
+//             server.createHandler()(event, context, callback);
+//         });
+//     };
 
-// 	logger.close();
+//     const response = await run(event, context);
+//     logger.close();
 
-// 	return response;
+//     return response;
 // };
 
-// exports.handler = run;
-// ----- //
-
-// ----- //
-// const middy = require('middy');
-// const { cors } = require('middy/middlewares');
-
-// // eslint-disable-next-line require-await
-// const createHandler = async () => {
-//     const server = new ApolloServer({
-//         schema,
-//         dataSources,
-//         context,
-//     });
-
-//     return Promise.resolve(server.createHandler());
-// };
-
-// exports.graphqlHandler = middy((event, context, callback) => {
-//     // eslint-disable-next-line no-param-reassign
-//     context.callbackWaitsForEmptyEventLoop = false;
-//     createHandler().then(handler => handler(event, context, callback));
-// }).use(cors());
-// ----- //
+// exports.handler = handler;
