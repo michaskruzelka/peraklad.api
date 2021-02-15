@@ -12,6 +12,7 @@ import {
     IBaseMovie,
     MovieType,
 } from './types';
+
 import { OMDB_API_KEY, OMDB_API_HOSTNAME, MOVIE_TYPES } from './config';
 
 class Movie extends RESTDataSource implements IDataSource {
@@ -183,9 +184,9 @@ class Movie extends RESTDataSource implements IDataSource {
         try {
             const response = (await this.performRequest(params)) as APIEpisodes;
             episodes = await Promise.all(
-                response.Episodes.map(async (episodeInfo) => {
+                response.Episodes.map((episodeInfo) => {
                     const params = { i: episodeInfo.imdbID };
-                    return await this.searchForMovie(params);
+                    return this.searchForMovie(params);
                 })
             );
         } catch (e) {
