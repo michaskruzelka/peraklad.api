@@ -1,6 +1,9 @@
 type Query {
-    movieByImdbId(imdbId: String!): IMovie
-    movieByTitleAndYear(title: String!, year: Int): IMovie
+    movieByImdbId(imdbId: String! @stringLength(min: 7, max: 9)): IMovie
+    movieByTitleAndYear(
+        title: String! @stringLength(min: 1, max: 100)
+        year: Int @range(min: 1880, max: 2100)
+    ): IMovie
 }
 
 interface IMovie {
@@ -28,7 +31,7 @@ type Episode implements IMovie {
     imdbRating: Float
     posterSrc: String
     type: String!
-    series: Series
+    series: Series @cost(value: 60)
     seasonNum: Int!
     episodeNum: Int!
 }
@@ -40,5 +43,8 @@ type Series implements IMovie {
     posterSrc: String
     type: String!
     language: String!
-    episodes(season: Int, episode: Int): [Episode]
+    episodes(
+        season: Int @range(min: 1, max: 100)
+        episode: Int @range(max: 100)
+    ): [Episode] @cost(value: 60)
 }

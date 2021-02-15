@@ -135,6 +135,10 @@ declare module 'neo4j-graphql-js' {
         [key: string]: (next: Promise<any>, src: any, args: RequestArguments, context: any) => Promise<any>;
     }
 
+    interface makeExecutableSchemaDirectives {
+        [name: string]: typeof SchemaDirectiveVisitor;
+    }
+
     type DirectiveResolvers = Record<string, () => any>;
 
     /**
@@ -187,7 +191,7 @@ declare module 'neo4j-graphql-js' {
         allowUndefinedInResolve?: boolean;
         resolverValidationOptions?: AugmentSchemaResolverValidationOptions;
         directiveResolvers?: DirectiveResolvers;
-        schemaDirectives?: AugmentSchemaDirectives;
+        schemaDirectives?: AugmentSchemaDirectives | makeExecutableSchemaDirectives;
         inheritResolversFromInterfaces?: boolean;
     }
 }

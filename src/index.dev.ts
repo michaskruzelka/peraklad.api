@@ -1,26 +1,7 @@
 import { ApolloServer } from 'apollo-server';
-import depthLimit from 'graphql-depth-limit';
+import { graphql } from './services';
 
-import { driver } from './neo4j';
-import schema from './schema';
-import { getDataSources } from './datasources';
-import { getLogger } from './services';
-
-const server = new ApolloServer({
-    context: ({ req }) => {
-        return {
-            req,
-            driver,
-            neo4jDatabase: process.env.NEO4J_DATABASE,
-            logger: getLogger(),
-        };
-    },
-    schema,
-    dataSources: getDataSources,
-    introspection: true,
-    playground: true,
-    validationRules: [depthLimit(10)],
-});
+const server = new ApolloServer(graphql.apollo.config);
 
 if (process.env.NODE_ENV !== 'test') {
     server.listen().then(() => {

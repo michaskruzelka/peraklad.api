@@ -1,5 +1,5 @@
 import { GraphQLInterfaceType, GraphQLSchema } from 'graphql';
-import { MovieType } from '../datasources/Movie/types';
+import { MovieType } from '../../datasources/Movie/types';
 
 /**
  * Workaround to query unions and interfaces

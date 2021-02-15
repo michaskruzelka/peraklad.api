@@ -7,7 +7,7 @@ const resolver = {
             _: any,
             args: ListArgs,
             { dataSources }: { dataSources: DataSources }
-        ): ILanguage[] => {
+        ): any => {
             return dataSources.language.getList(args.limit, args.type);
         },
         groupedLanguages: () => ({}),

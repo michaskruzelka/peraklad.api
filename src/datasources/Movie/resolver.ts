@@ -12,6 +12,23 @@ import {
 } from './types';
 
 const resolver = {
+    IMovie: {
+        __resolveType: (obj: any) => {
+            if (obj.Type === MovieType.EPISODE) {
+                return 'Episode';
+            }
+
+            if (obj.Type === MovieType.MOVIE) {
+                return 'Movie';
+            }
+
+            if (obj.Type === MovieType.SERIES) {
+                return 'Series';
+            }
+
+            return null;
+        },
+    },
     Query: {
         movieByImdbId: async (
             _: any,

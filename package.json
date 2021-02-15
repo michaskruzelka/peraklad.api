@@ -4,15 +4,18 @@
     "dependencies": {
         "@graphql-tools/load-files": "^6.2.5",
         "@graphql-tools/merge": "^6.2.6",
+        "@profusion/apollo-validation-directives": "^2.1.2",
         "apollo-datasource": "^0.7.2",
         "apollo-datasource-rest": "^0.9.7",
         "apollo-server-lambda": "^2.19.0",
         "graphql": "^15.4.0",
         "graphql-depth-limit": "^1.1.0",
+        "graphql-validation-complexity": "^0.4.2",
         "neo4j-driver": "^4.2.1",
         "neo4j-graphql-js": "2.18.0",
         "winston": "^3.3.3",
-        "winston-logzio": "^5.1.2"
+        "winston-logzio": "^5.1.2",
+        "yarn": "^1.22.10"
     },
     "devDependencies": {
         "@types/graphql-depth-limit": "^1.1.2",
