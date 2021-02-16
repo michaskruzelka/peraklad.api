@@ -12,6 +12,7 @@ interface IMovie {
     imdbRating: Float
     posterSrc: String
     type: String!
+    plot: String
 }
 
 type Movie implements IMovie {
@@ -22,6 +23,7 @@ type Movie implements IMovie {
     posterSrc: String
     language: String!
     type: String!
+    plot: String
 }
 
 type Episode implements IMovie {
@@ -34,6 +36,7 @@ type Episode implements IMovie {
     series: Series @cost(value: 60)
     seasonNum: Int!
     episodeNum: Int!
+    plot: String
 }
 
 type Series implements IMovie {
@@ -47,4 +50,5 @@ type Series implements IMovie {
         season: Int @range(min: 1, max: 100)
         episode: Int @range(max: 100)
     ): [Episode] @cost(value: 60)
+    plot: String
 }

@@ -75,6 +75,7 @@ interface APIMovie extends APIResponse {
     Poster: string;
     Language: string;
     imdbRating: string;
+    Plot?: string;
 }
 
 interface IBaseMovie extends APIMovie {
@@ -82,6 +83,7 @@ interface IBaseMovie extends APIMovie {
     type: MovieType;
     title: string;
     posterSrc: string;
+    plot?: string;
 }
 
 interface IMovie extends IBaseMovie {

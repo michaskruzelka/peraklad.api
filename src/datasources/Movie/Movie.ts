@@ -279,6 +279,7 @@ class Movie extends RESTDataSource implements IDataSource {
             type: response.Type,
             title: response.Title,
             posterSrc: this.asEmpty(response.Poster),
+            plot: response.Plot ? this.asEmpty(response.Plot) : '',
         };
     }
 
