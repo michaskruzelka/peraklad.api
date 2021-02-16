@@ -5,17 +5,17 @@ import {
     APIByIdPlushSeason,
     APIResponse,
     APIEpisodes,
-    APIMovie,
+    APIIMDB,
     APIError,
     ResponseType,
     IDataSource,
-    IBaseMovie,
-    MovieType,
+    IIMDB,
+    IMDBType,
 } from './types';
 
-import { OMDB_API_KEY, OMDB_API_HOSTNAME, MOVIE_TYPES } from './config';
+import { OMDB_API_KEY, OMDB_API_HOSTNAME, IMDB_TYPES } from './config';
 
-class Movie extends RESTDataSource implements IDataSource {
+class IMDB extends RESTDataSource implements IDataSource {
     private imdbIdPattern = /^(tt)\d{7}$/;
 
     constructor() {
@@ -57,10 +57,10 @@ class Movie extends RESTDataSource implements IDataSource {
      *
      * @returns a base movie object found in omdb
      */
-    public async searchByImdbId(imdbId: string | number): Promise<IBaseMovie> {
+    public async searchByImdbId(imdbId: string | number): Promise<IIMDB> {
         imdbId = this.validateImdbId(imdbId);
 
-        return await this.searchForMovie({ i: imdbId });
+        return await this.searchForIMDB({ i: imdbId });
     }
 
     /**
@@ -74,8 +74,8 @@ class Movie extends RESTDataSource implements IDataSource {
     public async searchByTitleAndYear(
         title: string,
         year: number | undefined = undefined
-    ): Promise<IBaseMovie> {
-        return await this.searchForMovie({ t: title, y: year });
+    ): Promise<IIMDB> {
+        return await this.searchForIMDB({ t: title, y: year });
     }
 
     /**
@@ -91,9 +91,9 @@ class Movie extends RESTDataSource implements IDataSource {
         imdbId: string | number,
         seasonNum: number,
         episodeNum: number = 0
-    ): Promise<IBaseMovie[]> {
+    ): Promise<IIMDB[]> {
         imdbId = this.validateImdbId(imdbId);
-        let result: IBaseMovie[] = [];
+        let result: IIMDB[] = [];
 
         if (episodeNum) {
             try {
@@ -132,9 +132,9 @@ class Movie extends RESTDataSource implements IDataSource {
         imdbId: string | number,
         seasonNum: number,
         episodeNum: number
-    ): Promise<IBaseMovie> {
+    ): Promise<IIMDB> {
         imdbId = this.validateImdbId(imdbId);
-        return await this.searchForMovie({
+        return await this.searchForIMDB({
             i: imdbId,
             Season: seasonNum,
             Episode: episodeNum,
@@ -146,10 +146,10 @@ class Movie extends RESTDataSource implements IDataSource {
      *
      * @returns and empty base movie object with 'movie' type by default
      */
-    public createEmptyBaseMovieObject(): IBaseMovie {
+    public createEmptyBaseMovieObject(): IIMDB {
         return {
             Response: ResponseType.TRUE,
-            Type: MovieType.MOVIE,
+            Type: IMDBType.MOVIE,
             Title: '',
             Year: '',
             imdbID: '',
@@ -157,7 +157,7 @@ class Movie extends RESTDataSource implements IDataSource {
             Language: '',
             imdbRating: '',
             imdbId: '',
-            type: MovieType.MOVIE,
+            type: IMDBType.MOVIE,
             title: '',
             posterSrc: '',
         };
@@ -168,8 +168,8 @@ class Movie extends RESTDataSource implements IDataSource {
      *
      * @returns movie type list
      */
-    public getMovieTypes(): MovieType[] {
-        return MOVIE_TYPES;
+    public getIMDBTypes(): IMDBType[] {
+        return IMDB_TYPES;
     }
 
     /**
@@ -183,8 +183,8 @@ class Movie extends RESTDataSource implements IDataSource {
     private async getSeasonEpisodes(
         imdbId: string,
         seasonNum: number
-    ): Promise<IBaseMovie[]> {
-        let episodes: IBaseMovie[] = [];
+    ): Promise<IIMDB[]> {
+        let episodes: IIMDB[] = [];
         const params: APIByIdPlushSeason = {
             i: imdbId,
             Season: seasonNum,
@@ -195,7 +195,7 @@ class Movie extends RESTDataSource implements IDataSource {
             episodes = await Promise.all(
                 response.Episodes.map((episodeInfo) => {
                     const params = { i: episodeInfo.imdbID };
-                    return this.searchForMovie(params);
+                    return this.searchForIMDB(params);
                 })
             );
         } catch (e) {
@@ -238,18 +238,18 @@ class Movie extends RESTDataSource implements IDataSource {
      *
      * @param params search args
      *
-     * @returns api response enriched with base movie properties
+     * @returns api response enriched with base IMDB properties
      *
-     * @throws an error when movie type in response is unrecognized
+     * @throws an error when IMDB type in response is unrecognized
      */
-    private async searchForMovie(params: APIParams): Promise<IBaseMovie> {
-        const response = (await this.performRequest(params)) as APIMovie;
+    private async searchForIMDB(params: APIParams): Promise<IIMDB> {
+        const response = (await this.performRequest(params)) as APIIMDB;
 
-        if (!MOVIE_TYPES.includes(response.Type)) {
-            throw new Error('Not a movie.');
+        if (!IMDB_TYPES.includes(response.Type)) {
+            throw new Error('Unrecognized IMDB type: ' + response.Type);
         }
 
-        return this.enrichResponseWithBaseMovie(response);
+        return this.enrichResponseWithBaseIMDBInfo(response);
     }
 
     /**
@@ -267,7 +267,7 @@ class Movie extends RESTDataSource implements IDataSource {
         if (response.Response === ResponseType.FALSE) {
             throw new Error(
                 (response as APIError).Error ||
-                    'Could not perform Movie Search API request.'
+                    'Could not perform IMDB Search API request.'
             );
         }
 
@@ -275,13 +275,13 @@ class Movie extends RESTDataSource implements IDataSource {
     }
 
     /**
-     * Enriches api response with base movie properties
+     * Enriches api response with base IMDB properties
      *
      * @param response response come from api
      *
-     * @returns api response enriched with base movie properties
+     * @returns api response enriched with base IMDB properties
      */
-    private enrichResponseWithBaseMovie(response: APIMovie): IBaseMovie {
+    private enrichResponseWithBaseIMDBInfo(response: APIIMDB): IIMDB {
         return {
             ...response,
             imdbId: response.imdbID,
@@ -326,4 +326,4 @@ class Movie extends RESTDataSource implements IDataSource {
     }
 }
 
-export { Movie };
+export { IMDB };

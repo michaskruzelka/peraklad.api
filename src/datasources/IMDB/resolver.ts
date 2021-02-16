@@ -1,28 +1,28 @@
 import { DataSources } from 'datasources/types';
 import { Logger } from 'winston';
 import {
-    IBaseMovie,
+    IIMDB,
     IEpisode,
     IMovie,
     ISeries,
-    MovieType,
+    IMDBType,
     SearchByIdArgs,
     SearchByTitlePlusYearArgs,
     EpisodesArgs,
 } from './types';
 
 const resolver = {
-    IMovie: {
+    IMDB: {
         __resolveType: (obj: any) => {
-            if (obj.Type === MovieType.EPISODE) {
+            if (obj.Type === IMDBType.EPISODE) {
                 return 'Episode';
             }
 
-            if (obj.Type === MovieType.MOVIE) {
+            if (obj.Type === IMDBType.MOVIE) {
                 return 'Movie';
             }
 
-            if (obj.Type === MovieType.SERIES) {
+            if (obj.Type === IMDBType.SERIES) {
                 return 'Series';
             }
 
@@ -30,29 +30,26 @@ const resolver = {
         },
     },
     Query: {
-        movieByImdbId: async (
+        imdbInfoByImdbId: async (
             _: any,
             args: SearchByIdArgs,
             { dataSources }: { dataSources: DataSources }
-        ): Promise<IBaseMovie> => {
-            return dataSources.movie.searchByImdbId(args.imdbId);
+        ): Promise<IIMDB> => {
+            return dataSources.imdb.searchByImdbId(args.imdbId);
         },
-        movieByTitleAndYear: async (
+        imdbInfoByTitleAndYear: async (
             _: any,
             args: SearchByTitlePlusYearArgs,
             { dataSources }: { dataSources: DataSources }
-        ): Promise<IBaseMovie> => {
-            return dataSources.movie.searchByTitleAndYear(
-                args.title,
-                args.year
-            );
+        ): Promise<IIMDB> => {
+            return dataSources.imdb.searchByTitleAndYear(args.title, args.year);
         },
-        movieTypes: (
+        imdbTypes: (
             _: any,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ): MovieType[] => {
-            return dataSources.movie.getMovieTypes();
+        ): IMDBType[] => {
+            return dataSources.imdb.getIMDBTypes();
         },
     },
     Episode: {
@@ -63,11 +60,11 @@ const resolver = {
                 dataSources,
                 logger,
             }: { dataSources: DataSources; logger: Logger }
-        ): Promise<IBaseMovie> => {
-            let series: IBaseMovie;
+        ): Promise<IIMDB> => {
+            let series: IIMDB;
 
             try {
-                series = await dataSources.movie.searchByImdbId(
+                series = await dataSources.imdb.searchByImdbId(
                     episode.seriesID
                 );
             } catch (e) {
@@ -78,10 +75,10 @@ const resolver = {
                         ': ' +
                         e.message
                 );
-                series = dataSources.movie.createEmptyBaseMovieObject();
-                series.imdbId = dataSources.movie.asEmpty(episode.seriesID);
-                series.type = MovieType.SERIES;
-                series.Type = MovieType.SERIES;
+                series = dataSources.imdb.createEmptyBaseMovieObject();
+                series.imdbId = dataSources.imdb.asEmpty(episode.seriesID);
+                series.type = IMDBType.SERIES;
+                series.Type = IMDBType.SERIES;
             }
 
             return series;
@@ -91,28 +88,32 @@ const resolver = {
             __: any,
             { dataSources }: { dataSources: DataSources }
         ): number => {
-            return dataSources.movie.asInt(episode.Season);
+            return dataSources.imdb.asInt(episode.Season);
         },
         episodeNum: (
             episode: IEpisode,
             __: any,
             { dataSources }: { dataSources: DataSources }
         ): number => {
-            return dataSources.movie.asInt(episode.Episode);
+            return dataSources.imdb.asInt(episode.Episode);
         },
         year: (
             episode: IEpisode,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ): number => {
-            return dataSources.movie.asInt(episode.Year);
+        ): number | null => {
+            const validYear = dataSources.imdb.asEmpty(episode.Year);
+            
+            return validYear ? dataSources.imdb.asInt(validYear) : null;
         },
         imdbRating: (
             episode: IEpisode,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ): number => {
-            return dataSources.movie.asFloat(episode.imdbRating);
+        ): number | null => {
+            const validRating = dataSources.imdb.asEmpty(episode.imdbRating);
+
+            return validRating ? dataSources.imdb.asFloat(validRating) : null;
         },
     },
     Movie: {
@@ -127,15 +128,19 @@ const resolver = {
             movie: IMovie,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ): number => {
-            return dataSources.movie.asInt(movie.Year);
+        ): number | null => {
+            const validYear = dataSources.imdb.asEmpty(movie.Year);
+            
+            return validYear ? dataSources.imdb.asInt(validYear) : null;
         },
         imdbRating: (
             movie: IMovie,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ): number => {
-            return dataSources.movie.asFloat(movie.imdbRating);
+        ): number | null => {
+            const validRating = dataSources.imdb.asEmpty(movie.imdbRating);
+
+            return validRating ? dataSources.imdb.asFloat(validRating) : null;
         },
     },
     Series: {
@@ -150,17 +155,17 @@ const resolver = {
             series: ISeries,
             args: EpisodesArgs,
             { dataSources }: { dataSources: DataSources }
-        ): Promise<IBaseMovie[]> => {
+        ): Promise<IIMDB[]> => {
             if (args.season) {
-                return await dataSources.movie.searchForEpisodes(
+                return await dataSources.imdb.searchForEpisodes(
                     series.imdbId,
                     args.season,
                     args.episode
                 );
             }
 
-            let episodes: IBaseMovie[] = [];
-            const seasonsCount = dataSources.movie.asInt(series.totalSeasons);
+            let episodes: IIMDB[] = [];
+            const seasonsCount = dataSources.imdb.asInt(series.totalSeasons);
             if (seasonsCount) {
                 for (
                     let seasonNum = 1;
@@ -169,7 +174,7 @@ const resolver = {
                 ) {
                     episodes = [
                         ...episodes,
-                        ...(await dataSources.movie.searchForEpisodes(
+                        ...(await dataSources.imdb.searchForEpisodes(
                             series.imdbId,
                             seasonNum,
                             args.episode
@@ -184,8 +189,10 @@ const resolver = {
             series: ISeries,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ): number => {
-            return dataSources.movie.asFloat(series.imdbRating);
+        ): number | null => {
+            const validRating = dataSources.imdb.asEmpty(series.imdbRating);
+
+            return validRating ? dataSources.imdb.asFloat(validRating) : null;
         },
     },
 };

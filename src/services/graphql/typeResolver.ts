@@ -1,5 +1,5 @@
 import { GraphQLInterfaceType, GraphQLSchema } from 'graphql';
-import { MovieType } from '../../datasources/Movie/types';
+import { IMDBType } from '../../datasources/IMDB/types';
 
 /**
  * Workaround to query unions and interfaces
@@ -10,18 +10,17 @@ import { MovieType } from '../../datasources/Movie/types';
  * https://www.apollographql.com/docs/apollo-server/schema/unions-interfaces/
  */
 const resolveTypes = (schema: GraphQLSchema): void => {
-    const IMovieGraphQLType = schema.getTypeMap()
-        .IMovie as GraphQLInterfaceType;
-    IMovieGraphQLType.resolveType = (obj: any) => {
-        if (obj.Type === MovieType.EPISODE) {
+    const IMDBGraphQLType = schema.getTypeMap().IMDB as GraphQLInterfaceType;
+    IMDBGraphQLType.resolveType = (obj: any) => {
+        if (obj.Type === IMDBType.EPISODE) {
             return 'Episode';
         }
 
-        if (obj.Type === MovieType.MOVIE) {
+        if (obj.Type === IMDBType.MOVIE) {
             return 'Movie';
         }
 
-        if (obj.Type === MovieType.SERIES) {
+        if (obj.Type === IMDBType.SERIES) {
             return 'Series';
         }
 

@@ -43,7 +43,7 @@ enum ResponseType {
     FALSE = 'False',
 }
 
-enum MovieType {
+enum IMDBType {
     MOVIE = 'movie',
     SERIES = 'series',
     EPISODE = 'episode',
@@ -67,8 +67,8 @@ interface APIEpisodes extends APIResponse {
     Episodes: APIEpisode[];
 }
 
-interface APIMovie extends APIResponse {
-    Type: MovieType;
+interface APIIMDB extends APIResponse {
+    Type: IMDBType;
     Title: string;
     Year: string;
     imdbID: string;
@@ -78,55 +78,55 @@ interface APIMovie extends APIResponse {
     Plot?: string;
 }
 
-interface IBaseMovie extends APIMovie {
+interface IIMDB extends APIIMDB {
     imdbId: string;
-    type: MovieType;
+    type: IMDBType;
     title: string;
     posterSrc: string;
     plot?: string;
 }
 
-interface IMovie extends IBaseMovie {
-    type: MovieType.MOVIE;
+interface IMovie extends IIMDB {
+    type: IMDBType.MOVIE;
     language: string;
     year: number;
 }
 
-interface IEpisode extends IBaseMovie {
+interface IEpisode extends IIMDB {
     seriesID: string;
     Episode: string;
     Season: string;
-    type: MovieType.EPISODE;
+    type: IMDBType.EPISODE;
     series: ISeries;
     seasonNum: number;
     episodeNum: number;
     year: number;
 }
 
-interface ISeries extends IBaseMovie {
-    type: MovieType.SERIES;
+interface ISeries extends IIMDB {
+    type: IMDBType.SERIES;
     language: string;
     totalSeasons: string;
     episodes: IEpisode[];
 }
 
 interface IDataSource {
-    searchByImdbId: (imdbId: string | number) => Promise<IBaseMovie>;
+    searchByImdbId: (imdbId: string | number) => Promise<IIMDB>;
     searchByTitleAndYear: (
         title: string,
         year: number | undefined
-    ) => Promise<IBaseMovie>;
+    ) => Promise<IIMDB>;
     searchForEpisodes: (
         imdbId: string | number,
         seasonNum: number,
         episodeNum: number
-    ) => Promise<IBaseMovie[]>;
+    ) => Promise<IIMDB[]>;
     searchForEpisode: (
         imdbId: string | number,
         seasonNum: number,
         episodeNum: number
-    ) => Promise<IBaseMovie>;
-    createEmptyBaseMovieObject: () => IBaseMovie;
+    ) => Promise<IIMDB>;
+    createEmptyBaseMovieObject: () => IIMDB;
 }
 
 export {
@@ -135,13 +135,13 @@ export {
     APIResponse,
     APIEpisodes,
     APIError,
-    APIMovie,
-    MovieType,
+    APIIMDB,
+    IMDBType,
     ResponseType,
     IMovie,
     IEpisode,
     ISeries,
-    IBaseMovie,
+    IIMDB,
     IDataSource,
     SearchByIdArgs,
     SearchByTitlePlusYearArgs,

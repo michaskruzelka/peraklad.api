@@ -28,7 +28,7 @@ const typesNotToAugment = [
     'GroupedLanguages',
     'Movie',
     'Episode',
-    'IMovie',
+    'IMDB',
     'Series',
     'ProjectAccessType',
     'ABC',

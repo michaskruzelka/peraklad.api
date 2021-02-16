@@ -1,13 +1,13 @@
 type Query {
-    movieByImdbId(imdbId: String! @stringLength(min: 7, max: 9)): IMovie
-    movieByTitleAndYear(
+    imdbInfoByImdbId(imdbId: String! @stringLength(min: 7, max: 9)): IMDB
+    imdbInfoByTitleAndYear(
         title: String! @stringLength(min: 1, max: 100)
         year: Int @range(min: 1880, max: 2100)
-    ): IMovie
-    movieTypes: [String]
+    ): IMDB
+    imdbTypes: [String]
 }
 
-interface IMovie {
+interface IMDB {
     imdbId: String!
     title: String!
     imdbRating: Float
@@ -16,7 +16,7 @@ interface IMovie {
     plot: String
 }
 
-type Movie implements IMovie {
+type Movie implements IMDB {
     imdbId: String!
     title: String!
     year: Int
@@ -27,7 +27,7 @@ type Movie implements IMovie {
     plot: String
 }
 
-type Episode implements IMovie {
+type Episode implements IMDB {
     imdbId: String!
     title: String!
     year: Int
@@ -40,7 +40,7 @@ type Episode implements IMovie {
     plot: String
 }
 
-type Series implements IMovie {
+type Series implements IMDB {
     imdbId: String!
     title: String!
     imdbRating: Float
