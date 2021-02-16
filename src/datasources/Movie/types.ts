@@ -111,11 +111,22 @@ interface ISeries extends IBaseMovie {
 }
 
 interface IDataSource {
-    searchByImdbId: (imdbId: string | number) => Promise<APIResponse>;
+    searchByImdbId: (imdbId: string | number) => Promise<IBaseMovie>;
     searchByTitleAndYear: (
         title: string,
         year: number | undefined
-    ) => Promise<APIResponse>;
+    ) => Promise<IBaseMovie>;
+    searchForEpisodes: (
+        imdbId: string | number,
+        seasonNum: number,
+        episodeNum: number
+    ) => Promise<IBaseMovie[]>;
+    searchForEpisode: (
+        imdbId: string | number,
+        seasonNum: number,
+        episodeNum: number
+    ) => Promise<IBaseMovie>;
+    createEmptyBaseMovieObject: () => IBaseMovie;
 }
 
 export {
