@@ -23,32 +23,29 @@ const typeDefsList: DocumentNode[] = [
 ];
 const typeDefsAsOne: DocumentNode = mergeTypeDefs(typeDefsList);
 
+const typesNotToAugment = [
+    'Language',
+    'GroupedLanguages',
+    'Movie',
+    'Episode',
+    'IMovie',
+    'Series',
+    'ProjectAccessType',
+    'ABC',
+    'Spelling',
+    'ValidatedInputErrorOutput',
+];
+
 const schemaOptions: makeAugmentedSchemaOptions = {
     typeDefs: typeDefsAsOne,
     resolvers,
     schemaDirectives: { range, stringLength },
     config: {
         query: {
-            exclude: [
-                'Language',
-                'GroupedLanguages',
-                'Movie',
-                'Episode',
-                'IMovie',
-                'Series',
-                'ValidatedInputErrorOutput',
-            ],
+            exclude: typesNotToAugment,
         },
         mutation: {
-            exclude: [
-                'Language',
-                'GroupedLanguages',
-                'Movie',
-                'Episode',
-                'IMovie',
-                'Series',
-                'ValidatedInputErrorOutput',
-            ],
+            exclude: typesNotToAugment,
         },
     },
 };

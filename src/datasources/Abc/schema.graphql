@@ -1,0 +1,10 @@
+type Query {
+    abcs: [ABC!]!
+    defaultAbc: ABC!
+}
+
+type ABC {
+    id: Int!
+    code: String!
+    isDefault: Boolean!
+}

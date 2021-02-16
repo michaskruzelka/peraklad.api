@@ -47,6 +47,13 @@ const resolver = {
                 args.year
             );
         },
+        movieTypes: (
+            _: any,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): MovieType[] => {
+            return dataSources.movie.getMovieTypes();
+        },
     },
     Episode: {
         series: async (

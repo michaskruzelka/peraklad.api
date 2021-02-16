@@ -164,6 +164,15 @@ class Movie extends RESTDataSource implements IDataSource {
     }
 
     /**
+     * Gets all movie types
+     *
+     * @returns movie type list
+     */
+    public getMovieTypes(): MovieType[] {
+        return MOVIE_TYPES;
+    }
+
+    /**
      * Gets episodes from the certain season
      *
      * @param imdbId imdb ID

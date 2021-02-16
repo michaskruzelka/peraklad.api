@@ -1,0 +1,10 @@
+type Query {
+    projectAccessTypes: [ProjectAccessType!]!
+    defaultProjectAccessType: ProjectAccessType!
+}
+
+type ProjectAccessType {
+    id: Int!
+    code: String!
+    isDefault: Boolean!
+}

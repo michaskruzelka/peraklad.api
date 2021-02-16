@@ -1,0 +1,10 @@
+type Query {
+    spellings: [Spelling!]!
+    defaultSpelling: Spelling!
+}
+
+type Spelling {
+    id: Int!
+    code: String!
+    isDefault: Boolean!
+}
