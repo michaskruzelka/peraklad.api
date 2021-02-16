@@ -21,6 +21,33 @@ type AccessTypeResponse = AccessType & {
 
 type AccessTypeListResponse = AccessTypeResponse[];
 
+enum LevelID {
+    PARENT = 1,
+    SUB = 2,
+    SELF = 3,
+}
+
+enum LevelCode {
+    PARENT = 'PARENT',
+    SUB = 'SUB',
+    SELF = 'SELF',
+}
+
+type Level = {
+    id: LevelID;
+    code: LevelCode;
+};
+
+enum Category {
+    SUBTITLES = 'SUBTITLES',
+    SOFTWARE = 'SOFTWARE',
+}
+
+enum SubtitlesSubcategory {
+    OFFLINE = 'OFFLINE',
+    ONLINE = 'ONLINE',
+}
+
 interface IDataSource {
     getAccessTypes: () => AccessType[];
     getDefaultAccessType: () => AccessType;
@@ -32,5 +59,10 @@ export {
     AccessType,
     AccessTypeResponse,
     AccessTypeListResponse,
+    LevelID,
+    LevelCode,
+    Level,
     IDataSource,
+    Category,
+    SubtitlesSubcategory,
 };

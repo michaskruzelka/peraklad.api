@@ -33,6 +33,7 @@ const typesNotToAugment = [
     'ProjectAccessType',
     'ABC',
     'Spelling',
+    'FileFormat',
     'ValidatedInputErrorOutput',
 ];
 

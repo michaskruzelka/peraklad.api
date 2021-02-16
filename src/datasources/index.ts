@@ -4,6 +4,7 @@ import { Project } from './Project';
 import { Abc } from './Abc';
 import { Spelling } from './Spelling';
 import { DataSources } from './types';
+import { Resource } from './Resource';
 
 const getDataSources = (): DataSources => {
     return {
@@ -12,7 +13,8 @@ const getDataSources = (): DataSources => {
         project: new Project(),
         abc: new Abc(),
         spelling: new Spelling(),
+        resource: new Resource(),
     };
 };
 
-export { getDataSources, Language, IMDB, Project, Abc, Spelling };
+export { getDataSources, Language, IMDB, Project, Abc, Spelling, Resource };

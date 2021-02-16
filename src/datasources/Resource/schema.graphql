@@ -1,0 +1,24 @@
+type Query {
+    fileFormats(
+        category: FileCategory!
+        subcategory: SubtitlesSubcategory
+    ): [FileFormat!]!
+}
+
+type FileFormat {
+    code: String!
+    name: String!
+    extensions: [String!]!
+    longName: String
+    description: String
+}
+
+enum FileCategory {
+    SUBTITLES
+    SOFTWARE
+}
+
+enum SubtitlesSubcategory {
+    OFFLINE
+    ONLINE
+}
