@@ -1,9 +1,13 @@
 import { DataSources } from '../../datasources/types';
+import { SearchResponse, FileInfoResult } from './Category/Subtitles/types';
+import { FileFormatCode } from '../Resource/types';
 import { SearchParams } from './Category/types';
 import {
     AccessTypeListResponse,
     AccessTypeResponse,
+    Category,
     IMDBSubtitlesArgs,
+    SubtitlesSubCategory,
 } from './types';
 
 const resolver = {
@@ -36,7 +40,7 @@ const resolver = {
             _: any,
             args: IMDBSubtitlesArgs,
             { dataSources }: { dataSources: DataSources }
-        ) => {
+        ): Promise<SearchResponse> => {
             const searchParams: SearchParams = {
                 language: dataSources.language.get(args.language),
                 imdbId: args.imdbId
@@ -45,11 +49,30 @@ const resolver = {
                 title: args.title,
             };
 
-            await dataSources.offlineSubtitlesProject.searchForFiles(
+            const result = await dataSources.offlineSubtitlesProject.searchForFiles(
                 searchParams
             );
 
-            return 'test';
+            const fileFormats = dataSources.resource.getFileFormats(
+                Category.SUBTITLES,
+                SubtitlesSubCategory.OFFLINE
+            );
+
+            return {
+                ...result,
+                filesInfo: result.filesInfo
+                    .filter((fileInfo: FileInfoResult) =>
+                        fileFormats
+                            .map((fileFormat) => fileFormat.code)
+                            .includes(fileInfo.format as FileFormatCode)
+                    )
+                    .map((fileInfo: FileInfoResult) => ({
+                        ...fileInfo,
+                        format: fileFormats.find(
+                            (fileFormat) => fileFormat.code === fileInfo.format
+                        ),
+                    })),
+            };
         },
     },
 };

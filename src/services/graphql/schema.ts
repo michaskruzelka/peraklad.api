@@ -31,6 +31,8 @@ const typesNotToAugment = [
     'IMDB',
     'Series',
     'ProjectAccessType',
+    'ImdbSubtitlesResponse',
+    'ImdbSubtitlesFile',
     'ABC',
     'Spelling',
     'FileFormat',

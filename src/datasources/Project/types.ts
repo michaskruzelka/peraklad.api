@@ -1,4 +1,4 @@
-import { ICategory } from './Category/types';
+import { SearchParams } from './Category/types';
 
 enum AccessTypeID {
     PUBLIC = 1,
@@ -59,7 +59,7 @@ type IMDBSubtitlesArgs = {
 interface IDataSource {
     getAccessTypes: () => AccessType[];
     getDefaultAccessType: () => AccessType;
-    getCategory(): ICategory;
+    searchForFiles(searchParams: SearchParams): Promise<any>;
 }
 
 export {

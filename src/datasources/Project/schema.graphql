@@ -5,7 +5,20 @@ type Query {
         language: String! @stringLength(min: 2, max: 2)
         imdbId: String @stringLength(min: 7, max: 9)
         title: String @stringLength(max: 100)
-    ): String
+    ): ImdbSubtitlesResponse
+}
+
+type ImdbSubtitlesResponse {
+    service: String
+    filesInfo: [ImdbSubtitlesFile]!
+}
+
+type ImdbSubtitlesFile {
+    url: String!
+    fileName: String!
+    encoding: String!
+    format: FileFormat!
+    language: Language!
 }
 
 type ProjectAccessType {

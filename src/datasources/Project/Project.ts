@@ -1,10 +1,10 @@
-import { DataSource } from 'apollo-datasource';
+import { RESTDataSource } from 'apollo-datasource-rest';
 
 import { ICategory, SearchParams } from './Category/types';
 import { IDataSource, AccessType } from './types';
 import { ACCESS_TYPES, DEFAULT_ACCESS_TYPE } from './config';
 
-class Project extends DataSource implements IDataSource {
+class Project extends RESTDataSource implements IDataSource {
     private category: ICategory;
 
     constructor(category: ICategory) {
@@ -36,23 +36,21 @@ class Project extends DataSource implements IDataSource {
     }
 
     /**
-     * Gets the category of the project
-     *
-     * @returns ICategory instance
-     */
-    public getCategory(): ICategory {
-        return this.category;
-    }
-
-    /**
      * Searches for files
      *
      * @param searchParams search parameters
-     * 
+     *
      * @returns files list
      */
     public async searchForFiles(searchParams: SearchParams): Promise<any> {
-        return this.category.searchForFiles(searchParams);
+        try {
+            return this.category.searchForFiles(searchParams);
+        } catch (e) {
+            this.context.logger.log(
+                'info',
+                'Error while searching for project files: ' + e.message
+            );
+        }
     }
 }
 
