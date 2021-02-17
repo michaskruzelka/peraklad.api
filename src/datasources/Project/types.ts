@@ -1,3 +1,5 @@
+import { ICategory } from './Category/types';
+
 enum AccessTypeID {
     PUBLIC = 1,
     RESTRICTED = 2,
@@ -43,14 +45,21 @@ enum Category {
     SOFTWARE = 'SOFTWARE',
 }
 
-enum SubtitlesSubcategory {
+enum SubtitlesSubCategory {
     OFFLINE = 'OFFLINE',
     ONLINE = 'ONLINE',
 }
 
+type IMDBSubtitlesArgs = {
+    language: string;
+    imdbId?: string | null;
+    title?: string | null;
+};
+
 interface IDataSource {
     getAccessTypes: () => AccessType[];
     getDefaultAccessType: () => AccessType;
+    getCategory(): ICategory;
 }
 
 export {
@@ -64,5 +73,6 @@ export {
     Level,
     IDataSource,
     Category,
-    SubtitlesSubcategory,
+    SubtitlesSubCategory,
+    IMDBSubtitlesArgs,
 };

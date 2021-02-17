@@ -8,7 +8,7 @@ import { Resource } from './Resource';
 type DataSources = {
     language: Language;
     imdb: IMDB;
-    project: Project;
+    offlineSubtitlesProject: Project;
     abc: Abc;
     spelling: Spelling;
     resource: Resource;

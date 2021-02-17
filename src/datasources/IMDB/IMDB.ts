@@ -1,4 +1,5 @@
 import { RESTDataSource, RequestOptions } from 'apollo-datasource-rest';
+import { ValidationError } from 'apollo-server';
 
 import {
     APIParams,
@@ -220,14 +221,14 @@ class IMDB extends RESTDataSource implements IDataSource {
      *
      * @throws an error when imdb ID is not valid
      */
-    private validateImdbId(imdbId: string | number): string {
+    public validateImdbId(imdbId: string | number): string {
         imdbId = String(imdbId);
         if (imdbId.indexOf('tt') !== 0) {
             imdbId = 'tt' + imdbId;
         }
 
         if (!this.imdbIdPattern.test(imdbId)) {
-            throw new Error('Specified Imdb ID is not valid');
+            throw new ValidationError('Specified Imdb ID is not valid');
         }
 
         return imdbId;

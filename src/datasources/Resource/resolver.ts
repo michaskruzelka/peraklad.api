@@ -10,7 +10,7 @@ const resolver = {
         ): FileFormatsResponse => {
             const fileFormats = dataSources.resource.getFileFormats(
                 args.category,
-                args.subcategory
+                args.subCategory
             );
 
             return fileFormats.map((fileFormat) => ({

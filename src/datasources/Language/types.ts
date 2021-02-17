@@ -6,6 +6,7 @@ interface IDataSource {
 
 interface ILanguage {
     code: string;
+    iso639_2: string;
     name: string;
     native: string;
 }

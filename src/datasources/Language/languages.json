@@ -1,926 +1,1105 @@
 [
     {
         "code": "aa",
+        "iso639_2": "aar",
         "name": "Afar",
         "native": "Afar"
     },
     {
         "code": "ab",
+        "iso639_2": "abk",
         "name": "Abkhazian",
         "native": "Аҧсуа"
     },
     {
         "code": "af",
+        "iso639_2": "afr",
         "name": "Afrikaans",
         "native": "Afrikaans"
     },
     {
         "code": "ak",
+        "iso639_2": "aka",
         "name": "Akan",
         "native": "Akana"
     },
     {
         "code": "am",
+        "iso639_2": "amh",
         "name": "Amharic",
         "native": "አማርኛ"
     },
     {
         "code": "an",
+        "iso639_2": "arg",
         "name": "Aragonese",
         "native": "Aragonés"
     },
     {
         "code": "ar",
+        "iso639_2": "ara",
         "name": "Arabic",
         "native": "العربية"
     },
     {
         "code": "as",
+        "iso639_2": "asm",
         "name": "Assamese",
         "native": "অসমীয়া"
     },
     {
         "code": "av",
+        "iso639_2": "ava",
         "name": "Avar",
         "native": "Авар"
     },
     {
         "code": "ay",
+        "iso639_2": "aym",
         "name": "Aymara",
         "native": "Aymar"
     },
     {
         "code": "az",
+        "iso639_2": "aze",
         "name": "Azerbaijani",
         "native": "Azərbaycanca / آذربايجان"
     },
     {
         "code": "ba",
+        "iso639_2": "bak",
         "name": "Bashkir",
         "native": "Башҡорт"
     },
     {
         "code": "be",
+        "iso639_2": "bel",
         "name": "Belarusian",
         "native": "Беларуская"
     },
     {
         "code": "bg",
+        "iso639_2": "bul",
         "name": "Bulgarian",
         "native": "Български"
     },
     {
         "code": "bh",
+        "iso639_2": "bih",
         "name": "Bihari",
         "native": "भोजपुरी"
     },
     {
         "code": "bi",
+        "iso639_2": "bis",
         "name": "Bislama",
         "native": "Bislama"
     },
     {
         "code": "bm",
+        "iso639_2": "bam",
         "name": "Bambara",
         "native": "Bamanankan"
     },
     {
         "code": "bn",
+        "iso639_2": "ben",
         "name": "Bengali",
         "native": "বাংলা"
     },
     {
         "code": "bo",
+        "iso639_2": "tib",
         "name": "Tibetan",
         "native": "བོད་ཡིག / Bod skad"
     },
     {
         "code": "br",
+        "iso639_2": "bre",
         "name": "Breton",
         "native": "Brezhoneg"
     },
     {
         "code": "bs",
+        "iso639_2": "bos",
         "name": "Bosnian",
         "native": "Bosanski"
     },
     {
         "code": "ca",
+        "iso639_2": "cat",
         "name": "Catalan",
         "native": "Català"
     },
     {
         "code": "ce",
+        "iso639_2": "che",
         "name": "Chechen",
         "native": "Нохчийн"
     },
     {
         "code": "ch",
+        "iso639_2": "cha",
         "name": "Chamorro",
         "native": "Chamoru"
     },
     {
         "code": "co",
+        "iso639_2": "cos",
         "name": "Corsican",
         "native": "Corsu"
     },
     {
         "code": "cr",
+        "iso639_2": "cre",
         "name": "Cree",
         "native": "Nehiyaw"
     },
     {
         "code": "cs",
+        "iso639_2": "cze",
         "name": "Czech",
         "native": "Česky"
     },
     {
         "code": "cu",
+        "iso639_2": "chu",
         "name": "Old Church Slavonic / Old Bulgarian",
         "native": "словѣньскъ / slověnĭskŭ"
     },
     {
         "code": "cv",
+        "iso639_2": "chv",
         "name": "Chuvash",
         "native": "Чăваш"
     },
     {
         "code": "cy",
+        "iso639_2": "wel",
         "name": "Welsh",
         "native": "Cymraeg"
     },
     {
         "code": "da",
+        "iso639_2": "dan",
         "name": "Danish",
         "native": "Dansk"
     },
     {
         "code": "de",
+        "iso639_2": "ger",
         "name": "German",
         "native": "Deutsch"
     },
     {
         "code": "dv",
+        "iso639_2": "div",
         "name": "Divehi",
         "native": "ދިވެހިބަސް"
     },
     {
         "code": "dz",
+        "iso639_2": "dzo",
         "name": "Dzongkha",
         "native": "ཇོང་ཁ"
     },
     {
         "code": "ee",
+        "iso639_2": "ewe",
         "name": "Ewe",
         "native": "Ɛʋɛ"
     },
     {
         "code": "el",
+        "iso639_2": "ell",
         "name": "Greek",
         "native": "Ελληνικά"
     },
     {
         "code": "en",
+        "iso639_2": "eng",
         "name": "English",
         "native": "English"
     },
     {
         "code": "eo",
+        "iso639_2": "epo",
         "name": "Esperanto",
         "native": "Esperanto"
     },
     {
         "code": "es",
+        "iso639_2": "spa",
         "name": "Spanish",
         "native": "Español"
     },
     {
         "code": "et",
+        "iso639_2": "est",
         "name": "Estonian",
         "native": "Eesti"
     },
     {
         "code": "eu",
+        "iso639_2": "baq",
         "name": "Basque",
         "native": "Euskara"
     },
     {
         "code": "fa",
+        "iso639_2": "per",
         "name": "Persian",
         "native": "فارسی"
     },
     {
-        "code": "ff",
-        "name": "Peul",
-        "native": "Fulfulde"
-    },
-    {
         "code": "fi",
+        "iso639_2": "fin",
         "name": "Finnish",
         "native": "Suomi"
     },
     {
         "code": "fj",
+        "iso639_2": "fij",
         "name": "Fijian",
         "native": "Na Vosa Vakaviti"
     },
     {
         "code": "fo",
+        "iso639_2": "fao",
         "name": "Faroese",
         "native": "Føroyskt"
     },
     {
         "code": "fr",
+        "iso639_2": "fre",
         "name": "French",
         "native": "Français"
     },
     {
         "code": "fy",
-        "name": "West Frisian",
+        "iso639_2": "fry",
+        "name": "Frisian",
         "native": "Frysk"
     },
     {
         "code": "ga",
+        "iso639_2": "gle",
         "name": "Irish",
         "native": "Gaeilge"
     },
     {
         "code": "gd",
-        "name": "Scottish Gaelic",
+        "iso639_2": "gla",
+        "name": "Gaelic",
         "native": "Gàidhlig"
     },
     {
         "code": "gl",
+        "iso639_2": "glg",
         "name": "Galician",
         "native": "Galego"
     },
     {
         "code": "gn",
+        "iso639_2": "grn",
         "name": "Guarani",
         "native": "Avañe'ẽ"
     },
     {
         "code": "gu",
+        "iso639_2": "guj",
         "name": "Gujarati",
         "native": "ગુજરાતી"
     },
     {
         "code": "gv",
+        "iso639_2": "glv",
         "name": "Manx",
         "native": "Gaelg"
     },
     {
         "code": "ha",
+        "iso639_2": "hau",
         "name": "Hausa",
         "native": "هَوُسَ"
     },
     {
         "code": "he",
+        "iso639_2": "heb",
         "name": "Hebrew",
         "native": "עברית"
     },
     {
         "code": "hi",
+        "iso639_2": "hin",
         "name": "Hindi",
         "native": "हिन्दी"
     },
     {
         "code": "ho",
+        "iso639_2": "hmo",
         "name": "Hiri Motu",
         "native": "Hiri Motu"
     },
     {
         "code": "hr",
+        "iso639_2": "hrv",
         "name": "Croatian",
         "native": "Hrvatski"
     },
     {
         "code": "ht",
+        "iso639_2": "hat",
         "name": "Haitian",
         "native": "Krèyol ayisyen"
     },
     {
         "code": "hu",
+        "iso639_2": "hun",
         "name": "Hungarian",
         "native": "Magyar"
     },
     {
         "code": "hy",
+        "iso639_2": "arm",
         "name": "Armenian",
         "native": "Հայերեն"
     },
     {
         "code": "hz",
+        "iso639_2": "her",
         "name": "Herero",
         "native": "Otsiherero"
     },
     {
         "code": "ia",
+        "iso639_2": "ina",
         "name": "Interlingua",
         "native": "Interlingua"
     },
     {
         "code": "id",
+        "iso639_2": "ind",
         "name": "Indonesian",
         "native": "Bahasa Indonesia"
     },
     {
         "code": "ie",
+        "iso639_2": "ile",
         "name": "Interlingue",
         "native": "Interlingue"
     },
     {
         "code": "ig",
+        "iso639_2": "ibo",
         "name": "Igbo",
         "native": "Igbo"
     },
     {
         "code": "ii",
+        "iso639_2": "ili",
         "name": "Sichuan Yi",
         "native": "ꆇꉙ / 四川彝语"
     },
     {
         "code": "ik",
+        "iso639_2": "ipk",
         "name": "Inupiak",
         "native": "Iñupiak"
     },
     {
         "code": "io",
+        "iso639_2": "ido",
         "name": "Ido",
         "native": "Ido"
     },
     {
         "code": "is",
+        "iso639_2": "ice",
         "name": "Icelandic",
         "native": "Íslenska"
     },
     {
         "code": "it",
+        "iso639_2": "ita",
         "name": "Italian",
         "native": "Italiano"
     },
     {
         "code": "iu",
+        "iso639_2": "iku",
         "name": "Inuktitut",
         "native": "ᐃᓄᒃᑎᑐᑦ"
     },
     {
         "code": "ja",
+        "iso639_2": "jpn",
         "name": "Japanese",
         "native": "日本語"
     },
     {
         "code": "jv",
+        "iso639_2": "jav",
         "name": "Javanese",
         "native": "Basa Jawa"
     },
     {
         "code": "ka",
+        "iso639_2": "geo",
         "name": "Georgian",
         "native": "ქართული"
     },
     {
         "code": "kg",
+        "iso639_2": "kon",
         "name": "Kongo",
         "native": "KiKongo"
     },
     {
         "code": "ki",
+        "iso639_2": "kik",
         "name": "Kikuyu",
         "native": "Gĩkũyũ"
     },
     {
         "code": "kj",
+        "iso639_2": "kua",
         "name": "Kuanyama",
         "native": "Kuanyama"
     },
     {
         "code": "kk",
+        "iso639_2": "kaz",
         "name": "Kazakh",
         "native": "Қазақша"
     },
     {
         "code": "kl",
+        "iso639_2": "kal",
         "name": "Greenlandic",
         "native": "Kalaallisut"
     },
     {
         "code": "km",
-        "name": "Cambodian",
+        "iso639_2": "khm",
+        "name": "Khmer",
         "native": "ភាសាខ្មែរ"
     },
     {
         "code": "kn",
+        "iso639_2": "kan",
         "name": "Kannada",
         "native": "ಕನ್ನಡ"
     },
     {
         "code": "ko",
+        "iso639_2": "kor",
         "name": "Korean",
         "native": "한국어"
     },
     {
         "code": "kr",
+        "iso639_2": "kau",
         "name": "Kanuri",
         "native": "Kanuri"
     },
     {
         "code": "ks",
+        "iso639_2": "kas",
         "name": "Kashmiri",
         "native": "कश्मीरी / كشميري"
     },
     {
         "code": "ku",
+        "iso639_2": "kur",
         "name": "Kurdish",
         "native": "Kurdî / كوردی"
     },
     {
         "code": "kv",
+        "iso639_2": "kom",
         "name": "Komi",
         "native": "Коми"
     },
     {
         "code": "kw",
+        "iso639_2": "cor",
         "name": "Cornish",
         "native": "Kernewek"
     },
     {
         "code": "ky",
+        "iso639_2": "kir",
         "name": "Kirghiz",
         "native": "Kırgızca / Кыргызча"
     },
     {
         "code": "la",
+        "iso639_2": "lat",
         "name": "Latin",
         "native": "Latina"
     },
     {
         "code": "lb",
+        "iso639_2": "ltz",
         "name": "Luxembourgish",
         "native": "Lëtzebuergesch"
     },
     {
         "code": "lg",
+        "iso639_2": "lug",
         "name": "Ganda",
         "native": "Luganda"
     },
     {
         "code": "li",
+        "iso639_2": "lim",
         "name": "Limburgian",
         "native": "Limburgs"
     },
     {
         "code": "ln",
+        "iso639_2": "lin",
         "name": "Lingala",
         "native": "Lingála"
     },
     {
         "code": "lo",
+        "iso639_2": "lao",
         "name": "Laotian",
         "native": "ລາວ / Pha xa lao"
     },
     {
         "code": "lt",
+        "iso639_2": "lit",
         "name": "Lithuanian",
         "native": "Lietuvių"
     },
     {
         "code": "lu",
+        "iso639_2": "lub",
         "name": "Luba-Katanga",
         "native": "Tshiluba"
     },
     {
         "code": "lv",
+        "iso639_2": "lav",
         "name": "Latvian",
         "native": "Latviešu"
     },
     {
         "code": "mg",
+        "iso639_2": "mlg",
         "name": "Malagasy",
         "native": "Malagasy"
     },
     {
         "code": "mh",
+        "iso639_2": "mah",
         "name": "Marshallese",
         "native": "Kajin Majel / Ebon"
     },
     {
         "code": "mi",
+        "iso639_2": "mao",
         "name": "Maori",
         "native": "Māori"
     },
     {
         "code": "mk",
+        "iso639_2": "mac",
         "name": "Macedonian",
         "native": "Македонски"
     },
     {
         "code": "ml",
+        "iso639_2": "mal",
         "name": "Malayalam",
         "native": "മലയാളം"
     },
     {
         "code": "mn",
+        "iso639_2": "mon",
         "name": "Mongolian",
         "native": "Монгол"
     },
     {
         "code": "mo",
+        "iso639_2": "mol",
         "name": "Moldovan",
         "native": "Moldovenească"
     },
     {
         "code": "mr",
+        "iso639_2": "mar",
         "name": "Marathi",
         "native": "मराठी"
     },
     {
         "code": "ms",
+        "iso639_2": "may",
         "name": "Malay",
         "native": "Bahasa Melayu"
     },
     {
         "code": "mt",
+        "iso639_2": "mlt",
         "name": "Maltese",
         "native": "bil-Malti"
     },
     {
         "code": "my",
+        "iso639_2": "bur",
         "name": "Burmese",
         "native": "မြန်မာစာ"
     },
     {
         "code": "na",
+        "iso639_2": "nau",
         "name": "Nauruan",
         "native": "Dorerin Naoero"
     },
     {
         "code": "nb",
+        "iso639_2": "nob",
         "name": "Norwegian Bokmål",
         "native": "Norsk bokmål"
     },
     {
         "code": "nd",
+        "iso639_2": "nde",
         "name": "North Ndebele",
         "native": "Sindebele"
     },
     {
         "code": "ne",
+        "iso639_2": "nep",
         "name": "Nepali",
         "native": "नेपाली"
     },
     {
         "code": "ng",
+        "iso639_2": "ndo",
         "name": "Ndonga",
         "native": "Oshiwambo"
     },
     {
         "code": "nl",
+        "iso639_2": "dut",
         "name": "Dutch",
         "native": "Nederlands"
     },
     {
         "code": "nn",
+        "iso639_2": "nno",
         "name": "Norwegian Nynorsk",
         "native": "Norsk nynorsk"
     },
     {
         "code": "no",
+        "iso639_2": "nor",
         "name": "Norwegian",
         "native": "Norsk"
     },
     {
         "code": "nr",
+        "iso639_2": "nbl",
         "name": "South Ndebele",
         "native": "isiNdebele"
     },
     {
         "code": "nv",
+        "iso639_2": "nav",
         "name": "Navajo",
         "native": "Diné bizaad"
     },
     {
         "code": "ny",
+        "iso639_2": "nya",
         "name": "Chichewa",
         "native": "Chi-Chewa"
     },
     {
         "code": "oc",
+        "iso639_2": "oci",
         "name": "Occitan",
         "native": "Occitan"
     },
     {
         "code": "oj",
+        "iso639_2": "oji",
         "name": "Ojibwa",
         "native": "ᐊᓂᔑᓈᐯᒧᐎᓐ / Anishinaabemowin"
     },
     {
         "code": "om",
+        "iso639_2": "orm",
         "name": "Oromo",
         "native": "Oromoo"
     },
     {
         "code": "or",
+        "iso639_2": "ori",
         "name": "Oriya",
         "native": "ଓଡ଼ିଆ"
     },
     {
         "code": "os",
+        "iso639_2": "oss",
         "name": "Ossetian / Ossetic",
         "native": "Иронау"
     },
     {
         "code": "pa",
+        "iso639_2": "pan",
         "name": "Panjabi / Punjabi",
         "native": "ਪੰਜਾਬੀ / पंजाबी / پنجابي"
     },
     {
         "code": "pi",
+        "iso639_2": "pli",
         "name": "Pali",
         "native": "Pāli / पाऴि"
     },
     {
         "code": "pl",
+        "iso639_2": "pol",
         "name": "Polish",
         "native": "Polski"
     },
     {
         "code": "ps",
-        "name": "Pashto",
+        "iso639_2": "pus",
+        "name": "Pushto",
         "native": "پښتو"
     },
     {
         "code": "pt",
+        "iso639_2": "por",
         "name": "Portuguese",
         "native": "Português"
     },
     {
         "code": "qu",
+        "iso639_2": "que",
         "name": "Quechua",
         "native": "Runa Simi"
     },
     {
         "code": "rm",
+        "iso639_2": "roh",
         "name": "Raeto Romance",
         "native": "Rumantsch"
     },
     {
         "code": "rn",
+        "iso639_2": "run",
         "name": "Kirundi",
         "native": "Kirundi"
     },
     {
         "code": "ro",
+        "iso639_2": "rum",
         "name": "Romanian",
         "native": "Română"
     },
     {
         "code": "ru",
+        "iso639_2": "rus",
         "name": "Russian",
         "native": "Русский"
     },
     {
         "code": "rw",
+        "iso639_2": "kin",
         "name": "Rwandi",
         "native": "Kinyarwandi"
     },
     {
         "code": "sa",
+        "iso639_2": "san",
         "name": "Sanskrit",
         "native": "संस्कृतम्"
     },
     {
         "code": "sc",
+        "iso639_2": "srd",
         "name": "Sardinian",
         "native": "Sardu"
     },
     {
         "code": "sd",
+        "iso639_2": "snd",
         "name": "Sindhi",
         "native": "सिनधि"
     },
     {
         "code": "se",
+        "iso639_2": "sme",
         "name": "Northern Sami",
         "native": "Sámegiella"
     },
     {
         "code": "sg",
+        "iso639_2": "sag",
         "name": "Sango",
         "native": "Sängö"
     },
     {
         "code": "sh",
+        "iso639_2": "bhs",
         "name": "Serbo-Croatian",
         "native": "Srpskohrvatski / Српскохрватски"
     },
     {
         "code": "si",
+        "iso639_2": "sin",
         "name": "Sinhalese",
         "native": "සිංහල"
     },
     {
         "code": "sk",
+        "iso639_2": "slo",
         "name": "Slovak",
         "native": "Slovenčina"
     },
     {
         "code": "sl",
+        "iso639_2": "slv",
         "name": "Slovenian",
         "native": "Slovenščina"
     },
     {
         "code": "sm",
+        "iso639_2": "smo",
         "name": "Samoan",
         "native": "Gagana Samoa"
     },
     {
         "code": "sn",
+        "iso639_2": "sna",
         "name": "Shona",
         "native": "chiShona"
     },
     {
         "code": "so",
+        "iso639_2": "som",
         "name": "Somalia",
         "native": "Soomaaliga"
     },
     {
         "code": "sq",
+        "iso639_2": "alb",
         "name": "Albanian",
         "native": "Shqip"
     },
     {
         "code": "sr",
+        "iso639_2": "scc",
         "name": "Serbian",
         "native": "Српски"
     },
     {
         "code": "ss",
+        "iso639_2": "ssw",
         "name": "Swati",
         "native": "SiSwati"
     },
     {
         "code": "st",
+        "iso639_2": "sot",
         "name": "Southern Sotho",
         "native": "Sesotho"
     },
     {
         "code": "su",
+        "iso639_2": "sun",
         "name": "Sundanese",
         "native": "Basa Sunda"
     },
     {
         "code": "sv",
+        "iso639_2": "swe",
         "name": "Swedish",
         "native": "Svenska"
     },
     {
         "code": "sw",
+        "iso639_2": "swa",
         "name": "Swahili",
         "native": "Kiswahili"
     },
     {
         "code": "ta",
+        "iso639_2": "tam",
         "name": "Tamil",
         "native": "தமிழ்"
     },
     {
         "code": "te",
+        "iso639_2": "tel",
         "name": "Telugu",
         "native": "తెలుగు"
     },
     {
         "code": "tg",
+        "iso639_2": "tgk",
         "name": "Tajik",
         "native": "Тоҷикӣ"
     },
     {
         "code": "th",
+        "iso639_2": "tha",
         "name": "Thai",
         "native": "ไทย / Phasa Thai"
     },
     {
         "code": "ti",
+        "iso639_2": "tir",
         "name": "Tigrinya",
         "native": "ትግርኛ"
     },
     {
         "code": "tk",
+        "iso639_2": "tuk",
         "name": "Turkmen",
         "native": "Туркмен / تركمن"
     },
     {
         "code": "tl",
+        "iso639_2": "tgl",
         "name": "Tagalog / Filipino",
         "native": "Tagalog"
     },
     {
         "code": "tn",
+        "iso639_2": "tsn",
         "name": "Tswana",
         "native": "Setswana"
     },
     {
         "code": "to",
+        "iso639_2": "ton",
         "name": "Tonga",
         "native": "Lea Faka-Tonga"
     },
     {
         "code": "tr",
+        "iso639_2": "tur",
         "name": "Turkish",
         "native": "Türkçe"
     },
     {
         "code": "ts",
+        "iso639_2": "tso",
         "name": "Tsonga",
         "native": "Xitsonga"
     },
     {
         "code": "tt",
+        "iso639_2": "tat",
         "name": "Tatar",
         "native": "Tatarça"
     },
     {
         "code": "tw",
+        "iso639_2": "twi",
         "name": "Twi",
         "native": "Twi"
     },
     {
         "code": "ty",
+        "iso639_2": "tah",
         "name": "Tahitian",
         "native": "Reo Mā`ohi"
     },
     {
         "code": "ug",
+        "iso639_2": "uig",
         "name": "Uyghur",
         "native": "Uyƣurqə / ئۇيغۇرچە"
     },
     {
         "code": "uk",
+        "iso639_2": "ukr",
         "name": "Ukrainian",
         "native": "Українська"
     },
     {
         "code": "ur",
+        "iso639_2": "urd",
         "name": "Urdu",
         "native": "اردو"
     },
     {
         "code": "uz",
+        "iso639_2": "uzb",
         "name": "Uzbek",
         "native": "Ўзбек"
     },
     {
         "code": "ve",
+        "iso639_2": "ven",
         "name": "Venda",
         "native": "Tshivenḓa"
     },
     {
         "code": "vi",
+        "iso639_2": "vie",
         "name": "Vietnamese",
         "native": "Tiếng Việt"
     },
     {
         "code": "vo",
+        "iso639_2": "vol",
         "name": "Volapük",
         "native": "Volapük"
     },
     {
         "code": "wa",
+        "iso639_2": "wln",
         "name": "Walloon",
         "native": "Walon"
     },
     {
         "code": "wo",
+        "iso639_2": "wol",
         "name": "Wolof",
         "native": "Wollof"
     },
     {
         "code": "xh",
+        "iso639_2": "xho",
         "name": "Xhosa",
         "native": "isiXhosa"
     },
     {
         "code": "yi",
+        "iso639_2": "yid",
         "name": "Yiddish",
         "native": "ייִדיש"
     },
     {
         "code": "yo",
+        "iso639_2": "yor",
         "name": "Yoruba",
         "native": "Yorùbá"
     },
     {
         "code": "za",
+        "iso639_2": "zha",
         "name": "Zhuang",
         "native": "Cuengh / Tôô / 壮语"
     },
     {
         "code": "zh",
+        "iso639_2": "chi",
         "name": "Chinese",
         "native": "中文"
     },
     {
         "code": "zu",
+        "iso639_2": "zul",
         "name": "Zulu",
         "native": "isiZulu"
     }

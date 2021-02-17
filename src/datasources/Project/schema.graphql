@@ -1,6 +1,11 @@
 type Query {
     projectAccessTypes: [ProjectAccessType!]!
     defaultProjectAccessType: ProjectAccessType!
+    imdbSubtitles(
+        language: String! @stringLength(min: 2, max: 2)
+        imdbId: String @stringLength(min: 7, max: 9)
+        title: String @stringLength(max: 100)
+    ): String
 }
 
 type ProjectAccessType {

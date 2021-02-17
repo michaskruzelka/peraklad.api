@@ -1,4 +1,4 @@
-import { Category, SubtitlesSubcategory } from '../Project/types';
+import { Category, SubtitlesSubCategory } from '../Project/types';
 import { FileFormat, FileFormatCode, CategoryFileFormats } from './types';
 
 const SRT_FILE_FORMAT: FileFormat = {
@@ -50,12 +50,12 @@ const XLIFF_FILE_FORMAT: FileFormat = {
 
 const FILE_FORMATS: CategoryFileFormats = {
     [Category.SUBTITLES]: {
-        [SubtitlesSubcategory.OFFLINE]: [
+        [SubtitlesSubCategory.OFFLINE]: [
             SRT_FILE_FORMAT,
             VTT_FILE_FORMAT,
             SMI_FILE_FORMAT,
         ],
-        [SubtitlesSubcategory.ONLINE]: [
+        [SubtitlesSubCategory.ONLINE]: [
             SBV_FILE_FORMAT,
             SRT_FILE_FORMAT,
             VTT_FILE_FORMAT,

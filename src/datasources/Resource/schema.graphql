@@ -1,7 +1,7 @@
 type Query {
     fileFormats(
         category: FileCategory!
-        subcategory: SubtitlesSubcategory
+        subCategory: SubtitlesSubCategory
     ): [FileFormat!]!
 }
 
@@ -18,7 +18,7 @@ enum FileCategory {
     SOFTWARE
 }
 
-enum SubtitlesSubcategory {
+enum SubtitlesSubCategory {
     OFFLINE
     ONLINE
 }

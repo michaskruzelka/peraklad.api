@@ -1,4 +1,4 @@
-import { Category, SubtitlesSubcategory } from '../Project/types';
+import { Category, SubtitlesSubCategory } from '../Project/types';
 
 enum FileFormatCode {
     SRT = 'srt',
@@ -19,8 +19,8 @@ type FileFormat = {
 };
 
 type SubtitlesFileFormats = {
-    [SubtitlesSubcategory.OFFLINE]: FileFormat[];
-    [SubtitlesSubcategory.ONLINE]: FileFormat[];
+    [SubtitlesSubCategory.OFFLINE]: FileFormat[];
+    [SubtitlesSubCategory.ONLINE]: FileFormat[];
 };
 
 type CategoryFileFormats = {
@@ -30,7 +30,7 @@ type CategoryFileFormats = {
 
 type FileFormatsArgs = {
     category: Category;
-    subcategory?: SubtitlesSubcategory | null;
+    subCategory?: SubtitlesSubCategory | null;
 };
 
 type FileFormatsResponse = FileFormat[];
@@ -38,7 +38,7 @@ type FileFormatsResponse = FileFormat[];
 interface IDataSource {
     getFileFormats(
         category: Category,
-        subCategory?: SubtitlesSubcategory
+        subCategory?: SubtitlesSubCategory
     ): FileFormat[];
 }
 

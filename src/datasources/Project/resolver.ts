@@ -1,5 +1,10 @@
 import { DataSources } from '../../datasources/types';
-import { AccessTypeListResponse, AccessTypeResponse } from './types';
+import { SearchParams } from './Category/types';
+import {
+    AccessTypeListResponse,
+    AccessTypeResponse,
+    IMDBSubtitlesArgs,
+} from './types';
 
 const resolver = {
     Query: {
@@ -8,9 +13,9 @@ const resolver = {
             __: any,
             { dataSources }: { dataSources: DataSources }
         ): AccessTypeListResponse => {
-            const accessTypes = dataSources.project.getAccessTypes();
-            const defaultAccessType = dataSources.project.getDefaultAccessType();
-            
+            const accessTypes = dataSources.offlineSubtitlesProject.getAccessTypes();
+            const defaultAccessType = dataSources.offlineSubtitlesProject.getDefaultAccessType();
+
             return accessTypes.map((accessType) => {
                 return {
                     ...accessType,
@@ -23,9 +28,28 @@ const resolver = {
             __: any,
             { dataSources }: { dataSources: DataSources }
         ): AccessTypeResponse => {
-            const defaultAccessType = dataSources.project.getDefaultAccessType();
-            
+            const defaultAccessType = dataSources.offlineSubtitlesProject.getDefaultAccessType();
+
             return { ...defaultAccessType, isDefault: true };
+        },
+        imdbSubtitles: async (
+            _: any,
+            args: IMDBSubtitlesArgs,
+            { dataSources }: { dataSources: DataSources }
+        ) => {
+            const searchParams: SearchParams = {
+                language: dataSources.language.get(args.language),
+                imdbId: args.imdbId
+                    ? dataSources.imdb.validateImdbId(args.imdbId)
+                    : null,
+                title: args.title,
+            };
+
+            await dataSources.offlineSubtitlesProject.searchForFiles(
+                searchParams
+            );
+
+            return 'test';
         },
     },
 };
