@@ -8,6 +8,8 @@ import {
 type OfflineSearchParams = {
     languages: ILanguage[];
     imdbId: string;
+    season?: number;
+    episode?: number;
 };
 
 type FileInfoResult = {

@@ -4,6 +4,8 @@ type Query {
     imdbSubtitles(
         languages: [String!]! @stringLength(min: 2, max: 2)
         imdbId: String! @stringLength(min: 7, max: 9)
+        season: Int @range(min: 0, max: 100)
+        episode: Int @range(min: 0, max: 100)
         limit: Int @range(min: 0, max: 10)
     ): ImdbSubtitlesResponse
 }

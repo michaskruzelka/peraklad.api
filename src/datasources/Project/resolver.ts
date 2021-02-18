@@ -51,6 +51,8 @@ const resolver = {
                     dataSources.language.get(language)
                 ),
                 imdbId: dataSources.imdb.validateImdbId(args.imdbId, false),
+                season: args.season || undefined,
+                episode: args.episode || undefined,
             };
 
             const result = await dataSources.offlineSubtitlesProject.searchForFiles(

@@ -20,7 +20,7 @@ class Offline implements ISubCategory {
                     url: fileInfo.url,
                     fileName: fileInfo.filename,
                     format: String(fileInfo.format).toLowerCase(),
-                    language: fileInfo.langcode,
+                    language: fileInfo.langcode.toLowerCase(),
                     encoding: fileInfo.encoding,
                 })),
         };

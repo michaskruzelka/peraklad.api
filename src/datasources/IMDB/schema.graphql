@@ -34,7 +34,7 @@ type Episode implements IMDB {
     imdbRating: Float
     posterSrc: String
     type: String!
-    series: Series @cost(value: 60)
+    series: Series @cost(value: 100)
     seasonNum: Int!
     episodeNum: Int!
     plot: String
@@ -50,6 +50,6 @@ type Series implements IMDB {
     episodes(
         season: Int @range(min: 1, max: 100)
         episode: Int @range(max: 100)
-    ): [Episode] @cost(value: 60)
+    ): [Episode] @cost(value: 100)
     plot: String
 }

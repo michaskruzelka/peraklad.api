@@ -53,6 +53,8 @@ enum SubtitlesSubCategory {
 type IMDBSubtitlesArgs = {
     languages: string[];
     imdbId: string;
+    season?: number | null;
+    episode?: number | null;
     limit?: number | null;
 };
 

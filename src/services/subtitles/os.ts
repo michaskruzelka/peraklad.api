@@ -1,11 +1,6 @@
 import OS from 'opensubtitles-api';
 
-import {
-    Service,
-    SearchParams,
-    ServicesCodes,
-    ServicesNames,
-} from './types';
+import { Service, SearchParams, ServicesCodes, ServicesNames } from './types';
 import {
     OPENSUBTITLES_UA,
     OPENSUBTITLES_USERNAME,
@@ -38,6 +33,8 @@ const searchService: Service = {
                 .map((language) => language.iso639_2)
                 .join(','),
             imdbid: searchParams.imdbId,
+            season: searchParams.season ? String(searchParams.season) : null,
+            episode: searchParams.episode ? String(searchParams.episode) : null,
             limit: String(limit),
             gzip: true,
         };

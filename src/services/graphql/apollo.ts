@@ -19,7 +19,7 @@ const config: Config = {
     introspection: true,
     playground: true,
     validationRules,
-    debug: ('dev' === process.env.NODE_ENV),
+    debug: ['dev', 'development'].includes(String(process.env.NODE_ENV)),
 };
 
 export { config };
