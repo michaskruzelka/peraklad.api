@@ -36,6 +36,7 @@ const typesNotToAugment = [
     'ABC',
     'Spelling',
     'FileFormat',
+    'SubtitlesSearchService',
     'ValidatedInputErrorOutput',
 ];
 

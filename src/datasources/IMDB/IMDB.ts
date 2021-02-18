@@ -17,7 +17,7 @@ import {
 import { OMDB_API_KEY, OMDB_API_HOSTNAME, IMDB_TYPES } from './config';
 
 class IMDB extends RESTDataSource implements IDataSource {
-    private imdbIdPattern = /^(tt)\d{7}$/;
+    private imdbIdPattern = /^(tt)?\d{7}$/;
 
     constructor() {
         super();
@@ -216,22 +216,34 @@ class IMDB extends RESTDataSource implements IDataSource {
      * Validates imdb ID prepending 'tt' prefix beforehand
      *
      * @param imdbId imdb ID
+     * @param withPrefix to prepend 'tt' prefix to id
      *
      * @returns the validated imdb ID
      *
      * @throws an error when imdb ID is not valid
      */
-    public validateImdbId(imdbId: string | number): string {
-        imdbId = String(imdbId);
-        if (imdbId.indexOf('tt') !== 0) {
-            imdbId = 'tt' + imdbId;
+    public validateImdbId(
+        imdbId: string | number,
+        withPrefix: boolean = true
+    ): string {
+        const prefix = 'tt';
+        let validatedImdbId = String(imdbId);
+
+        if (validatedImdbId.indexOf(prefix) !== 0) {
+            if (withPrefix) {
+                validatedImdbId = prefix + validatedImdbId;
+            }
+        } else {
+            if (!withPrefix) {
+                validatedImdbId = validatedImdbId.substring(prefix.length);
+            }
         }
 
-        if (!this.imdbIdPattern.test(imdbId)) {
+        if (!this.imdbIdPattern.test(validatedImdbId)) {
             throw new ValidationError('Specified Imdb ID is not valid');
         }
 
-        return imdbId;
+        return validatedImdbId;
     }
 
     /**

@@ -11,8 +11,11 @@ class Subtitles implements ICategory {
         return this.subCategory;
     }
 
-    public async searchForFiles(searchParams: SearchParams): Promise<any> {
-        return this.subCategory.searchForFiles(searchParams);
+    public async searchForFiles(
+        searchParams: SearchParams,
+        limit?: number
+    ): Promise<any> {
+        return this.subCategory.searchForFiles(searchParams, limit);
     }
 }
 

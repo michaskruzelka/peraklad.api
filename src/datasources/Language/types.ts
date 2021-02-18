@@ -2,6 +2,7 @@ interface IDataSource {
     getList: (limit: number, type: ListType) => ILanguage[];
     get: (code: string) => ILanguage;
     getCurrentLocale: () => Locale;
+    isValidCodes(codes: string[]): boolean;
 }
 
 interface ILanguage {

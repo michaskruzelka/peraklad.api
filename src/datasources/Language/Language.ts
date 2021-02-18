@@ -72,7 +72,7 @@ class Language extends DataSource implements IDataSource {
             if (returnDefaultOnError) {
                 return this.getDefaultLanguage();
             }
-            
+
             throw new Error('Language not found.');
         }
 
@@ -99,6 +99,19 @@ class Language extends DataSource implements IDataSource {
      */
     public getCurrentLocale(): Locale {
         return (process.env.LOCALE ?? this.getDefaultLocale()) as Locale;
+    }
+
+    /**
+     * Determines whether language codes are valid
+     *
+     * @param list of langauge codes
+     *
+     * @returns true if every code in the list is valid
+     */
+    public isValidCodes(codes: string[]): boolean {
+        const allLanguagesCodes = languages.map((language) => language.code);
+
+        return codes && codes.every((code) => allLanguagesCodes.includes(code));
     }
 
     /**

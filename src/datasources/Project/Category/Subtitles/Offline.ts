@@ -1,72 +1,28 @@
-import OS from 'opensubtitles-api';
-import { ValidationError } from 'apollo-server';
-
+import { subtitlesService } from '../../../../services/subtitles';
 import { ISubCategory } from '../types';
-import {
-    OfflineSearchParams,
-    SearchServicesCodes,
-    SearchService,
-    SearchResult,
-} from './types';
-import {
-    OPENSUBTITLES_UA,
-    OPENSUBTITLES_USERNAME,
-    OPENSUBTITLES_PASSWORD,
-} from './config';
-
-const searchService: SearchService = {
-    code: SearchServicesCodes.OS,
-    execute: async (searchParams: OfflineSearchParams) => {
-        if (
-            !(
-                OPENSUBTITLES_UA &&
-                OPENSUBTITLES_USERNAME &&
-                OPENSUBTITLES_PASSWORD
-            )
-        ) {
-            throw new Error('Opensubtitles credentials not fully set.');
-        }
-
-        const client = new OS({
-            useragent: OPENSUBTITLES_UA,
-            username: OPENSUBTITLES_USERNAME,
-            password: OPENSUBTITLES_PASSWORD,
-            ssl: true,
-        });
-
-        const input = {
-            sublanguageid: searchParams.language.iso639_2,
-            imdbid: searchParams.imdbId,
-            query: searchParams.title,
-            limit: '5',
-            gzip: true,
-        };
-
-        return await client.search(input);
-    },
-};
+import { OfflineSearchParams, SearchResult } from './types';
 
 class Offline implements ISubCategory {
     public async searchForFiles(
-        searchParams: OfflineSearchParams
+        searchParams: OfflineSearchParams,
+        limit: number = 5
     ): Promise<SearchResult> {
-        if (!(searchParams.imdbId || searchParams.title)) {
-            throw new ValidationError('ImdbId or Title not specified.');
-        }
+        const result = await subtitlesService.search(searchParams, limit);
 
-        const result = await searchService.execute(searchParams);
-        
         return {
-            service: searchService.code,
-            filesInfo: (result[searchParams.language.code] || []).map(
-                (fileInfo: any) => ({
+            service: {
+                code: subtitlesService.code,
+                name: subtitlesService.name,
+            },
+            filesInfo: Object.values(result)
+                .flat(1)
+                .map((fileInfo: any) => ({
                     url: fileInfo.url,
                     fileName: fileInfo.filename,
                     format: String(fileInfo.format).toLowerCase(),
-                    language: searchParams.language,
+                    language: fileInfo.langcode,
                     encoding: fileInfo.encoding,
-                })
-            ),
+                })),
         };
     }
 }

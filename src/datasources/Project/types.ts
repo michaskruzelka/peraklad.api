@@ -51,15 +51,15 @@ enum SubtitlesSubCategory {
 }
 
 type IMDBSubtitlesArgs = {
-    language: string;
-    imdbId?: string | null;
-    title?: string | null;
+    languages: string[];
+    imdbId: string;
+    limit?: number | null;
 };
 
 interface IDataSource {
     getAccessTypes: () => AccessType[];
     getDefaultAccessType: () => AccessType;
-    searchForFiles(searchParams: SearchParams): Promise<any>;
+    searchForFiles(searchParams: SearchParams, limit?: number): Promise<any>;
 }
 
 export {

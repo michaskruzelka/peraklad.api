@@ -1,19 +1,13 @@
 import { ILanguage } from 'datasources/Language/types';
 import { FileFormat } from 'datasources/Resource/types';
+import {
+    ServicesCodes,
+    ServicesNames,
+} from '../../../../services/subtitles/types';
 
 type OfflineSearchParams = {
-    language: ILanguage;
-    imdbId?: string | null;
-    title?: string | null;
-};
-
-enum SearchServicesCodes {
-    OS = 'opensubtitles',
-}
-
-type SearchService = {
-    code: SearchServicesCodes;
-    execute: (searchParams: OfflineSearchParams) => any;
+    languages: ILanguage[];
+    imdbId: string;
 };
 
 type FileInfoResult = {
@@ -21,27 +15,32 @@ type FileInfoResult = {
     fileName: string;
     encoding: string;
     format: string;
-    language: ILanguage;
+    language: string;
+};
+
+type SearchService = {
+    code: ServicesCodes;
+    name: ServicesNames;
 };
 
 type SearchResult = {
-    service?: SearchServicesCodes;
+    service: SearchService;
     filesInfo: FileInfoResult[];
 };
 
 type FileInfoResponse = FileInfoResult & {
     format: FileFormat;
+    language: ILanguage;
 };
 type SearchResponse = {
-    service?: SearchServicesCodes;
+    service: SearchService;
     filesInfo: FileInfoResponse[];
 };
 
 export {
     OfflineSearchParams,
-    SearchServicesCodes,
-    SearchService,
     SearchResult,
     SearchResponse,
     FileInfoResult,
+    SearchService,
 };

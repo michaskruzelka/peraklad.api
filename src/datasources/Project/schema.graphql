@@ -2,14 +2,14 @@ type Query {
     projectAccessTypes: [ProjectAccessType!]!
     defaultProjectAccessType: ProjectAccessType!
     imdbSubtitles(
-        language: String! @stringLength(min: 2, max: 2)
-        imdbId: String @stringLength(min: 7, max: 9)
-        title: String @stringLength(max: 100)
+        languages: [String!]! @stringLength(min: 2, max: 2)
+        imdbId: String! @stringLength(min: 7, max: 9)
+        limit: Int @range(min: 0, max: 10)
     ): ImdbSubtitlesResponse
 }
 
 type ImdbSubtitlesResponse {
-    service: String
+    service: SubtitlesSearchService!
     filesInfo: [ImdbSubtitlesFile]!
 }
 
@@ -19,6 +19,11 @@ type ImdbSubtitlesFile {
     encoding: String!
     format: FileFormat!
     language: Language!
+}
+
+type SubtitlesSearchService {
+    code: String!
+    name: String!
 }
 
 type ProjectAccessType {

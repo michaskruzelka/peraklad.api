@@ -39,12 +39,16 @@ class Project extends RESTDataSource implements IDataSource {
      * Searches for files
      *
      * @param searchParams search parameters
+     * @param limit search limit
      *
      * @returns files list
      */
-    public async searchForFiles(searchParams: SearchParams): Promise<any> {
+    public async searchForFiles(
+        searchParams: SearchParams,
+        limit?: number
+    ): Promise<any> {
         try {
-            return this.category.searchForFiles(searchParams);
+            return this.category.searchForFiles(searchParams, limit);
         } catch (e) {
             this.context.logger.log(
                 'info',

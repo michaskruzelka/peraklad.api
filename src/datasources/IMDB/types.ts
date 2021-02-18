@@ -127,7 +127,7 @@ interface IDataSource {
         episodeNum: number
     ) => Promise<IIMDB>;
     createEmptyBaseMovieObject: () => IIMDB;
-    validateImdbId(imdbId: string | number): string;
+    validateImdbId(imdbId: string | number, withPrefix: boolean): string;
 }
 
 export {

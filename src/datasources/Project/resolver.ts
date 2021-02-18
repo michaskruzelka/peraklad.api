@@ -9,6 +9,7 @@ import {
     IMDBSubtitlesArgs,
     SubtitlesSubCategory,
 } from './types';
+import { ValidationError } from 'apollo-server';
 
 const resolver = {
     Query: {
@@ -41,16 +42,20 @@ const resolver = {
             args: IMDBSubtitlesArgs,
             { dataSources }: { dataSources: DataSources }
         ): Promise<SearchResponse> => {
+            if (!dataSources.language.isValidCodes(args.languages)) {
+                throw new ValidationError('Languages are not valid.');
+            }
+
             const searchParams: SearchParams = {
-                language: dataSources.language.get(args.language),
-                imdbId: args.imdbId
-                    ? dataSources.imdb.validateImdbId(args.imdbId)
-                    : null,
-                title: args.title,
+                languages: args.languages.map((language: string) =>
+                    dataSources.language.get(language)
+                ),
+                imdbId: dataSources.imdb.validateImdbId(args.imdbId, false),
             };
 
             const result = await dataSources.offlineSubtitlesProject.searchForFiles(
-                searchParams
+                searchParams,
+                args.limit || undefined
             );
 
             const fileFormats = dataSources.resource.getFileFormats(
@@ -61,16 +66,21 @@ const resolver = {
             return {
                 ...result,
                 filesInfo: result.filesInfo
-                    .filter((fileInfo: FileInfoResult) =>
-                        fileFormats
-                            .map((fileFormat) => fileFormat.code)
-                            .includes(fileInfo.format as FileFormatCode)
+                    .filter(
+                        (fileInfo: FileInfoResult) =>
+                            fileFormats
+                                .map((fileFormat) => fileFormat.code)
+                                .includes(fileInfo.format as FileFormatCode) &&
+                            dataSources.language.isValidCodes([
+                                fileInfo.language,
+                            ])
                     )
                     .map((fileInfo: FileInfoResult) => ({
                         ...fileInfo,
                         format: fileFormats.find(
                             (fileFormat) => fileFormat.code === fileInfo.format
                         ),
+                        language: dataSources.language.get(fileInfo.language),
                     })),
             };
         },
