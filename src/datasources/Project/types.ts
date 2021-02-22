@@ -17,11 +17,9 @@ type AccessType = {
     code: AccessTypeCode;
 };
 
-type AccessTypeResponse = AccessType & {
+type ResolvedAccessType = AccessType & {
     isDefault: boolean;
 };
-
-type AccessTypeListResponse = AccessTypeResponse[];
 
 enum LevelID {
     PARENT = 1,
@@ -58,6 +56,10 @@ type IMDBSubtitlesArgs = {
     limit?: number | null;
 };
 
+type Project = {
+    type: number;
+};
+
 interface IDataSource {
     getAccessTypes: () => AccessType[];
     getDefaultAccessType: () => AccessType;
@@ -68,8 +70,7 @@ export {
     AccessTypeID,
     AccessTypeCode,
     AccessType,
-    AccessTypeResponse,
-    AccessTypeListResponse,
+    ResolvedAccessType,
     LevelID,
     LevelCode,
     Level,
@@ -77,4 +78,5 @@ export {
     Category,
     SubtitlesSubCategory,
     IMDBSubtitlesArgs,
+    Project,
 };

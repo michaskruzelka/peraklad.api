@@ -38,6 +38,7 @@ const typesNotToAugment = [
     'FileFormat',
     'SubtitlesSearchService',
     'ValidatedInputErrorOutput',
+    'Project',
 ];
 
 const schemaOptions: makeAugmentedSchemaOptions = {
@@ -48,9 +49,7 @@ const schemaOptions: makeAugmentedSchemaOptions = {
         query: {
             exclude: typesNotToAugment,
         },
-        mutation: {
-            exclude: typesNotToAugment,
-        },
+        mutation: false,
     },
 };
 

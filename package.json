@@ -8,15 +8,13 @@
         "apollo-datasource": "^0.7.2",
         "apollo-datasource-rest": "^0.9.7",
         "apollo-server-lambda": "^2.19.0",
-        "graphql": "^15.4.0",
         "graphql-depth-limit": "^1.1.0",
         "graphql-validation-complexity": "^0.4.2",
         "neo4j-driver": "^4.2.1",
         "neo4j-graphql-js": "2.18.0",
         "opensubtitles-api": "^5.1.2",
         "winston": "^3.3.3",
-        "winston-logzio": "^5.1.2",
-        "yarn": "^1.22.10"
+        "winston-logzio": "^5.1.2"
     },
     "devDependencies": {
         "@types/graphql-depth-limit": "^1.1.2",
@@ -31,6 +29,6 @@
         "build": "tsc",
         "postbuild": "recursive-copy src ./ -f '/(.graphql)$/' '/(.json)$/' '/(.cypher)$/' -w",
         "dev": "nodemon --watch src --exec yarn run build",
-        "start": "nodemon --exec ts-node src/index.dev.ts"
+        "start": "cross-env DEBUG=neo4j-graphql-js nodemon --exec ts-node src/index.dev.ts"
     }
 }

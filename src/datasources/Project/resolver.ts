@@ -3,13 +3,28 @@ import { SearchResponse, FileInfoResult } from './Category/Subtitles/types';
 import { FileFormatCode } from '../Resource/types';
 import { SearchParams } from './Category/types';
 import {
-    AccessTypeListResponse,
-    AccessTypeResponse,
+    AccessType,
+    ResolvedAccessType,
     Category,
     IMDBSubtitlesArgs,
     SubtitlesSubCategory,
+    Project,
 } from './types';
 import { ValidationError } from 'apollo-server';
+
+const isAccessTypeDefault = (
+    accessType: ResolvedAccessType,
+    dataSources: DataSources
+): boolean => {
+    if (accessType.isDefault !== undefined) {
+        return accessType.isDefault;
+    }
+
+    return (
+        dataSources.offlineSubtitlesProject.getDefaultAccessType().id ===
+        accessType.id
+    );
+};
 
 const resolver = {
     Query: {
@@ -17,22 +32,14 @@ const resolver = {
             _: any,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ): AccessTypeListResponse => {
-            const accessTypes = dataSources.offlineSubtitlesProject.getAccessTypes();
-            const defaultAccessType = dataSources.offlineSubtitlesProject.getDefaultAccessType();
-
-            return accessTypes.map((accessType) => {
-                return {
-                    ...accessType,
-                    isDefault: accessType.id === defaultAccessType.id,
-                };
-            });
+        ): AccessType[] => {
+            return dataSources.offlineSubtitlesProject.getAccessTypes();
         },
         defaultProjectAccessType: (
             _: any,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ): AccessTypeResponse => {
+        ): ResolvedAccessType => {
             const defaultAccessType = dataSources.offlineSubtitlesProject.getDefaultAccessType();
 
             return { ...defaultAccessType, isDefault: true };
@@ -85,6 +92,26 @@ const resolver = {
                         language: dataSources.language.get(fileInfo.language),
                     })),
             };
+        },
+    },
+    MovieSubtitles: {
+        accessType: (
+            project: Project,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ) => {
+            return dataSources.offlineSubtitlesProject.getAccessTypeById(
+                project.type
+            );
+        },
+    },
+    ProjectAccessType: {
+        isDefault: (
+            accessType: ResolvedAccessType,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): boolean => {
+            return isAccessTypeDefault(accessType, dataSources);
         },
     },
 };
