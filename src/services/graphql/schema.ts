@@ -1,4 +1,4 @@
-import { loadFilesSync } from '@graphql-tools/load-files';
+import { loadFiles } from '@graphql-tools/load-files';
 import { mergeTypeDefs } from '@graphql-tools/merge';
 import { DocumentNode, GraphQLSchema } from 'graphql';
 import path from 'path';
@@ -12,59 +12,63 @@ import {
     makeAugmentedSchemaOptions,
 } from 'neo4j-graphql-js';
 
-import { resolvers } from './resolvers';
+import { getResolvers } from './resolvers';
 import { resolveTypes } from './typeResolver';
 
-const typeDefsList: DocumentNode[] = [
-    ...loadFilesSync(path.join(__dirname, '../../**/*.graphql')),
-    ...range.getTypeDefs(),
-    ...stringLength.getTypeDefs(),
-    ...ValidateDirectiveVisitor.getMissingCommonTypeDefs(),
-];
-const typeDefsAsOne: DocumentNode = mergeTypeDefs(typeDefsList);
-
-const typesNotToAugment = [
-    'Language',
-    'GroupedLanguages',
-    'Movie',
-    'Episode',
-    'IMDB',
-    'Series',
-    'ProjectAccessType',
-    'ImdbSubtitlesResponse',
-    'ImdbSubtitlesFile',
-    'ABC',
-    'Spelling',
-    'FileFormat',
-    'SubtitlesSearchService',
-    'ValidatedInputErrorOutput',
-];
-
-const schemaOptions: makeAugmentedSchemaOptions = {
-    typeDefs: typeDefsAsOne,
-    resolvers,
-    schemaDirectives: { range, stringLength },
-    config: {
-        query: {
-            exclude: typesNotToAugment,
+const getSchema = async (): Promise<GraphQLSchema> => {
+    const typeDefsList: DocumentNode[] = [
+        ...await loadFiles(path.join(__dirname, '../../**/*.graphql')),
+        ...range.getTypeDefs(),
+        ...stringLength.getTypeDefs(),
+        ...ValidateDirectiveVisitor.getMissingCommonTypeDefs(),
+    ];
+    const typeDefsAsOne: DocumentNode = mergeTypeDefs(typeDefsList);
+    
+    const typesNotToAugment = [
+        'Language',
+        'GroupedLanguages',
+        'Movie',
+        'Episode',
+        'IMDB',
+        'Series',
+        'ProjectAccessType',
+        'ImdbSubtitlesResponse',
+        'ImdbSubtitlesFile',
+        'ABC',
+        'Spelling',
+        'FileFormat',
+        'SubtitlesSearchService',
+        'ValidatedInputErrorOutput',
+    ];
+    
+    const schemaOptions: makeAugmentedSchemaOptions = {
+        typeDefs: typeDefsAsOne,
+        resolvers: await getResolvers(),
+        schemaDirectives: { range, stringLength },
+        config: {
+            query: {
+                exclude: typesNotToAugment,
+            },
+            mutation: {
+                exclude: typesNotToAugment,
+            },
         },
-        mutation: {
-            exclude: typesNotToAugment,
-        },
-    },
+    };
+
+    const schema = makeAugmentedSchema(schemaOptions);
+
+    // Prevents neo4j auto-generated input types (start with '_')
+    // from validation check
+    Object.values(schema.getTypeMap()).forEach((type: any) => {
+        if ('_' === type.name.charAt(0)) {
+            type.mustValidateInput = false;
+        }
+    });
+
+    ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
+    resolveTypes(schema);
+
+    return schema;
 };
 
-const schema: GraphQLSchema = makeAugmentedSchema(schemaOptions);
-
-// Prevents neo4j auto-generated input types (start with '_')
-// from validation check
-Object.values(schema.getTypeMap()).forEach((type: any) => {
-    if ('_' === type.name.charAt(0)) {
-        type.mustValidateInput = false;
-    }
-});
-ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
-
-resolveTypes(schema);
-
-export { schema };
+export { getSchema };

@@ -2,10 +2,10 @@ import { Config } from 'apollo-server-core';
 import { Neo4jContext } from 'neo4j-graphql-js';
 import { getDataSources } from '../../datasources';
 import { logger, neo4j } from '../../services';
-import { schema } from './schema';
+import { getSchema } from './schema';
 import { validationRules } from './validation';
 
-const config: Config = {
+const getConfig = async (): Promise<Config> => ({
     context: ({ req }: Neo4jContext) => {
         return {
             req,
@@ -14,12 +14,12 @@ const config: Config = {
             logger: logger.getLogger(),
         };
     },
-    schema,
+    schema: await getSchema(),
     dataSources: getDataSources,
     introspection: true,
     playground: true,
     validationRules,
     debug: ['dev', 'development'].includes(String(process.env.NODE_ENV)),
-};
+});
 
-export { config };
+export { getConfig };

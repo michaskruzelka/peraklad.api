@@ -1,9 +1,10 @@
 import { ApolloServer } from 'apollo-server-lambda';
 import { graphql } from './services';
 
-const server = new ApolloServer(graphql.apollo.config);
-
-exports.handler = server.createHandler();
+(async () => {
+    const server = new ApolloServer(await graphql.apollo.getConfig());
+    exports.handler = server.createHandler();
+})();
 
 // Uncomment the code below in case you want to close some connections
 // (for example, logger.close()) after the run

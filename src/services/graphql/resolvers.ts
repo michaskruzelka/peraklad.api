@@ -1,12 +1,14 @@
-import { loadFilesSync } from '@graphql-tools/load-files';
+import { loadFiles } from '@graphql-tools/load-files';
 import { mergeResolvers } from '@graphql-tools/merge';
 import { IResolvers } from 'graphql-tools';
 import path from 'path';
 
-const resolversArray = loadFilesSync(
-    path.join(__dirname, '../../datasources/**/resolver.*')
-);
+const getResolvers = async (): Promise<IResolvers> => {
+    const resolversArray = await loadFiles(
+        path.join(__dirname, '../../datasources/**/resolver.*')
+    );
 
-const resolvers: IResolvers = mergeResolvers(resolversArray);
+    return mergeResolvers(resolversArray);
+};
 
-export { resolvers };
+export { getResolvers };

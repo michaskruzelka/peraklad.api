@@ -1,13 +1,14 @@
 import { ApolloServer } from 'apollo-server';
 import { graphql } from './services';
 
-const server = new ApolloServer(graphql.apollo.config);
+(async () => {
+    const server = new ApolloServer(await graphql.apollo.getConfig());
 
-if (process.env.NODE_ENV !== 'test') {
-    server.listen().then(() => {
-        console.log(`
-        Server is running!
-        Listening on port 4000
-      `);
-    });
-}
+    if (process.env.NODE_ENV !== 'test') {
+        await server.listen();
+        console.log(
+            `Server is running!
+             Listening on port 4000`
+        );
+    }
+})();
