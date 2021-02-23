@@ -5,7 +5,33 @@ import {
     Level,
     LevelID,
     LevelCode,
+    Status,
+    StatusID,
+    StatusCode,
 } from './types';
+
+const STATUSES: Status[] = [
+    {
+        id: StatusID.NEW,
+        code: StatusCode.NEW,
+    },
+    {
+        id: StatusID.IN_PROGRESS,
+        code: StatusCode.IN_PROGRESS,
+    },
+    {
+        id: StatusID.COMPLETED,
+        code: StatusCode.COMPLETED,
+    },
+    {
+        id: StatusID.FAILED,
+        code: StatusCode.FAILED,
+    },
+    {
+        id: StatusID.DELETED,
+        code: StatusCode.DELETED,
+    },
+];
 
 const ACCESS_TYPES: AccessType[] = [
     {
@@ -24,28 +50,19 @@ const ACCESS_TYPES: AccessType[] = [
 
 const DEFAULT_ACCESS_TYPE = AccessTypeID.RESTRICTED;
 
-const PARENT_LEVEL: Level = {
-    id: LevelID.PARENT,
-    code: LevelCode.PARENT,
-};
+const LEVELS: Level[] = [
+    {
+        id: LevelID.PARENT,
+        code: LevelCode.PARENT,
+    },
+    {
+        id: LevelID.SUB,
+        code: LevelCode.SUB,
+    },
+    {
+        id: LevelID.SELF,
+        code: LevelCode.SELF,
+    },
+];
 
-const SUB_LEVEL: Level = {
-    id: LevelID.SUB,
-    code: LevelCode.SUB,
-};
-
-const SELF_LEVEL: Level = {
-    id: LevelID.SELF,
-    code: LevelCode.SELF,
-};
-
-const LEVELS: Level[] = [SELF_LEVEL, SUB_LEVEL, PARENT_LEVEL];
-
-export {
-    ACCESS_TYPES,
-    DEFAULT_ACCESS_TYPE,
-    PARENT_LEVEL,
-    SUB_LEVEL,
-    SELF_LEVEL,
-    LEVELS,
-};
+export { ACCESS_TYPES, DEFAULT_ACCESS_TYPE, LEVELS, STATUSES };

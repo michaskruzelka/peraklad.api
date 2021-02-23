@@ -1,8 +1,8 @@
 import { Language } from './Language';
 import { IMDB } from './IMDB';
 import { Subtitles } from './Project/Category/Subtitles';
-import { Offline } from './Project/Category/Subtitles/Offline';
-import { Abc } from './Abc';
+import { Movie } from './Project/Category/Subtitles/Movie';
+import { ABC } from './ABC';
 import { Spelling } from './Spelling';
 import { DataSources } from './types';
 import { Resource } from './Resource';
@@ -12,11 +12,11 @@ const getDataSources = (): DataSources => {
     return {
         language: new Language(),
         imdb: new IMDB(),
-        movieSubtitlesProject: new Project(new Subtitles(new Offline())),
-        abc: new Abc(),
+        movieSubtitlesProject: new Project(new Subtitles(new Movie())),
+        abc: new ABC(),
         spelling: new Spelling(),
         resource: new Resource(),
     };
 };
 
-export { getDataSources, Language, IMDB, Project, Abc, Spelling, Resource };
+export { getDataSources };

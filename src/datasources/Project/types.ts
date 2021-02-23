@@ -1,4 +1,28 @@
+import { Spelling } from '../Spelling/types';
+import { IABC } from '../ABC/types';
 import { SearchParams } from './Category/types';
+import { IResource } from 'datasources/Resource/types';
+
+enum StatusID {
+    NEW = 1,
+    IN_PROGRESS = 2,
+    COMPLETED = 3,
+    FAILED = 4,
+    DELETED = 5,
+}
+
+enum StatusCode {
+    NEW = 'new',
+    IN_PROGRESS = 'in_progress',
+    COMPLETED = 'completed',
+    FAILED = 'failed',
+    DELETED = 'deleted',
+}
+
+type Status = {
+    id: StatusID;
+    code: StatusCode;
+};
 
 enum AccessTypeID {
     PUBLIC = 1,
@@ -43,9 +67,9 @@ enum Category {
     SOFTWARE = 'SOFTWARE',
 }
 
-enum SubtitlesSubCategory {
-    OFFLINE = 'OFFLINE',
-    ONLINE = 'ONLINE',
+enum SubCategory {
+    OFFLINE = 'MOVIE',
+    ONLINE = 'VIDEO_STREAM',
 }
 
 type IMDBSubtitlesArgs = {
@@ -56,15 +80,17 @@ type IMDBSubtitlesArgs = {
     limit?: number | null;
 };
 
-type Project = {
+type IProject = {
     level: Level;
+    resource: IResource;
+    category: Category;
+    subCategory?: SubCategory;
 };
 
 type ProjectSettings = {
-    abcId: number;
-    accessId: number;
-    spellingId: number;
-    statusId: number;
+    abc: IABC;
+    spelling: Spelling;
+    status: Status;
     access: AccessType;
 };
 
@@ -73,6 +99,7 @@ interface IDataSource {
     getDefaultAccessType: () => AccessType;
     getAccessTypeById: (id: number) => AccessType;
     getLevelById: (id: number) => Level;
+    getStatusById: (id: number) => Status;
     searchForFiles(searchParams: SearchParams, limit?: number): Promise<any>;
 }
 
@@ -86,8 +113,11 @@ export {
     Level,
     IDataSource,
     Category,
-    SubtitlesSubCategory,
+    SubCategory,
     IMDBSubtitlesArgs,
-    Project,
+    IProject,
     ProjectSettings,
+    Status,
+    StatusID,
+    StatusCode,
 };

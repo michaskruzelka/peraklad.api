@@ -5,7 +5,7 @@ import {
     ServicesNames,
 } from '../../../../services/subtitles/types';
 
-type OfflineSearchParams = {
+type MovieSubtitlesSearchParams = {
     languages: ILanguage[];
     imdbId: string;
     season?: number;
@@ -40,7 +40,7 @@ type SearchResponse = {
 };
 
 export {
-    OfflineSearchParams,
+    MovieSubtitlesSearchParams,
     SearchResult,
     SearchResponse,
     FileInfoResult,

@@ -1,6 +1,6 @@
-import { ABC, ABCId, ABCCode } from './types';
+import { IABC, ABCId, ABCCode } from './types';
 
-const ABC_LIST: ABC[] = [
+const ABC_LIST: IABC[] = [
     {
         id: ABCId.CYRILLIC,
         code: ABCCode.CYRILLIC,

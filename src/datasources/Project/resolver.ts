@@ -1,6 +1,6 @@
 import { ValidationError } from 'apollo-server';
 
-import { DataSources } from '../../datasources/types';
+import { DataSources } from '../types';
 import { SearchResponse, FileInfoResult } from './Category/Subtitles/types';
 import { FileFormatCode } from '../Resource/types';
 import { SearchParams } from './Category/types';
@@ -9,11 +9,14 @@ import {
     ResolvedAccessType,
     Category,
     IMDBSubtitlesArgs,
-    SubtitlesSubCategory,
-    Project,
+    SubCategory,
+    IProject,
     Level,
     ProjectSettings,
+    Status,
 } from './types';
+import { IABC } from '../ABC/types';
+import { Spelling } from '../Spelling/types';
 
 const isAccessTypeDefault = (
     accessType: ResolvedAccessType,
@@ -27,6 +30,10 @@ const isAccessTypeDefault = (
         dataSources.movieSubtitlesProject.getDefaultAccessType().id ===
         accessType.id
     );
+};
+
+const getLevel = (project: IProject, dataSources: DataSources): Level => {
+    return dataSources.movieSubtitlesProject.getLevelById(project.level.id);
 };
 
 const resolver = {
@@ -72,7 +79,7 @@ const resolver = {
 
             const fileFormats = dataSources.resource.getFileFormats(
                 Category.SUBTITLES,
-                SubtitlesSubCategory.OFFLINE
+                SubCategory.OFFLINE
             );
 
             return {
@@ -99,13 +106,11 @@ const resolver = {
     },
     MovieSubtitles: {
         level: (
-            project: Project,
+            project: IProject,
             __: any,
             { dataSources }: { dataSources: DataSources }
         ): Level => {
-            return dataSources.movieSubtitlesProject.getLevelById(
-                project.level.id
-            );
+            return getLevel(project, dataSources);
         },
     },
     ProjectSettings: {
@@ -116,6 +121,29 @@ const resolver = {
         ): AccessType => {
             return dataSources.movieSubtitlesProject.getAccessTypeById(
                 projectSettings.access.id
+            );
+        },
+        abc: (
+            projectSettings: ProjectSettings,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): IABC => {
+            return dataSources.abc.getABCById(projectSettings.abc.id);
+        },
+        spelling: (
+            projectSettings: ProjectSettings,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): Spelling => {
+            return dataSources.spelling.getById(projectSettings.spelling.id);
+        },
+        status: (
+            projectSettings: ProjectSettings,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): Status => {
+            return dataSources.movieSubtitlesProject.getStatusById(
+                projectSettings.status.id
             );
         },
     },

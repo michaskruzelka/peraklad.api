@@ -1,6 +1,6 @@
-import { OfflineSearchParams } from '../../datasources/Project/Category/Subtitles/types';
+import { MovieSubtitlesSearchParams } from '../../datasources/Project/Category/Subtitles/types';
 
-type SearchParams = OfflineSearchParams;
+type SearchParams = MovieSubtitlesSearchParams;
 
 enum ServicesCodes {
     OS = 'opensubtitles',

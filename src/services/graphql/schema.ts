@@ -42,6 +42,8 @@ const getSchema = async (): Promise<GraphQLSchema> => {
         'Project',
         'ProjectLevel',
         'ProjectSettings',
+        'ProjectStatus',
+        'ResourceStatus',
     ];
 
     const schemaOptions: makeAugmentedSchemaOptions = {

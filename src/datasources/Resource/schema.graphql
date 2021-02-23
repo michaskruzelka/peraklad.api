@@ -1,7 +1,7 @@
 type Query {
     fileFormats(
-        category: FileCategory!
-        subCategory: SubtitlesSubCategory
+        category: ProjectCategory!
+        subCategory: ProjectSubCategory
     ): [FileFormat!]!
 }
 
@@ -13,12 +13,16 @@ type FileFormat {
     description: String
 }
 
-enum FileCategory {
-    SUBTITLES
-    SOFTWARE
+type ResourceStatus {
+    id: Int!
+    code: String!
 }
 
-enum SubtitlesSubCategory {
-    OFFLINE
-    ONLINE
+type Resource {
+    id: ID!
+    name: String!
+    format: FileFormat! @cypher(statement: "RETURN { code: this.format }")
+    language: Language!
+    status: ResourceStatus!
+    project: Project! @relation(name: "TRANSLATING", direction: IN)
 }

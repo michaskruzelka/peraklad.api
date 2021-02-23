@@ -1,4 +1,5 @@
-import { Category, SubtitlesSubCategory } from '../Project/types';
+import { ILanguage } from '../Language/types';
+import { Category, IProject, SubCategory } from '../Project/types';
 
 enum FileFormatCode {
     SRT = 'srt',
@@ -10,6 +11,23 @@ enum FileFormatCode {
     XLIFF = 'xliff',
 }
 
+enum StatusID {
+    STARTED = 1,
+    FINISHED = 2,
+    DELETED = 3,
+}
+
+enum StatusCode {
+    STARTED = 'started',
+    FINISHED = 'finished',
+    DELETED = 'deleted',
+}
+
+type Status = {
+    id: StatusID;
+    code: StatusCode;
+};
+
 type FileFormat = {
     code: FileFormatCode;
     extensions: string[];
@@ -19,8 +37,8 @@ type FileFormat = {
 };
 
 type SubtitlesFileFormats = {
-    [SubtitlesSubCategory.OFFLINE]: FileFormat[];
-    [SubtitlesSubCategory.ONLINE]: FileFormat[];
+    [SubCategory.OFFLINE]: FileFormat[];
+    [SubCategory.ONLINE]: FileFormat[];
 };
 
 type CategoryFileFormats = {
@@ -30,16 +48,27 @@ type CategoryFileFormats = {
 
 type FileFormatsArgs = {
     category: Category;
-    subCategory?: SubtitlesSubCategory | null;
+    subCategory?: SubCategory | null;
 };
 
-type FileFormatsResponse = FileFormat[];
+interface IResource {
+    id: string;
+    name: string;
+    format: FileFormat;
+    language: ILanguage;
+    project: IProject;
+}
 
 interface IDataSource {
     getFileFormats(
         category: Category,
-        subCategory?: SubtitlesSubCategory
+        subCategory?: SubCategory
     ): FileFormat[];
+    getFileFormatByCode(
+        code: string,
+        category: Category,
+        subCategory?: SubCategory | null
+    ): FileFormat;
 }
 
 export {
@@ -49,5 +78,8 @@ export {
     IDataSource,
     SubtitlesFileFormats,
     FileFormatsArgs,
-    FileFormatsResponse,
+    Status,
+    StatusID,
+    StatusCode,
+    IResource,
 };

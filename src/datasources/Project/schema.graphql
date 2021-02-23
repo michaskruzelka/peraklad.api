@@ -39,13 +39,16 @@ type ProjectLevel {
     code: String!
 }
 
+type ProjectStatus {
+    id: Int!
+    code: String!
+}
+
 type ProjectSettings {
-    abcId: Int!
-    accessId: Int!
-    access: ProjectAccessType!
-        @cypher(statement: "WITH (this) RETURN { id: this.accessId }")
-    spellingId: Int!
-    statusId: Int!
+    abc: ABC! @cypher(statement: "RETURN { id: this.abc }")
+    access: ProjectAccessType! @cypher(statement: "RETURN { id: this.access }")
+    spelling: Spelling! @cypher(statement: "RETURN {id: this.spelling}")
+    status: ProjectStatus! @cypher(statement: "RETURN { id: this.status }")
 }
 
 interface Project {
@@ -54,23 +57,37 @@ interface Project {
     level: ProjectLevel!
     createdAt: DateTime!
     updatedAt: DateTime!
+    category: ProjectCategory!
+    subCategory: ProjectSubCategory
     description: String
     settings: ProjectSettings
+    resource: Resource
 }
 
 type MovieSubtitles implements Project {
     id: ID!
     name: String!
-    level: ProjectLevel!
-        @cypher(statement: "WITH (this) RETURN { id: this.level }")
+    level: ProjectLevel! @cypher(statement: "RETURN { id: this.level }")
     createdAt: DateTime!
     updatedAt: DateTime!
+    category: ProjectCategory!
+    subCategory: ProjectSubCategory
     description: String
     settings: ProjectSettings @relation(name: "HAS_SETTINGS", direction: OUT)
+    resource: Resource @relation(name: "TRANSLATING", direction: OUT)
     # imdb: [IMDB] @relation(name: "HAS_INFO", direction: OUT)
-    # resource: Resource @relation(name: "TRANSLATING", direction: OUT)
 }
 
 # type VideoStreamSubtitles implements Project {
 
 # }
+
+enum ProjectCategory {
+    SUBTITLES
+    SOFTWARE
+}
+
+enum ProjectSubCategory {
+    MOVIE
+    VIDEO_STREAM
+}

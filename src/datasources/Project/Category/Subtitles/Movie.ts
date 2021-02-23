@@ -1,10 +1,10 @@
 import { subtitlesService } from '../../../../services/subtitles';
 import { ISubCategory } from '../types';
-import { OfflineSearchParams, SearchResult } from './types';
+import { MovieSubtitlesSearchParams, SearchResult } from './types';
 
-class Offline implements ISubCategory {
+class Movie implements ISubCategory {
     public async searchForFiles(
-        searchParams: OfflineSearchParams,
+        searchParams: MovieSubtitlesSearchParams,
         limit: number = 5
     ): Promise<SearchResult> {
         const result = await subtitlesService.search(searchParams, limit);
@@ -27,4 +27,4 @@ class Offline implements ISubCategory {
     }
 }
 
-export { Offline };
+export { Movie };

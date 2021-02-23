@@ -1,8 +1,8 @@
 import { RESTDataSource } from 'apollo-datasource-rest';
 
 import { ICategory, SearchParams } from './Category/types';
-import { IDataSource, AccessType, Level } from './types';
-import { ACCESS_TYPES, DEFAULT_ACCESS_TYPE, LEVELS } from './config';
+import { IDataSource, AccessType, Level, Status } from './types';
+import { ACCESS_TYPES, DEFAULT_ACCESS_TYPE, LEVELS, STATUSES } from './config';
 
 class Project extends RESTDataSource implements IDataSource {
     private category: ICategory;
@@ -70,6 +70,25 @@ class Project extends RESTDataSource implements IDataSource {
         }
 
         return level;
+    }
+
+    /**
+     * Gets status by ID
+     *
+     * @param id status ID
+     *
+     * @returns status object
+     *
+     * @throws an error when status was not found
+     */
+    public getStatusById(id: number): Status {
+        const status = STATUSES.find((status) => status.id === id);
+
+        if (!status) {
+            throw new Error('Project status not found');
+        }
+
+        return status;
     }
 
     /**

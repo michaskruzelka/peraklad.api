@@ -1,5 +1,5 @@
-import { DataSources } from '../../datasources/types';
-import { SpellingResponse, SpellingListResponse } from './types';
+import { DataSources } from '../types';
+import { ResolvedSpelling, Spelling } from './types';
 
 const resolver = {
     Query: {
@@ -7,25 +7,30 @@ const resolver = {
             _: any,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ): SpellingListResponse => {
-            const spellings = dataSources.spelling.getSpellings();
-            const defaultSpelling = dataSources.spelling.getDefaultSpelling();
-
-            return spellings.map((spelling) => {
-                return {
-                    ...spelling,
-                    isDefault: spelling.id === defaultSpelling.id,
-                };
-            });
+        ): Spelling[] => {
+            return dataSources.spelling.getSpellings();
         },
         defaultSpelling: (
             _: any,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ): SpellingResponse => {
+        ): ResolvedSpelling => {
             const defaultSpelling = dataSources.spelling.getDefaultSpelling();
 
             return { ...defaultSpelling, isDefault: true };
+        },
+    },
+    Spelling: {
+        isDefault: (
+            spelling: ResolvedSpelling,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): boolean => {
+            if (undefined !== spelling.isDefault) {
+                return spelling.isDefault;
+            }
+
+            return dataSources.spelling.getDefaultSpelling().id === spelling.id;
         },
     },
 };

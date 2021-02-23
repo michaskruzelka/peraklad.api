@@ -1,4 +1,4 @@
-import { OfflineSearchParams } from './Subtitles/types';
+import { MovieSubtitlesSearchParams } from './Subtitles/types';
 
 interface ICategory {
     getSubCategory: () => ISubCategory;
@@ -8,7 +8,8 @@ interface ICategory {
     ) => Promise<any>;
 }
 
-type SearchParams = OfflineSearchParams;
+// It will be a union type in future
+type SearchParams = MovieSubtitlesSearchParams;
 
 interface ISubCategory {
     searchForFiles: (

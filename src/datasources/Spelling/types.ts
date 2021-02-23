@@ -13,22 +13,20 @@ type Spelling = {
     code: SpellingCode;
 };
 
-type SpellingResponse = Spelling & {
+type ResolvedSpelling = Spelling & {
     isDefault: boolean;
 };
-
-type SpellingListResponse = SpellingResponse[];
 
 interface IDataSource {
     getSpellings: () => Spelling[];
     getDefaultSpelling: () => Spelling;
+    getById: (id: number) => Spelling;
 }
 
 export {
     SpellingID,
     SpellingCode,
     Spelling,
-    SpellingResponse,
-    SpellingListResponse,
+    ResolvedSpelling,
     IDataSource,
 };

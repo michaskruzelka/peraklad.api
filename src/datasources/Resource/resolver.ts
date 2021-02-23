@@ -1,5 +1,5 @@
-import { DataSources } from '../../datasources/types';
-import { FileFormatsArgs, FileFormatsResponse } from './types';
+import { DataSources } from '../types';
+import { FileFormat, FileFormatsArgs, IResource } from './types';
 
 const resolver = {
     Query: {
@@ -7,7 +7,7 @@ const resolver = {
             _: any,
             args: FileFormatsArgs,
             { dataSources }: { dataSources: DataSources }
-        ): FileFormatsResponse => {
+        ): FileFormat[] => {
             const fileFormats = dataSources.resource.getFileFormats(
                 args.category,
                 args.subCategory
@@ -18,6 +18,22 @@ const resolver = {
                 description: fileFormat.description || null,
             }));
         },
+    },
+    Resource: {
+        format: (
+            resource: IResource,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): FileFormat => {
+            return dataSources.resource.getFileFormatByCode(
+                resource.format.code,
+                resource.project.category,
+                resource.project.subCategory
+            );
+        },
+    },
+    FileFormat: {
+        description: () => {},
     },
 };
 
