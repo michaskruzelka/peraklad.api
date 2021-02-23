@@ -33,3 +33,29 @@ type ProjectAccessType {
     code: String!
     isDefault: Boolean!
 }
+
+interface Project {
+    id: ID!
+    name: String!
+    type: Int!
+    accessType: ProjectAccessType!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    description: String
+    # resource: Resource @relation(name: "TRANSLATING", direction: OUT)
+}
+
+type MovieSubtitles implements Project {
+    id: ID!
+    name: String!
+    type: Int!
+    accessType: ProjectAccessType! @neo4j_ignore
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    description: String
+    # imdb: [IMDB] @relation(name: "HAS_INFO", direction: OUT)
+}
+
+# type VideoStreamSubtitles implements Project {
+
+# }

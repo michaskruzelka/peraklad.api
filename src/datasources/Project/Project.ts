@@ -23,6 +23,27 @@ class Project extends RESTDataSource implements IDataSource {
     }
 
     /**
+     * Gets access type by id
+     *
+     * @param id access type id
+     *
+     * @returns access type
+     *
+     * @throws an error when the access type was not found
+     */
+    public getAccessTypeById(id: number): AccessType {
+        const accessType = ACCESS_TYPES.find(
+            (accessType) => accessType.id === id
+        );
+
+        if (!accessType) {
+            throw new Error('Project access type not found.');
+        }
+
+        return accessType;
+    }
+
+    /**
      * Gets default access type
      *
      * @returns default access type

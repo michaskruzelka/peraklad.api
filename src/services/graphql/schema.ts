@@ -39,6 +39,7 @@ const getSchema = async (): Promise<GraphQLSchema> => {
         'FileFormat',
         'SubtitlesSearchService',
         'ValidatedInputErrorOutput',
+        'Project',
     ];
     
     const schemaOptions: makeAugmentedSchemaOptions = {
@@ -49,9 +50,7 @@ const getSchema = async (): Promise<GraphQLSchema> => {
             query: {
                 exclude: typesNotToAugment,
             },
-            mutation: {
-                exclude: typesNotToAugment,
-            },
+            mutation: false,
         },
     };
 
