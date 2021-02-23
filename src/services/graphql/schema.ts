@@ -17,13 +17,13 @@ import { resolveTypes } from './typeResolver';
 
 const getSchema = async (): Promise<GraphQLSchema> => {
     const typeDefsList: DocumentNode[] = [
-        ...await loadFiles(path.join(__dirname, '../../**/*.graphql')),
+        ...(await loadFiles(path.join(__dirname, '../../../src/**/*.graphql'))),
         ...range.getTypeDefs(),
         ...stringLength.getTypeDefs(),
         ...ValidateDirectiveVisitor.getMissingCommonTypeDefs(),
     ];
     const typeDefsAsOne: DocumentNode = mergeTypeDefs(typeDefsList);
-    
+
     const typesNotToAugment = [
         'Language',
         'GroupedLanguages',
@@ -40,8 +40,10 @@ const getSchema = async (): Promise<GraphQLSchema> => {
         'SubtitlesSearchService',
         'ValidatedInputErrorOutput',
         'Project',
+        'ProjectLevel',
+        'ProjectSettings',
     ];
-    
+
     const schemaOptions: makeAugmentedSchemaOptions = {
         typeDefs: typeDefsAsOne,
         resolvers: await getResolvers(),

@@ -1,3 +1,5 @@
+import { ValidationError } from 'apollo-server';
+
 import { DataSources } from '../../datasources/types';
 import { SearchResponse, FileInfoResult } from './Category/Subtitles/types';
 import { FileFormatCode } from '../Resource/types';
@@ -9,8 +11,9 @@ import {
     IMDBSubtitlesArgs,
     SubtitlesSubCategory,
     Project,
+    Level,
+    ProjectSettings,
 } from './types';
-import { ValidationError } from 'apollo-server';
 
 const isAccessTypeDefault = (
     accessType: ResolvedAccessType,
@@ -21,7 +24,7 @@ const isAccessTypeDefault = (
     }
 
     return (
-        dataSources.offlineSubtitlesProject.getDefaultAccessType().id ===
+        dataSources.movieSubtitlesProject.getDefaultAccessType().id ===
         accessType.id
     );
 };
@@ -33,14 +36,14 @@ const resolver = {
             __: any,
             { dataSources }: { dataSources: DataSources }
         ): AccessType[] => {
-            return dataSources.offlineSubtitlesProject.getAccessTypes();
+            return dataSources.movieSubtitlesProject.getAccessTypes();
         },
         defaultProjectAccessType: (
             _: any,
             __: any,
             { dataSources }: { dataSources: DataSources }
         ): ResolvedAccessType => {
-            const defaultAccessType = dataSources.offlineSubtitlesProject.getDefaultAccessType();
+            const defaultAccessType = dataSources.movieSubtitlesProject.getDefaultAccessType();
 
             return { ...defaultAccessType, isDefault: true };
         },
@@ -62,7 +65,7 @@ const resolver = {
                 episode: args.episode || undefined,
             };
 
-            const result = await dataSources.offlineSubtitlesProject.searchForFiles(
+            const result = await dataSources.movieSubtitlesProject.searchForFiles(
                 searchParams,
                 args.limit || undefined
             );
@@ -95,13 +98,24 @@ const resolver = {
         },
     },
     MovieSubtitles: {
-        accessType: (
+        level: (
             project: Project,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ) => {
-            return dataSources.offlineSubtitlesProject.getAccessTypeById(
-                project.type
+        ): Level => {
+            return dataSources.movieSubtitlesProject.getLevelById(
+                project.level.id
+            );
+        },
+    },
+    ProjectSettings: {
+        access: (
+            projectSettings: ProjectSettings,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): AccessType => {
+            return dataSources.movieSubtitlesProject.getAccessTypeById(
+                projectSettings.access.id
             );
         },
     },

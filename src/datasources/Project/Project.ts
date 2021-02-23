@@ -1,8 +1,8 @@
 import { RESTDataSource } from 'apollo-datasource-rest';
 
 import { ICategory, SearchParams } from './Category/types';
-import { IDataSource, AccessType } from './types';
-import { ACCESS_TYPES, DEFAULT_ACCESS_TYPE } from './config';
+import { IDataSource, AccessType, Level } from './types';
+import { ACCESS_TYPES, DEFAULT_ACCESS_TYPE, LEVELS } from './config';
 
 class Project extends RESTDataSource implements IDataSource {
     private category: ICategory;
@@ -54,6 +54,22 @@ class Project extends RESTDataSource implements IDataSource {
                 (accessType) => accessType.id === DEFAULT_ACCESS_TYPE
             ) || ACCESS_TYPES[0]
         );
+    }
+
+    /**
+     * Gets level by id
+     *
+     * @param id level id
+     * @returns level
+     */
+    public getLevelById(id: number): Level {
+        const level = LEVELS.find((level) => level.id === id);
+
+        if (!level) {
+            throw new Error('Project level not found.');
+        }
+
+        return level;
     }
 
     /**

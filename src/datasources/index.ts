@@ -12,7 +12,7 @@ const getDataSources = (): DataSources => {
     return {
         language: new Language(),
         imdb: new IMDB(),
-        offlineSubtitlesProject: new Project(new Subtitles(new Offline())),
+        movieSubtitlesProject: new Project(new Subtitles(new Offline())),
         abc: new Abc(),
         spelling: new Spelling(),
         resource: new Resource(),

@@ -6,9 +6,6 @@ import { graphql } from './services';
 
     if (process.env.NODE_ENV !== 'test') {
         await server.listen();
-        console.log(
-            `Server is running!
-             Listening on port 4000`
-        );
+        console.log('Server is running');
     }
 })();

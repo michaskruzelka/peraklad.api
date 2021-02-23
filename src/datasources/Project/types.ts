@@ -57,12 +57,22 @@ type IMDBSubtitlesArgs = {
 };
 
 type Project = {
-    type: number;
+    level: Level;
+};
+
+type ProjectSettings = {
+    abcId: number;
+    accessId: number;
+    spellingId: number;
+    statusId: number;
+    access: AccessType;
 };
 
 interface IDataSource {
     getAccessTypes: () => AccessType[];
     getDefaultAccessType: () => AccessType;
+    getAccessTypeById: (id: number) => AccessType;
+    getLevelById: (id: number) => Level;
     searchForFiles(searchParams: SearchParams, limit?: number): Promise<any>;
 }
 
@@ -79,4 +89,5 @@ export {
     SubtitlesSubCategory,
     IMDBSubtitlesArgs,
     Project,
+    ProjectSettings,
 };

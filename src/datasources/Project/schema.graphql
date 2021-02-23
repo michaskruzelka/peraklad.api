@@ -34,26 +34,41 @@ type ProjectAccessType {
     isDefault: Boolean!
 }
 
+type ProjectLevel {
+    id: Int!
+    code: String!
+}
+
+type ProjectSettings {
+    abcId: Int!
+    accessId: Int!
+    access: ProjectAccessType!
+        @cypher(statement: "WITH (this) RETURN { id: this.accessId }")
+    spellingId: Int!
+    statusId: Int!
+}
+
 interface Project {
     id: ID!
     name: String!
-    type: Int!
-    accessType: ProjectAccessType!
+    level: ProjectLevel!
     createdAt: DateTime!
     updatedAt: DateTime!
     description: String
-    # resource: Resource @relation(name: "TRANSLATING", direction: OUT)
+    settings: ProjectSettings
 }
 
 type MovieSubtitles implements Project {
     id: ID!
     name: String!
-    type: Int!
-    accessType: ProjectAccessType! @neo4j_ignore
+    level: ProjectLevel!
+        @cypher(statement: "WITH (this) RETURN { id: this.level }")
     createdAt: DateTime!
     updatedAt: DateTime!
     description: String
+    settings: ProjectSettings @relation(name: "HAS_SETTINGS", direction: OUT)
     # imdb: [IMDB] @relation(name: "HAS_INFO", direction: OUT)
+    # resource: Resource @relation(name: "TRANSLATING", direction: OUT)
 }
 
 # type VideoStreamSubtitles implements Project {
