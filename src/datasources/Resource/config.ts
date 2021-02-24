@@ -50,12 +50,12 @@ const XLIFF_FILE_FORMAT: FileFormat = {
 
 const FILE_FORMATS: CategoryFileFormats = {
     [Category.SUBTITLES]: {
-        [SubCategory.OFFLINE]: [
+        [SubCategory.MOVIE]: [
             SRT_FILE_FORMAT,
             VTT_FILE_FORMAT,
             SMI_FILE_FORMAT,
         ],
-        [SubCategory.ONLINE]: [
+        [SubCategory.VIDEO_STREAM]: [
             SBV_FILE_FORMAT,
             SRT_FILE_FORMAT,
             VTT_FILE_FORMAT,

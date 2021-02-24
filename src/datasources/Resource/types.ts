@@ -37,8 +37,8 @@ type FileFormat = {
 };
 
 type SubtitlesFileFormats = {
-    [SubCategory.OFFLINE]: FileFormat[];
-    [SubCategory.ONLINE]: FileFormat[];
+    [SubCategory.MOVIE]: FileFormat[];
+    [SubCategory.VIDEO_STREAM]: FileFormat[];
 };
 
 type CategoryFileFormats = {

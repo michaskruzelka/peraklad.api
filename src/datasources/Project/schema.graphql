@@ -70,8 +70,8 @@ type MovieSubtitles implements Project {
     level: ProjectLevel! @cypher(statement: "RETURN { id: this.level }")
     createdAt: DateTime!
     updatedAt: DateTime!
-    category: ProjectCategory!
-    subCategory: ProjectSubCategory
+    category: ProjectCategory! @cypher(statement: "RETURN labels(this)")
+    subCategory: ProjectSubCategory @cypher(statement: "RETURN labels(this)")
     description: String
     settings: ProjectSettings @relation(name: "HAS_SETTINGS", direction: OUT)
     resource: Resource @relation(name: "TRANSLATING", direction: OUT)

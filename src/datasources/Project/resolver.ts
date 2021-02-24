@@ -1,5 +1,6 @@
 import { ValidationError } from 'apollo-server';
 
+import RequiredFieldError from '../../services/errors/RequiredSelectionFieldError';
 import { DataSources } from '../types';
 import { SearchResponse, FileInfoResult } from './Category/Subtitles/types';
 import { FileFormatCode } from '../Resource/types';
@@ -33,6 +34,10 @@ const isAccessTypeDefault = (
 };
 
 const getLevel = (project: IProject, dataSources: DataSources): Level => {
+    if (!project.level.id) {
+        throw new RequiredFieldError('level { id }');
+    }
+
     return dataSources.movieSubtitlesProject.getLevelById(project.level.id);
 };
 
@@ -72,36 +77,38 @@ const resolver = {
                 episode: args.episode || undefined,
             };
 
-            const result = await dataSources.movieSubtitlesProject.searchForFiles(
+            return dataSources.movieSubtitlesProject.searchForFiles(
                 searchParams,
                 args.limit || undefined
             );
-
+        },
+    },
+    ImdbSubtitlesResponse: {
+        filesInfo: (
+            imdbSubtitles: SearchResponse,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ) => {
             const fileFormats = dataSources.resource.getFileFormats(
                 Category.SUBTITLES,
-                SubCategory.OFFLINE
+                SubCategory.MOVIE
             );
 
-            return {
-                ...result,
-                filesInfo: result.filesInfo
-                    .filter(
-                        (fileInfo: FileInfoResult) =>
-                            fileFormats
-                                .map((fileFormat) => fileFormat.code)
-                                .includes(fileInfo.format as FileFormatCode) &&
-                            dataSources.language.isValidCodes([
-                                fileInfo.language,
-                            ])
-                    )
-                    .map((fileInfo: FileInfoResult) => ({
-                        ...fileInfo,
-                        format: fileFormats.find(
-                            (fileFormat) => fileFormat.code === fileInfo.format
-                        ),
-                        language: dataSources.language.get(fileInfo.language),
-                    })),
-            };
+            return imdbSubtitles.filesInfo
+                .filter(
+                    (fileInfo: FileInfoResult) =>
+                        fileFormats
+                            .map((fileFormat) => fileFormat.code)
+                            .includes(fileInfo.format as FileFormatCode) &&
+                        dataSources.language.isValidCodes([fileInfo.language])
+                )
+                .map((fileInfo: FileInfoResult) => ({
+                    ...fileInfo,
+                    format: fileFormats.find(
+                        (fileFormat) => fileFormat.code === fileInfo.format
+                    ),
+                    language: dataSources.language.get(fileInfo.language),
+                }));
         },
     },
     MovieSubtitles: {
@@ -112,6 +119,8 @@ const resolver = {
         ): Level => {
             return getLevel(project, dataSources);
         },
+        category: () => Category.SUBTITLES,
+        subCategory: () => SubCategory.MOVIE,
     },
     ProjectSettings: {
         access: (
@@ -119,6 +128,10 @@ const resolver = {
             __: any,
             { dataSources }: { dataSources: DataSources }
         ): AccessType => {
+            if (!projectSettings.access.id) {
+                throw new RequiredFieldError('access { id }');
+            }
+
             return dataSources.movieSubtitlesProject.getAccessTypeById(
                 projectSettings.access.id
             );
@@ -128,6 +141,10 @@ const resolver = {
             __: any,
             { dataSources }: { dataSources: DataSources }
         ): IABC => {
+            if (!projectSettings.abc.id) {
+                throw new RequiredFieldError('abc { id }');
+            }
+
             return dataSources.abc.getABCById(projectSettings.abc.id);
         },
         spelling: (
@@ -135,6 +152,10 @@ const resolver = {
             __: any,
             { dataSources }: { dataSources: DataSources }
         ): Spelling => {
+            if (!projectSettings.spelling.id) {
+                throw new RequiredFieldError('spelling { id }');
+            }
+
             return dataSources.spelling.getById(projectSettings.spelling.id);
         },
         status: (
@@ -142,6 +163,10 @@ const resolver = {
             __: any,
             { dataSources }: { dataSources: DataSources }
         ): Status => {
+            if (!projectSettings.status.id) {
+                throw new RequiredFieldError('status { id }');
+            }
+
             return dataSources.movieSubtitlesProject.getStatusById(
                 projectSettings.status.id
             );

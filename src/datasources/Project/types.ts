@@ -68,8 +68,8 @@ enum Category {
 }
 
 enum SubCategory {
-    OFFLINE = 'MOVIE',
-    ONLINE = 'VIDEO_STREAM',
+    MOVIE = 'MOVIE',
+    VIDEO_STREAM = 'VIDEO_STREAM',
 }
 
 type IMDBSubtitlesArgs = {
