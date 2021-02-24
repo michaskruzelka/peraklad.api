@@ -1,5 +1,8 @@
 import { DataSources } from '../types';
-import { FileFormat, FileFormatsArgs, IResource } from './types';
+import { FileFormat, FileFormatsArgs, IResource, Status } from './types';
+import { ILanguage } from '../Language/types';
+import RequiredFieldError from '../../services/errors/RequiredSelectionFieldError';
+import { determine } from '../Project/category';
 
 const resolver = {
     Query: {
@@ -8,15 +11,10 @@ const resolver = {
             args: FileFormatsArgs,
             { dataSources }: { dataSources: DataSources }
         ): FileFormat[] => {
-            const fileFormats = dataSources.resource.getFileFormats(
+            return dataSources.resource.getFileFormats(
                 args.category,
                 args.subCategory
             );
-
-            return fileFormats.map((fileFormat) => ({
-                ...fileFormat,
-                description: fileFormat.description || null,
-            }));
         },
     },
     Resource: {
@@ -25,15 +23,43 @@ const resolver = {
             __: any,
             { dataSources }: { dataSources: DataSources }
         ): FileFormat => {
+            if (!resource.format.code) {
+                throw new RequiredFieldError('format { code }');
+            }
+
             return dataSources.resource.getFileFormatByCode(
-                resource.format.code,
-                resource.project.category,
-                resource.project.subCategory
+                resource.format.code._code,
+                determine.category(resource.format.code._labels),
+                determine.subCategory(resource.format.code._labels)
             );
+        },
+        language: (
+            resource: IResource,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): ILanguage => {
+            if (!resource.language.code) {
+                throw new RequiredFieldError('language { code }');
+            }
+
+            return dataSources.language.get(resource.language.code);
+        },
+        status: (
+            resource: IResource,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): Status => {
+            if (!resource.status.id) {
+                throw new RequiredFieldError('status { id }');
+            }
+
+            return dataSources.resource.getStatusById(resource.status.id);
         },
     },
     FileFormat: {
-        description: () => {},
+        description: (fileFormat: FileFormat) => {
+            return fileFormat.description || null;
+        },
     },
 };
 

@@ -1,7 +1,7 @@
 import { Spelling } from '../Spelling/types';
 import { IABC } from '../ABC/types';
-import { SearchParams } from './Category/types';
-import { IResource } from 'datasources/Resource/types';
+import { SearchParams, } from './Category/types';
+import { IResource } from '../Resource/types';
 
 enum StatusID {
     NEW = 1,

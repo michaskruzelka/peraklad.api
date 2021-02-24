@@ -54,21 +54,35 @@ type FileFormatsArgs = {
 interface IResource {
     id: string;
     name: string;
-    format: FileFormat;
-    language: ILanguage;
+    format: FileFormat & {
+        code: {
+            _code: FileFormatCode;
+            _labels: string[];
+        };
+    };
+    language: {
+        code: string;
+    };
+    status: {
+        id: number;
+    };
     project: IProject;
 }
 
+type ResolvedResource = IResource & {
+    format: FileFormat;
+    language: ILanguage;
+    status: Status;
+};
+
 interface IDataSource {
-    getFileFormats(
-        category: Category,
-        subCategory?: SubCategory
-    ): FileFormat[];
+    getFileFormats(category: Category, subCategory?: SubCategory): FileFormat[];
     getFileFormatByCode(
         code: string,
         category: Category,
         subCategory?: SubCategory | null
     ): FileFormat;
+    getStatusById(id: number): Status;
 }
 
 export {
@@ -82,4 +96,5 @@ export {
     StatusID,
     StatusCode,
     IResource,
+    ResolvedResource,
 };

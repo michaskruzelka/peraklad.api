@@ -21,8 +21,15 @@ type ResourceStatus {
 type Resource {
     id: ID!
     name: String!
-    format: FileFormat! @cypher(statement: "RETURN { code: this.format }")
-    language: Language!
-    status: ResourceStatus!
-    project: Project! @relation(name: "TRANSLATING", direction: IN)
+    language: Language! @cypher(statement: "RETURN { code: this.language }")
+    status: ResourceStatus! @cypher(statement: "RETURN { id: this.status }")
+    project: Project!
+        @cypher(statement: "MATCH (this)<-[:TRANSLATING]-(p:Project) RETURN p")
+    format: FileFormat!
+        @cypher(
+            statement: """
+                MATCH (this)<-[:TRANSLATING]-(p:Project)
+                RETURN { code: { _code: this.format, _labels: labels(p) } }
+            """
+        )
 }

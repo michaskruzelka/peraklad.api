@@ -51,6 +51,17 @@ type ProjectSettings {
     status: ProjectStatus! @cypher(statement: "RETURN { id: this.status }")
 }
 
+# interface IMDBInfo {
+#     title: String!
+#     imdbId: String
+#     imdbRating: Float
+#     posterSrc: String
+# }
+
+# type MovieIMDBInfo {
+#     title: 
+# }
+
 interface Project {
     id: ID!
     name: String!
@@ -62,24 +73,37 @@ interface Project {
     description: String
     settings: ProjectSettings
     resource: Resource
+    parent: Project
+    children: [Project]
 }
 
 type MovieSubtitles implements Project {
     id: ID!
     name: String!
-    level: ProjectLevel! @cypher(statement: "RETURN { id: this.level }")
+    level: ProjectLevel! @cypher(statement: "MATCH (this) RETURN { id: this.level }")
     createdAt: DateTime!
     updatedAt: DateTime!
-    category: ProjectCategory! @cypher(statement: "RETURN labels(this)")
-    subCategory: ProjectSubCategory @cypher(statement: "RETURN labels(this)")
+    category: ProjectCategory! @neo4j_ignore
+    subCategory: ProjectSubCategory @neo4j_ignore
     description: String
     settings: ProjectSettings @relation(name: "HAS_SETTINGS", direction: OUT)
     resource: Resource @relation(name: "TRANSLATING", direction: OUT)
-    # imdb: [IMDB] @relation(name: "HAS_INFO", direction: OUT)
+    parent: Project @relation(name: "IS_PARENT_OF", direction: IN)
+    children: [Project] @relation(name: "IS_PARENT_OF", direction: OUT)
+    # imdb: [IMDBInfo] @relation(name: "HAS_INFO", direction: OUT)
 }
 
 # type VideoStreamSubtitles implements Project {
-
+#     id: ID!
+#     name: String!
+#     level: ProjectLevel! @cypher(statement: "RETURN { id: this.level }")
+#     createdAt: DateTime!
+#     updatedAt: DateTime!
+#     category: ProjectCategory! @cypher(statement: "RETURN labels(this)")
+#     subCategory: ProjectSubCategory @cypher(statement: "RETURN labels(this)")
+#     description: String
+#     settings: ProjectSettings @relation(name: "HAS_SETTINGS", direction: OUT)
+#     resource: Resource @relation(name: "TRANSLATING", direction: OUT)
 # }
 
 enum ProjectCategory {

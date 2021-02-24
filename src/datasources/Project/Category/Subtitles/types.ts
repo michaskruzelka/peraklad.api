@@ -44,5 +44,6 @@ export {
     SearchResult,
     SearchResponse,
     FileInfoResult,
+    FileInfoResponse,
     SearchService,
 };

@@ -8,6 +8,8 @@ import {
     Status,
     StatusID,
     StatusCode,
+    Category,
+    SubCategory,
 } from './types';
 
 const STATUSES: Status[] = [
@@ -65,4 +67,33 @@ const LEVELS: Level[] = [
     },
 ];
 
-export { ACCESS_TYPES, DEFAULT_ACCESS_TYPE, LEVELS, STATUSES };
+const CATEGORIES = [
+    {
+        code: Category.SUBTITLES,
+        labels: ['MovieSubtitles', 'VideoStreamSubtitles'],
+    },
+    {
+        code: Category.SOFTWARE,
+        labels: ['Software'],
+    },
+];
+
+const SUBCATEGORIES = [
+    {
+        code: SubCategory.MOVIE,
+        labels: ['MovieSubtitles'],
+    },
+    {
+        code: SubCategory.VIDEO_STREAM,
+        labels: ['VideoStreamSubtitles'],
+    },
+];
+
+export {
+    ACCESS_TYPES,
+    DEFAULT_ACCESS_TYPE,
+    LEVELS,
+    STATUSES,
+    CATEGORIES,
+    SUBCATEGORIES,
+};

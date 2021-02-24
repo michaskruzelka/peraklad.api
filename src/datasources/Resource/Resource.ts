@@ -1,8 +1,8 @@
 import { DataSource } from 'apollo-datasource';
 
 import { Category, SubCategory } from 'datasources/Project/types';
-import { FileFormat, IDataSource, SubtitlesFileFormats } from './types';
-import { FILE_FORMATS } from './config';
+import { FileFormat, IDataSource, SubtitlesFileFormats, Status } from './types';
+import { FILE_FORMATS, STATUSES } from './config';
 
 class Resource extends DataSource implements IDataSource {
     public getFileFormats(
@@ -47,6 +47,16 @@ class Resource extends DataSource implements IDataSource {
         }
 
         return fileFormat;
+    }
+
+    public getStatusById(id: number): Status {
+        const status = STATUSES.find((status) => status.id === id);
+
+        if (!status) {
+            throw new Error('Resource status not found');
+        }
+
+        return status;
     }
 }
 

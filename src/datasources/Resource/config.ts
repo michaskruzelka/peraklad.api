@@ -1,5 +1,12 @@
 import { Category, SubCategory } from '../Project/types';
-import { FileFormat, FileFormatCode, CategoryFileFormats } from './types';
+import {
+    FileFormat,
+    FileFormatCode,
+    CategoryFileFormats,
+    Status,
+    StatusID,
+    StatusCode,
+} from './types';
 
 const SRT_FILE_FORMAT: FileFormat = {
     code: FileFormatCode.SRT,
@@ -64,4 +71,19 @@ const FILE_FORMATS: CategoryFileFormats = {
     [Category.SOFTWARE]: [JSON_FILE_FORMAT, YML_FILE_FORMAT, XLIFF_FILE_FORMAT],
 };
 
-export { FILE_FORMATS };
+const STATUSES: Status[] = [
+    {
+        id: StatusID.STARTED,
+        code: StatusCode.STARTED,
+    },
+    {
+        id: StatusID.FINISHED,
+        code: StatusCode.FINISHED,
+    },
+    {
+        id: StatusID.DELETED,
+        code: StatusCode.DELETED,
+    },
+];
+
+export { FILE_FORMATS, STATUSES };
