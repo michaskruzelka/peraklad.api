@@ -8,8 +8,8 @@ type Query {
 type Language {
     code: String!
     iso639_2: String!
-    name: String
-    native: String
+    name: String!
+    native: String!
 }
 
 type GroupedLanguages {

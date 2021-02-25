@@ -34,6 +34,7 @@ type FileInfoResponse = FileInfoResult & {
     format: FileFormat;
     language: ILanguage;
 };
+
 type SearchResponse = {
     service: SearchService;
     filesInfo: FileInfoResponse[];

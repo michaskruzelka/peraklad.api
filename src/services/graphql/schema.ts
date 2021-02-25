@@ -24,13 +24,19 @@ const getSchema = async (): Promise<GraphQLSchema> => {
     ];
     const typeDefsAsOne: DocumentNode = mergeTypeDefs(typeDefsList);
 
-    const typesNotToAugment = [
+    const typesToIgnore = [
         'Language',
         'GroupedLanguages',
+        'OMDB',
+        'OMDBMovie',
+        'OMDBEpisode',
+        'OMDBSeries',
+        'IMDB',
         'Movie',
         'Episode',
-        'IMDB',
         'Series',
+        'VideoInfo',
+        'VideoStreamService',
         'ProjectAccessType',
         'ImdbSubtitlesResponse',
         'ImdbSubtitlesFile',
@@ -52,7 +58,7 @@ const getSchema = async (): Promise<GraphQLSchema> => {
         schemaDirectives: { range, stringLength },
         config: {
             query: {
-                exclude: typesNotToAugment,
+                exclude: typesToIgnore,
             },
             mutation: false,
         },

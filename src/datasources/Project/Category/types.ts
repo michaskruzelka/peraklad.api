@@ -1,7 +1,7 @@
 import { MovieSubtitlesSearchParams } from './Subtitles/types';
 
 interface ICategory {
-    getSubCategory: () => ISubCategory;
+    readonly subCategory: ISubCategory;
     searchForFiles: (
         searchParams: SearchParams,
         limit?: number
@@ -16,6 +16,7 @@ interface ISubCategory {
         searchParams: SearchParams,
         limit?: number
     ) => Promise<any>;
+    getServiceById: (id: number) => any;
 }
 
 export { ICategory, ISubCategory, SearchParams };

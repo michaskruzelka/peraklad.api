@@ -5,7 +5,7 @@ import { IDataSource, AccessType, Level, Status } from './types';
 import { ACCESS_TYPES, DEFAULT_ACCESS_TYPE, LEVELS, STATUSES } from './config';
 
 class Project extends RESTDataSource implements IDataSource {
-    private category: ICategory;
+    public readonly category: ICategory;
 
     constructor(category: ICategory) {
         super();

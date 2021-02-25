@@ -1,13 +1,13 @@
 type Query {
-    imdbInfoByImdbId(imdbId: String! @stringLength(min: 7, max: 9)): IMDB
+    imdbInfoByImdbId(imdbId: String! @stringLength(min: 7, max: 9)): OMDB
     imdbInfoByTitleAndYear(
         title: String! @stringLength(min: 1, max: 100)
         year: Int @range(min: 1880, max: 2100)
-    ): IMDB
+    ): OMDB
     imdbTypes: [String]
 }
 
-interface IMDB {
+interface OMDB {
     imdbId: String!
     title: String!
     imdbRating: Float
@@ -16,7 +16,7 @@ interface IMDB {
     plot: String
 }
 
-type Movie implements IMDB {
+type OMDBMovie implements OMDB {
     imdbId: String!
     title: String!
     year: Int
@@ -27,20 +27,20 @@ type Movie implements IMDB {
     plot: String
 }
 
-type Episode implements IMDB {
+type OMDBEpisode implements OMDB {
     imdbId: String!
     title: String!
     year: Int
     imdbRating: Float
     posterSrc: String
     type: String!
-    series: Series @cost(value: 100)
+    series: OMDBSeries @cost(value: 500)
     seasonNum: Int!
     episodeNum: Int!
     plot: String
 }
 
-type Series implements IMDB {
+type OMDBSeries implements OMDB {
     imdbId: String!
     title: String!
     imdbRating: Float
@@ -50,6 +50,6 @@ type Series implements IMDB {
     episodes(
         season: Int @range(min: 1, max: 100)
         episode: Int @range(max: 100)
-    ): [Episode] @cost(value: 100)
+    ): [OMDBEpisode] @cost(value: 500)
     plot: String
 }

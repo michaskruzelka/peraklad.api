@@ -10,6 +10,19 @@ enum ServicesNames {
     OS = 'OpenSubtitles',
 }
 
+enum StreamServiceId {
+    YOUTUBE = 1,
+}
+
+enum StreamServiceCode {
+    YOUTUBE = 'youtube',
+}
+
+type StreamService = {
+    id: StreamServiceId;
+    code: StreamServiceCode;
+};
+
 type Service = {
     code: ServicesCodes;
     name: ServicesNames;
@@ -21,4 +34,7 @@ export {
     ServicesCodes,
     ServicesNames,
     Service,
+    StreamServiceId,
+    StreamServiceCode,
+    StreamService,
 };

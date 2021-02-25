@@ -25,6 +25,11 @@ class Movie implements ISubCategory {
                 })),
         };
     }
+
+    public getServiceById(id: number) {
+        console.log(id);
+        throw new Error('Method getServiceById is not implemented.');
+    }
 }
 
 export { Movie };

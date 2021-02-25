@@ -43,7 +43,7 @@ enum ResponseType {
     FALSE = 'False',
 }
 
-enum IMDBType {
+enum OMDBType {
     MOVIE = 'movie',
     SERIES = 'series',
     EPISODE = 'episode',
@@ -67,8 +67,8 @@ interface APIEpisodes extends APIResponse {
     Episodes: APIEpisode[];
 }
 
-interface APIIMDB extends APIResponse {
-    Type: IMDBType;
+interface APIOMDB extends APIResponse {
+    Type: OMDBType;
     Title: string;
     Year: string;
     imdbID: string;
@@ -78,56 +78,57 @@ interface APIIMDB extends APIResponse {
     Plot?: string;
 }
 
-interface IIMDB extends APIIMDB {
+interface IOMDB extends APIOMDB {
     imdbId: string;
-    type: IMDBType;
+    type: OMDBType;
     title: string;
     posterSrc: string;
     plot?: string;
 }
 
-interface IMovie extends IIMDB {
-    type: IMDBType.MOVIE;
+interface IMovie extends IOMDB {
+    type: OMDBType.MOVIE;
     language: string;
     year: number;
 }
 
-interface IEpisode extends IIMDB {
+interface IEpisode extends IOMDB {
     seriesID: string;
     Episode: string;
     Season: string;
-    type: IMDBType.EPISODE;
+    type: OMDBType.EPISODE;
     series: ISeries;
     seasonNum: number;
     episodeNum: number;
     year: number;
 }
 
-interface ISeries extends IIMDB {
-    type: IMDBType.SERIES;
+interface ISeries extends IOMDB {
+    type: OMDBType.SERIES;
     language: string;
     totalSeasons: string;
     episodes: IEpisode[];
 }
 
 interface IDataSource {
-    searchByImdbId: (imdbId: string | number) => Promise<IIMDB>;
+    searchByImdbId: (imdbId: string | number) => Promise<IOMDB>;
     searchByTitleAndYear: (
         title: string,
         year: number | undefined
-    ) => Promise<IIMDB>;
+    ) => Promise<IOMDB>;
     searchForEpisodes: (
         imdbId: string | number,
         seasonNum: number,
         episodeNum: number
-    ) => Promise<IIMDB[]>;
+    ) => Promise<IOMDB[]>;
     searchForEpisode: (
         imdbId: string | number,
         seasonNum: number,
         episodeNum: number
-    ) => Promise<IIMDB>;
-    createEmptyBaseMovieObject: () => IIMDB;
+    ) => Promise<IOMDB>;
+    createEmptyBaseMovieObject: () => IOMDB;
     validateImdbId(imdbId: string | number, withPrefix: boolean): string;
+    getOMDBTypes: () => OMDBType[];
 }
 
 export {
@@ -136,13 +137,13 @@ export {
     APIResponse,
     APIEpisodes,
     APIError,
-    APIIMDB,
-    IMDBType,
+    APIOMDB,
+    OMDBType,
     ResponseType,
     IMovie,
     IEpisode,
     ISeries,
-    IIMDB,
+    IOMDB,
     IDataSource,
     SearchByIdArgs,
     SearchByTitlePlusYearArgs,

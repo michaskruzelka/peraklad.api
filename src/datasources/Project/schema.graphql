@@ -51,36 +51,45 @@ type ProjectSettings {
     status: ProjectStatus! @cypher(statement: "RETURN { id: this.status }")
 }
 
-# interface IMDBInfo {
-#     title: String!
-#     imdbId: String
-#     imdbRating: Float
-#     posterSrc: String
-# }
+interface IMDB {
+    title: String!
+    imdbId: String
+    imdbRating: Float
+    posterSrc: String
+}
 
-# type MovieIMDBInfo {
-#     title: 
-# }
+type Movie implements IMDB {
+    title: String!
+    imdbId: String
+    imdbRating: Float
+    posterSrc: String
+    language: Language! @cypher(statement: "RETURN { code: this.language }")
+    year: Int
+}
+
+type Episode implements IMDB {
+    title: String!
+    imdbId: String
+    imdbRating: Float
+    posterSrc: String
+    episodeNum: Int!
+    seasonNum: Int!
+    year: Int
+}
+
+type Series implements IMDB {
+    title: String!
+    imdbId: String
+    imdbRating: Float
+    posterSrc: String
+    language: Language! @cypher(statement: "RETURN { code: this.language }")
+}
 
 interface Project {
     id: ID!
     name: String!
     level: ProjectLevel!
-    createdAt: DateTime!
-    updatedAt: DateTime!
-    category: ProjectCategory!
-    subCategory: ProjectSubCategory
-    description: String
-    settings: ProjectSettings
-    resource: Resource
-    parent: Project
-    children: [Project]
-}
-
-type MovieSubtitles implements Project {
-    id: ID!
-    name: String!
-    level: ProjectLevel! @cypher(statement: "MATCH (this) RETURN { id: this.level }")
+        @cypher(statement: "MATCH (this) RETURN { id: this.level }")
     createdAt: DateTime!
     updatedAt: DateTime!
     category: ProjectCategory! @neo4j_ignore
@@ -88,23 +97,67 @@ type MovieSubtitles implements Project {
     description: String
     settings: ProjectSettings @relation(name: "HAS_SETTINGS", direction: OUT)
     resource: Resource @relation(name: "TRANSLATING", direction: OUT)
-    parent: Project @relation(name: "IS_PARENT_OF", direction: IN)
-    children: [Project] @relation(name: "IS_PARENT_OF", direction: OUT)
-    # imdb: [IMDBInfo] @relation(name: "HAS_INFO", direction: OUT)
+    parent: Project
+        @relation(name: "IS_PARENT_OF", direction: IN)
+        @cost(value: 2)
+    children: [Project]
+        @relation(name: "IS_PARENT_OF", direction: OUT)
+        @cost(value: 3)
 }
 
-# type VideoStreamSubtitles implements Project {
-#     id: ID!
-#     name: String!
-#     level: ProjectLevel! @cypher(statement: "RETURN { id: this.level }")
-#     createdAt: DateTime!
-#     updatedAt: DateTime!
-#     category: ProjectCategory! @cypher(statement: "RETURN labels(this)")
-#     subCategory: ProjectSubCategory @cypher(statement: "RETURN labels(this)")
-#     description: String
-#     settings: ProjectSettings @relation(name: "HAS_SETTINGS", direction: OUT)
-#     resource: Resource @relation(name: "TRANSLATING", direction: OUT)
-# }
+type MovieSubtitles implements Project {
+    id: ID!
+    name: String!
+    level: ProjectLevel!
+        @cypher(statement: "MATCH (this) RETURN { id: this.level }")
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    category: ProjectCategory! @neo4j_ignore
+    subCategory: ProjectSubCategory @neo4j_ignore
+    description: String
+    settings: ProjectSettings @relation(name: "HAS_SETTINGS", direction: OUT)
+    resource: Resource @relation(name: "TRANSLATING", direction: OUT)
+    parent: MovieSubtitles
+        @relation(name: "IS_PARENT_OF", direction: IN)
+        @cost(value: 2)
+    children: [MovieSubtitles]
+        @relation(name: "IS_PARENT_OF", direction: OUT)
+        @cost(value: 3)
+    imdb: [IMDB] @relation(name: "HAS_INFO", direction: OUT)
+}
+
+type VideoStreamService {
+    id: Int!
+    code: String!
+}
+
+type VideoInfo {
+    service: VideoStreamService
+        @cypher(statement: "RETURN { id: this.service }")
+    url: String!
+    language: Language @cypher(statement: "RETURN { code: this.language }")
+}
+
+type VideoStreamSubtitles implements Project {
+    id: ID!
+    name: String!
+    level: ProjectLevel!
+        @cypher(statement: "MATCH (this) RETURN { id: this.level }")
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    category: ProjectCategory! @neo4j_ignore
+    subCategory: ProjectSubCategory @neo4j_ignore
+    description: String
+    settings: ProjectSettings @relation(name: "HAS_SETTINGS", direction: OUT)
+    resource: Resource @relation(name: "TRANSLATING", direction: OUT)
+    parent: VideoStreamSubtitles
+        @relation(name: "IS_PARENT_OF", direction: IN)
+        @cost(value: 2)
+    children: [VideoStreamSubtitles]
+        @relation(name: "IS_PARENT_OF", direction: OUT)
+        @cost(value: 3)
+    videoInfo: [VideoInfo] @relation(name: "HAS_INFO", direction: OUT)
+}
 
 enum ProjectCategory {
     SUBTITLES

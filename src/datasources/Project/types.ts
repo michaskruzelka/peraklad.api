@@ -1,6 +1,6 @@
 import { Spelling } from '../Spelling/types';
 import { IABC } from '../ABC/types';
-import { SearchParams, } from './Category/types';
+import { SearchParams, ICategory } from './Category/types';
 import { IResource } from '../Resource/types';
 
 enum StatusID {
@@ -94,7 +94,36 @@ type ProjectSettings = {
     access: AccessType;
 };
 
+interface IIMDB {
+    title: string;
+    imdbId?: string | null;
+    imdbRating?: string | null;
+    posterSrc?: string | null;
+}
+
+interface IMovie extends IIMDB {
+    language: {
+        code: string;
+    };
+}
+
+interface ISeries extends IIMDB {
+    language: {
+        code: string;
+    };
+}
+
+interface IVideoInfo {
+    language: {
+        code: string;
+    };
+    service: {
+        id?: number;
+    }
+}
+
 interface IDataSource {
+    readonly category: ICategory;
     getAccessTypes: () => AccessType[];
     getDefaultAccessType: () => AccessType;
     getAccessTypeById: (id: number) => AccessType;
@@ -120,4 +149,7 @@ export {
     Status,
     StatusID,
     StatusCode,
+    IMovie,
+    ISeries,
+    IVideoInfo,
 };

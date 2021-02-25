@@ -6,17 +6,17 @@ import {
     APIByIdPlushSeason,
     APIResponse,
     APIEpisodes,
-    APIIMDB,
+    APIOMDB,
     APIError,
     ResponseType,
     IDataSource,
-    IIMDB,
-    IMDBType,
+    IOMDB,
+    OMDBType,
 } from './types';
 
-import { OMDB_API_KEY, OMDB_API_HOSTNAME, IMDB_TYPES } from './config';
+import { OMDB_API_KEY, OMDB_API_HOSTNAME, OMDB_TYPES } from './config';
 
-class IMDB extends RESTDataSource implements IDataSource {
+class OMDB extends RESTDataSource implements IDataSource {
     private imdbIdPattern = /^(tt)?\d{7}$/;
 
     constructor() {
@@ -58,7 +58,7 @@ class IMDB extends RESTDataSource implements IDataSource {
      *
      * @returns a base movie object found in omdb
      */
-    public async searchByImdbId(imdbId: string | number): Promise<IIMDB> {
+    public async searchByImdbId(imdbId: string | number): Promise<IOMDB> {
         imdbId = this.validateImdbId(imdbId);
 
         return await this.searchForIMDB({ i: imdbId });
@@ -75,7 +75,7 @@ class IMDB extends RESTDataSource implements IDataSource {
     public async searchByTitleAndYear(
         title: string,
         year: number | undefined = undefined
-    ): Promise<IIMDB> {
+    ): Promise<IOMDB> {
         return await this.searchForIMDB({ t: title, y: year });
     }
 
@@ -92,9 +92,9 @@ class IMDB extends RESTDataSource implements IDataSource {
         imdbId: string | number,
         seasonNum: number,
         episodeNum: number = 0
-    ): Promise<IIMDB[]> {
+    ): Promise<IOMDB[]> {
         imdbId = this.validateImdbId(imdbId);
-        let result: IIMDB[] = [];
+        let result: IOMDB[] = [];
 
         if (episodeNum) {
             try {
@@ -133,7 +133,7 @@ class IMDB extends RESTDataSource implements IDataSource {
         imdbId: string | number,
         seasonNum: number,
         episodeNum: number
-    ): Promise<IIMDB> {
+    ): Promise<IOMDB> {
         imdbId = this.validateImdbId(imdbId);
         return await this.searchForIMDB({
             i: imdbId,
@@ -147,10 +147,10 @@ class IMDB extends RESTDataSource implements IDataSource {
      *
      * @returns and empty base movie object with 'movie' type by default
      */
-    public createEmptyBaseMovieObject(): IIMDB {
+    public createEmptyBaseMovieObject(): IOMDB {
         return {
             Response: ResponseType.TRUE,
-            Type: IMDBType.MOVIE,
+            Type: OMDBType.MOVIE,
             Title: '',
             Year: '',
             imdbID: '',
@@ -158,7 +158,7 @@ class IMDB extends RESTDataSource implements IDataSource {
             Language: '',
             imdbRating: '',
             imdbId: '',
-            type: IMDBType.MOVIE,
+            type: OMDBType.MOVIE,
             title: '',
             posterSrc: '',
         };
@@ -169,8 +169,8 @@ class IMDB extends RESTDataSource implements IDataSource {
      *
      * @returns movie type list
      */
-    public getIMDBTypes(): IMDBType[] {
-        return IMDB_TYPES;
+    public getOMDBTypes(): OMDBType[] {
+        return OMDB_TYPES;
     }
 
     /**
@@ -184,8 +184,8 @@ class IMDB extends RESTDataSource implements IDataSource {
     private async getSeasonEpisodes(
         imdbId: string,
         seasonNum: number
-    ): Promise<IIMDB[]> {
-        let episodes: IIMDB[] = [];
+    ): Promise<IOMDB[]> {
+        let episodes: IOMDB[] = [];
         const params: APIByIdPlushSeason = {
             i: imdbId,
             Season: seasonNum,
@@ -255,10 +255,10 @@ class IMDB extends RESTDataSource implements IDataSource {
      *
      * @throws an error when IMDB type in response is unrecognized
      */
-    private async searchForIMDB(params: APIParams): Promise<IIMDB> {
-        const response = (await this.performRequest(params)) as APIIMDB;
+    private async searchForIMDB(params: APIParams): Promise<IOMDB> {
+        const response = (await this.performRequest(params)) as APIOMDB;
 
-        if (!IMDB_TYPES.includes(response.Type)) {
+        if (!OMDB_TYPES.includes(response.Type)) {
             throw new Error('Unrecognized IMDB type: ' + response.Type);
         }
 
@@ -294,7 +294,7 @@ class IMDB extends RESTDataSource implements IDataSource {
      *
      * @returns api response enriched with base IMDB properties
      */
-    private enrichResponseWithBaseIMDBInfo(response: APIIMDB): IIMDB {
+    private enrichResponseWithBaseIMDBInfo(response: APIOMDB): IOMDB {
         return {
             ...response,
             imdbId: response.imdbID,
@@ -339,4 +339,4 @@ class IMDB extends RESTDataSource implements IDataSource {
     }
 }
 
-export { IMDB };
+export { OMDB };

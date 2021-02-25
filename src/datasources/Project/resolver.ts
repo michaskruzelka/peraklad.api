@@ -15,6 +15,9 @@ import {
     Level,
     ProjectSettings,
     Status,
+    IMovie,
+    ISeries,
+    IVideoInfo,
 } from './types';
 import { IABC } from '../ABC/types';
 import { Spelling } from '../Spelling/types';
@@ -39,6 +42,17 @@ const getLevel = (project: IProject, dataSources: DataSources): Level => {
     }
 
     return dataSources.movieSubtitlesProject.getLevelById(project.level.id);
+};
+
+const getLanguage = (
+    object: { language: { code?: string } },
+    dataSources: DataSources
+) => {
+    if (!object.language.code) {
+        throw new RequiredFieldError('language { code }');
+    }
+
+    return dataSources.language.get(object.language.code);
 };
 
 const resolver = {
@@ -72,7 +86,7 @@ const resolver = {
                 languages: args.languages.map((language: string) =>
                     dataSources.language.get(language)
                 ),
-                imdbId: dataSources.imdb.validateImdbId(args.imdbId, false),
+                imdbId: dataSources.omdb.validateImdbId(args.imdbId, false),
                 season: args.season || undefined,
                 episode: args.episode || undefined,
             };
@@ -121,6 +135,17 @@ const resolver = {
         },
         category: () => Category.SUBTITLES,
         subCategory: () => SubCategory.MOVIE,
+    },
+    VideoStreamSubtitles: {
+        level: (
+            project: IProject,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): Level => {
+            return getLevel(project, dataSources);
+        },
+        category: () => Category.SUBTITLES,
+        subCategory: () => SubCategory.VIDEO_STREAM,
     },
     ProjectSettings: {
         access: (
@@ -179,6 +204,46 @@ const resolver = {
             { dataSources }: { dataSources: DataSources }
         ): boolean => {
             return isAccessTypeDefault(accessType, dataSources);
+        },
+    },
+    Movie: {
+        language: (
+            movie: IMovie,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ) => {
+            return getLanguage(movie, dataSources);
+        },
+    },
+    Series: {
+        language: (
+            series: ISeries,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ) => {
+            return getLanguage(series, dataSources);
+        },
+    },
+    VideoInfo: {
+        language: (
+            videoInfo: IVideoInfo,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ) => {
+            return getLanguage(videoInfo, dataSources);
+        },
+        service: (
+            videoInfo: IVideoInfo,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ) => {
+            if (!videoInfo.service.id) {
+                throw new RequiredFieldError('service { id }');
+            }
+
+            return dataSources.videoStreamSubtitlesProject.category.subCategory.getServiceById(
+                videoInfo.service.id
+            );
         },
     },
 };
