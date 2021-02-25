@@ -1,7 +1,8 @@
 import { Spelling } from '../Spelling/types';
 import { IABC } from '../ABC/types';
-import { SearchParams, ICategory } from './Category/types';
+import { ICategory } from './Category/types';
 import { IResource } from '../Resource/types';
+import { ServicesCodes } from '../../services/subtitles/types';
 
 enum StatusID {
     NEW = 1,
@@ -73,6 +74,7 @@ enum SubCategory {
 }
 
 type IMDBSubtitlesArgs = {
+    service?: ServicesCodes;
     languages: string[];
     imdbId: string;
     season?: number | null;
@@ -129,7 +131,6 @@ interface IDataSource {
     getAccessTypeById: (id: number) => AccessType;
     getLevelById: (id: number) => Level;
     getStatusById: (id: number) => Status;
-    searchForFiles(searchParams: SearchParams, limit?: number): Promise<any>;
 }
 
 export {

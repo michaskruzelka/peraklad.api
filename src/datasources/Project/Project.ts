@@ -1,6 +1,6 @@
 import { RESTDataSource } from 'apollo-datasource-rest';
 
-import { ICategory, SearchParams } from './Category/types';
+import { ICategory } from './Category/types';
 import { IDataSource, AccessType, Level, Status } from './types';
 import { ACCESS_TYPES, DEFAULT_ACCESS_TYPE, LEVELS, STATUSES } from './config';
 
@@ -89,28 +89,6 @@ class Project extends RESTDataSource implements IDataSource {
         }
 
         return status;
-    }
-
-    /**
-     * Searches for files
-     *
-     * @param searchParams search parameters
-     * @param limit search limit
-     *
-     * @returns files list
-     */
-    public async searchForFiles(
-        searchParams: SearchParams,
-        limit?: number
-    ): Promise<any> {
-        try {
-            return this.category.searchForFiles(searchParams, limit);
-        } catch (e) {
-            this.context.logger.log(
-                'info',
-                'Error while searching for project files: ' + e.message
-            );
-        }
     }
 }
 

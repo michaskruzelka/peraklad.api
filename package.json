@@ -8,6 +8,8 @@
         "apollo-datasource": "^0.7.2",
         "apollo-datasource-rest": "^0.9.7",
         "apollo-server-lambda": "^2.19.0",
+        "cheerio": "^1.0.0-rc.5",
+        "got": "^11.8.1",
         "graphql-depth-limit": "^1.1.0",
         "graphql-validation-complexity": "^0.4.2",
         "neo4j-driver": "^4.2.1",

@@ -55,6 +55,34 @@ const getLanguage = (
     return dataSources.language.get(object.language.code);
 };
 
+const isSubtitlesResponseValid = (
+    response: FileInfoResult,
+    dataSources: DataSources
+): boolean => {
+    let languageCode;
+
+    try {
+        languageCode =
+            response.languageCode ||
+            dataSources.language.getByName(response.languageName || '', false)
+                .code;
+    } catch (e) {
+        return false;
+    }
+
+    const fileFormats = dataSources.resource.getFileFormats(
+        Category.SUBTITLES,
+        SubCategory.MOVIE
+    );
+
+    return (
+        fileFormats
+            .map((fileFormat) => fileFormat.code)
+            .includes(response.format as FileFormatCode) &&
+        dataSources.language.isValidCodes([languageCode])
+    );
+};
+
 const resolver = {
     Query: {
         projectAccessTypes: (
@@ -76,7 +104,7 @@ const resolver = {
         imdbSubtitles: async (
             _: any,
             args: IMDBSubtitlesArgs,
-            { dataSources }: { dataSources: DataSources }
+            { dataSources, logger }: { dataSources: DataSources; logger: any }
         ): Promise<SearchResponse> => {
             if (!dataSources.language.isValidCodes(args.languages)) {
                 throw new ValidationError('Languages are not valid.');
@@ -91,10 +119,19 @@ const resolver = {
                 episode: args.episode || undefined,
             };
 
-            return dataSources.movieSubtitlesProject.searchForFiles(
-                searchParams,
-                args.limit || undefined
-            );
+            try {
+                return dataSources.movieSubtitlesProject.category.subCategory.searchForFiles(
+                    searchParams,
+                    args.limit || undefined,
+                    args.service
+                );
+            } catch (e) {
+                logger.log(
+                    'info',
+                    'Error while searching for project files: ' + e.message
+                );
+                throw new Error('Error while searching for project files.');
+            }
         },
     },
     ImdbSubtitlesResponse: {
@@ -109,21 +146,27 @@ const resolver = {
             );
 
             return imdbSubtitles.filesInfo
-                .filter(
-                    (fileInfo: FileInfoResult) =>
-                        fileFormats
-                            .map((fileFormat) => fileFormat.code)
-                            .includes(fileInfo.format as FileFormatCode) &&
-                        dataSources.language.isValidCodes([fileInfo.language])
+                .filter((fileInfo: FileInfoResult) =>
+                    isSubtitlesResponseValid(fileInfo, dataSources)
                 )
                 .map((fileInfo: FileInfoResult) => ({
                     ...fileInfo,
                     format: fileFormats.find(
                         (fileFormat) => fileFormat.code === fileInfo.format
                     ),
-                    language: dataSources.language.get(fileInfo.language),
+                    language: fileInfo.languageCode
+                        ? dataSources.language.get(fileInfo.languageCode)
+                        : dataSources.language.getByName(
+                              fileInfo.languageName || '',
+                              false
+                          ),
                 }));
         },
+    },
+    ImdbSubtitlesFile: {
+        encoding: (fileInfo: any) => {
+            return fileInfo.encoding || null;
+        }
     },
     MovieSubtitles: {
         level: (

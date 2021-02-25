@@ -3,11 +3,13 @@ import { MovieSubtitlesSearchParams } from '../../datasources/Project/Category/S
 type SearchParams = MovieSubtitlesSearchParams;
 
 enum ServicesCodes {
-    OS = 'opensubtitles',
+    OS = 'OPENSUBTITLES',
+    YIFY = 'YIFY',
 }
 
 enum ServicesNames {
     OS = 'OpenSubtitles',
+    YIFY = 'YIFY Subtitles'
 }
 
 enum StreamServiceId {

@@ -15,9 +15,10 @@ type MovieSubtitlesSearchParams = {
 type FileInfoResult = {
     url: string;
     fileName: string;
-    encoding: string;
     format: string;
-    language: string;
+    encoding?: string;
+    languageName?: string;
+    languageCode?: string;
 };
 
 type SearchService = {

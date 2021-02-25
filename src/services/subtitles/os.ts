@@ -7,7 +7,7 @@ import {
     OPENSUBTITLES_PASSWORD,
 } from './config';
 
-const searchService: Service = {
+const service: Service = {
     code: ServicesCodes.OS,
     name: ServicesNames.OS,
     search: async (searchParams: SearchParams, limit: number) => {
@@ -43,4 +43,4 @@ const searchService: Service = {
     },
 };
 
-export default searchService;
+export default service;

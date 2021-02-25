@@ -1,12 +1,16 @@
-import { subtitlesService } from '../../../../services/subtitles';
+import { FileFormatCode } from '../../../Resource/types';
+import { ServicesCodes } from '../../../../services/subtitles/types';
+import { getService } from '../../../../services/subtitles';
 import { ISubCategory } from '../types';
 import { MovieSubtitlesSearchParams, SearchResult } from './types';
 
 class Movie implements ISubCategory {
     public async searchForFiles(
         searchParams: MovieSubtitlesSearchParams,
-        limit: number = 5
+        limit: number = 5,
+        service: ServicesCodes | null = ServicesCodes.OS
     ): Promise<SearchResult> {
+        const subtitlesService = getService(service || ServicesCodes.OS);
         const result = await subtitlesService.search(searchParams, limit);
 
         return {
@@ -19,8 +23,13 @@ class Movie implements ISubCategory {
                 .map((fileInfo: any) => ({
                     url: fileInfo.url,
                     fileName: fileInfo.filename,
-                    format: String(fileInfo.format).toLowerCase(),
-                    language: fileInfo.langcode.toLowerCase(),
+                    format: fileInfo.format
+                        ? String(fileInfo.format).toLowerCase()
+                        : FileFormatCode.SRT,
+                    languageCode: fileInfo.langcode
+                        ? fileInfo.langcode.toLowerCase()
+                        : undefined,
+                    languageName: fileInfo.language,
                     encoding: fileInfo.encoding,
                 })),
         };

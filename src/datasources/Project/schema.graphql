@@ -2,6 +2,7 @@ type Query {
     projectAccessTypes: [ProjectAccessType!]!
     defaultProjectAccessType: ProjectAccessType!
     imdbSubtitles(
+        service: SubtitlesService
         languages: [String!]! @stringLength(min: 2, max: 2)
         imdbId: String! @stringLength(min: 7, max: 9)
         season: Int @range(min: 0, max: 100)
@@ -18,7 +19,7 @@ type ImdbSubtitlesResponse {
 type ImdbSubtitlesFile {
     url: String!
     fileName: String!
-    encoding: String!
+    encoding: String
     format: FileFormat!
     language: Language!
 }
@@ -167,4 +168,9 @@ enum ProjectCategory {
 enum ProjectSubCategory {
     MOVIE
     VIDEO_STREAM
+}
+
+enum SubtitlesService {
+    OPENSUBTITLES
+    YIFY
 }
