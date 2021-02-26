@@ -3,6 +3,7 @@ type Query {
         category: ProjectCategory!
         subCategory: ProjectSubCategory
     ): [FileFormat!]!
+    ResourceItem: [ResourceItem] @listLength(max: 500)
 }
 
 type FileFormat {
@@ -18,6 +19,58 @@ type ResourceStatus {
     code: String!
 }
 
+type ResourceItemStatus {
+    id: Int!
+    code: String!
+}
+
+type TranslationType {
+    id: Int!
+    code: String!
+}
+
+type TranslationService {
+    id: Int!
+    code: String!
+    name: String!
+}
+
+type TranslationStatus {
+    id: Int!
+    code: String!
+}
+
+type Translation {
+    id: ID!
+    text: String!
+    status: TranslationStatus! @cypher(statement: "RETURN { id: this.status }")
+    type: TranslationType! @cypher(statement: "RETURN { id: this.type }")
+    service: TranslationService
+        @cypher(statement: "RETURN { id: this.service }")
+    resourceItem: ResourceItem @relation(name: "FOR", direction: OUT)
+}
+
+type Timing {
+    startsAt: Duration!
+    endsAt: Duration!
+}
+
+type Recommendation {
+    language: Language! @cypher(statement: "RETURN { code: this.language }")
+    text: String!
+    createdAt: DateTime!
+    timing: Timing @relation(name: "HAS_TIMING", direction: OUT)
+}
+
+type ResourceItem {
+    id: ID!
+    text: String!
+    status: ResourceItemStatus! @cypher(statement: "RETURN { id: this.status }")
+    nextItem: ResourceItem @relation(name: "NEXT", direction: OUT)
+    prevItem: ResourceItem @relation(name: "NEXT", direction: IN)
+    translation: [Translation] @relation(name: "FOR", direction: IN)
+}
+
 type Resource {
     id: ID!
     name: String!
@@ -28,8 +81,10 @@ type Resource {
     format: FileFormat!
         @cypher(
             statement: """
-                MATCH (this)<-[:TRANSLATING]-(p:Project)
-                RETURN { code: { _code: this.format, _labels: labels(p) } }
+            MATCH (this)<-[:TRANSLATING]-(p:Project)
+            RETURN { code: { _code: this.format, _labels: labels(p) } }
             """
         )
+    firstItem: ResourceItem @relation(name: "FIRST_ITEM", direction: OUT)
+    lastItem: ResourceItem @relation(name: "LAST_ITEM", direction: OUT)
 }

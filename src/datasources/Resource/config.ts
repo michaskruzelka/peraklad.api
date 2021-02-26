@@ -6,6 +6,18 @@ import {
     Status,
     StatusID,
     StatusCode,
+    ItemStatus,
+    ItemStatusID,
+    ItemStatusCode,
+    TranslationStatus,
+    TranslationStatusID,
+    TranslationStatusCode,
+    TranslationType,
+    TranslationTypeID,
+    TranslationTypeCode,
+    TranslationService,
+    TranslationServiceID,
+    TranslationServiceCode,
 } from './types';
 
 const SRT_FILE_FORMAT: FileFormat = {
@@ -86,4 +98,61 @@ const STATUSES: Status[] = [
     },
 ];
 
-export { FILE_FORMATS, STATUSES };
+const ITEM_STATUSES: ItemStatus[] = [
+    {
+        id: ItemStatusID.NEW,
+        code: ItemStatusCode.NEW,
+    },
+    {
+        id: ItemStatusID.TRANSLATING,
+        code: ItemStatusCode.TRANSLATING,
+    },
+    {
+        id: ItemStatusID.TRANSLATED,
+        code: ItemStatusCode.TRANSLATED,
+    },
+];
+
+const TRANSLATION_STATUSES: TranslationStatus[] = [
+    {
+        id: TranslationStatusID.SUGGESTED,
+        code: TranslationStatusCode.SUGGESTED,
+    },
+    {
+        id: TranslationStatusID.APPROVED,
+        code: TranslationStatusCode.APPROVED,
+    },
+];
+
+const TRANSLATION_TYPES: TranslationType[] = [
+    {
+        id: TranslationTypeID.HUMAN,
+        code: TranslationTypeCode.HUMAN,
+    },
+    {
+        id: TranslationTypeID.MACHINE,
+        code: TranslationTypeCode.MACHINE,
+    },
+];
+
+const TRANSLATION_SERVICES: TranslationService[] = [
+    {
+        id: TranslationServiceID.GOOGLE,
+        code: TranslationServiceCode.GOOGLE,
+        name: 'Google Перакладчык',
+    },
+    {
+        id: TranslationServiceID.YANDEX,
+        code: TranslationServiceCode.YANDEX,
+        name: 'Yandex Перакладчык',
+    },
+];
+
+export {
+    FILE_FORMATS,
+    STATUSES,
+    ITEM_STATUSES,
+    TRANSLATION_STATUSES,
+    TRANSLATION_TYPES,
+    TRANSLATION_SERVICES,
+};

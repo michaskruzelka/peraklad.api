@@ -1,8 +1,24 @@
 import { DataSource } from 'apollo-datasource';
 
 import { Category, SubCategory } from 'datasources/Project/types';
-import { FileFormat, IDataSource, SubtitlesFileFormats, Status } from './types';
-import { FILE_FORMATS, STATUSES } from './config';
+import {
+    FileFormat,
+    IDataSource,
+    SubtitlesFileFormats,
+    Status,
+    ItemStatus,
+    TranslationStatus,
+    TranslationType,
+    TranslationService,
+} from './types';
+import {
+    FILE_FORMATS,
+    ITEM_STATUSES,
+    STATUSES,
+    TRANSLATION_STATUSES,
+    TRANSLATION_TYPES,
+    TRANSLATION_SERVICES,
+} from './config';
 
 class Resource extends DataSource implements IDataSource {
     public getFileFormats(
@@ -57,6 +73,54 @@ class Resource extends DataSource implements IDataSource {
         }
 
         return status;
+    }
+
+    public getItemStatusById(id: number): ItemStatus {
+        const itemStatus = ITEM_STATUSES.find(
+            (itemStatus) => itemStatus.id === id
+        );
+
+        if (!itemStatus) {
+            throw new Error('Resource item status not found.');
+        }
+
+        return itemStatus;
+    }
+
+    public getTranslationStatusById(id: number): TranslationStatus {
+        const translationStatus = TRANSLATION_STATUSES.find(
+            (status) => status.id === id
+        );
+
+        if (!translationStatus) {
+            throw new Error('Translation status not found.');
+        }
+
+        return translationStatus;
+    }
+
+    public getTranslationTypeById(id: number): TranslationType {
+        const translationType = TRANSLATION_TYPES.find(
+            (type) => type.id === id
+        );
+
+        if (!translationType) {
+            throw new Error('Translation type not found.');
+        }
+
+        return translationType;
+    }
+
+    public getTranslationServiceById(id: number): TranslationService {
+        const translationService = TRANSLATION_SERVICES.find(
+            (service) => service.id === id
+        );
+
+        if (!translationService) {
+            throw new Error('Translation service not found.');
+        }
+
+        return translationService;
     }
 }
 

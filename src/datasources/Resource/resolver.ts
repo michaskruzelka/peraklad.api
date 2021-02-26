@@ -1,5 +1,16 @@
 import { DataSources } from '../types';
-import { FileFormat, FileFormatsArgs, IResource, Status } from './types';
+import {
+    FileFormat,
+    FileFormatsArgs,
+    IResource,
+    IResourceItem,
+    ITranslation,
+    Status,
+    ItemStatus,
+    TranslationStatus,
+    TranslationType,
+    TranslationService,
+} from './types';
 import { ILanguage } from '../Language/types';
 import RequiredFieldError from '../../services/errors/RequiredSelectionFieldError';
 import { determine } from '../Project/category';
@@ -56,8 +67,68 @@ const resolver = {
             return dataSources.resource.getStatusById(resource.status.id);
         },
     },
+    ResourceItem: {
+        status: (
+            resourceItem: IResourceItem,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): ItemStatus => {
+            if (!resourceItem.status.id) {
+                throw new RequiredFieldError('status { id }');
+            }
+
+            return dataSources.resource.getItemStatusById(
+                resourceItem.status.id
+            );
+        },
+    },
+    Translation: {
+        status: (
+            translation: ITranslation,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): TranslationStatus => {
+            if (!translation.status.id) {
+                throw new RequiredFieldError('status { id }');
+            }
+
+            return dataSources.resource.getTranslationStatusById(
+                translation.status.id
+            );
+        },
+        type: (
+            translation: ITranslation,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): TranslationType => {
+            if (!translation.type.id) {
+                throw new RequiredFieldError('type { id }');
+            }
+
+            return dataSources.resource.getTranslationTypeById(
+                translation.type.id
+            );
+        },
+        service: (
+            translation: ITranslation,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): TranslationService | null => {
+            if (!translation.service || translation.service.id === null) {
+                return null;
+            }
+
+            if (!translation.service.id) {
+                throw new RequiredFieldError('service { id }');
+            }
+
+            return dataSources.resource.getTranslationServiceById(
+                translation.service.id
+            );
+        },
+    },
     FileFormat: {
-        description: (fileFormat: FileFormat) => {
+        description: (fileFormat: FileFormat): string | null => {
             return fileFormat.description || null;
         },
     },
