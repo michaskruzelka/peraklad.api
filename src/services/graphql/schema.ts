@@ -15,6 +15,7 @@ import {
 
 import { getResolvers } from './resolvers';
 import { resolveTypes } from './typeResolver';
+import { typesToIgnoreDBAugmentation } from './config';
 
 const getSchema = async (): Promise<GraphQLSchema> => {
     const typeDefsList: DocumentNode[] = [
@@ -26,45 +27,13 @@ const getSchema = async (): Promise<GraphQLSchema> => {
     ];
     const typeDefsAsOne: DocumentNode = mergeTypeDefs(typeDefsList);
 
-    const typesToIgnore = [
-        'Language',
-        'GroupedLanguages',
-        'OMDB',
-        'OMDBMovie',
-        'OMDBEpisode',
-        'OMDBSeries',
-        'IMDB',
-        'Movie',
-        'Episode',
-        'Series',
-        'VideoInfo',
-        'VideoStreamService',
-        'ProjectAccessType',
-        'ImdbSubtitlesResponse',
-        'ImdbSubtitlesFile',
-        'ABC',
-        'Spelling',
-        'FileFormat',
-        'SubtitlesSearchService',
-        'ValidatedInputErrorOutput',
-        'Project',
-        'ProjectLevel',
-        'ProjectSettings',
-        'ProjectStatus',
-        'ResourceStatus',
-        'ResourceItemStatus',
-        'TranslationStatus',
-        'TranslationType',
-        'TranslationService',
-    ];
-
     const schemaOptions: makeAugmentedSchemaOptions = {
         typeDefs: typeDefsAsOne,
         resolvers: await getResolvers(),
         schemaDirectives: { range, stringLength, listLength },
         config: {
             query: {
-                exclude: typesToIgnore,
+                exclude: typesToIgnoreDBAugmentation,
             },
             mutation: false,
         },

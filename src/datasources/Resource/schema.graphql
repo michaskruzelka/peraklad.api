@@ -50,9 +50,66 @@ type Translation {
     resourceItem: ResourceItem @relation(name: "FOR", direction: OUT)
 }
 
+type Duration {
+    hours: Int!
+    minutes: Int!
+    seconds: Int!
+    milliseconds: Int!
+    total: Int!
+    format: string!
+}
+
+type TimingFormat {
+    fileFormat: FileFormat!
+    formatted: String!
+}
+
 type Timing {
     startsAt: Duration!
+        @cypher(
+            statement: """
+            RETURN {
+                hours: this.startsAt.hours,
+                minutes: this.startsAt.minutesOfHour,
+                seconds: this.startsAt.secondsOfMinute,
+                milliseconds: this.startsAt.millisecondsOfSecond,
+                total: this.startsAt.milliseconds,
+                formatted: toString(this.startsAt)
+            }
+            """
+        )
     endsAt: Duration!
+        @cypher(
+            statement: """
+            RETURN {
+                hours: this.endsAt.hours,
+                minutes: this.endsAt.minutesOfHour,
+                seconds: this.endsAt.secondsOfMinute,
+                milliseconds: this.endsAt.millisecondsOfSecond,
+                total: this.endsAt.milliseconds,
+                formatted: toString(this.endsAt)
+            }
+            """
+        )
+    difference: Duration!
+        @cypher(
+            statement: """
+            WITH duration({ milliseconds: this.endsAt.milliseconds - this.startsAt.milliseconds }) AS diff
+            RETURN {
+                hours: diff.hours,
+                minutes: diff.minutesOfHour,
+                seconds: diff.secondsOfMinute,
+                milliseconds: diff.millisecondsOfSecond,
+                total: diff.milliseconds,
+                formatted: toString(diff)
+            }
+            """
+        )
+    # get start and ends and traverse to resourceItemContext and get labels to determine the category
+    # and thus to get a list of specific formats (srt, sbv, etc.).
+    # If not traversable, ignore, return null.
+    # formatted: [TimingFormat!] @cypher(statement: """
+    # """)
 }
 
 type Recommendation {
@@ -62,6 +119,32 @@ type Recommendation {
     timing: Timing @relation(name: "HAS_TIMING", direction: OUT)
 }
 
+type SRT {
+    coordinates: String;
+}
+
+type VTT {
+    cueSettings: String;
+}
+
+# add XLIFF and others
+
+union Format = SRT | VTT
+
+interface ResourceItemContext {
+    formats: [Format]
+}
+
+type Subtitle implements ResourceItemContext {
+    formats: [Format]
+    timing: Timing! @relation(name: "HAS_TIMING", direction: OUT)
+}
+
+type SoftwareElement {
+    formats: [Format]
+    key: String
+}
+
 type ResourceItem {
     id: ID!
     text: String!
@@ -69,6 +152,7 @@ type ResourceItem {
     nextItem: ResourceItem @relation(name: "NEXT", direction: OUT)
     prevItem: ResourceItem @relation(name: "NEXT", direction: IN)
     translation: [Translation] @relation(name: "FOR", direction: IN)
+    context: ResourceItemContext! @relation(name: "HAS_CONTEXT")
 }
 
 type Resource {
