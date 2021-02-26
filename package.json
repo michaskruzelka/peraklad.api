@@ -19,6 +19,7 @@
         "winston-logzio": "^5.1.2"
     },
     "devDependencies": {
+        "@types/cheerio": "^0.22.24",
         "@types/graphql-depth-limit": "^1.1.2",
         "apollo-server": "^2.19.1",
         "cross-env": "^7.0.3",

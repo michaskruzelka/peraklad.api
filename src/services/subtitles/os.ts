@@ -1,6 +1,12 @@
 import OS from 'opensubtitles-api';
 
-import { Service, SearchParams, ServicesCodes, ServicesNames } from './types';
+import {
+    Service,
+    SearchParams,
+    ServicesCodes,
+    ServicesNames,
+    ServiceSearchResult,
+} from './types';
 import {
     OPENSUBTITLES_UA,
     OPENSUBTITLES_USERNAME,
@@ -10,7 +16,10 @@ import {
 const service: Service = {
     code: ServicesCodes.OS,
     name: ServicesNames.OS,
-    search: async (searchParams: SearchParams, limit: number) => {
+    search: async (
+        searchParams: SearchParams,
+        limit: number
+    ): Promise<ServiceSearchResult> => {
         if (
             !(
                 OPENSUBTITLES_UA &&

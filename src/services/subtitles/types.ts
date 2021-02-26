@@ -9,7 +9,7 @@ enum ServicesCodes {
 
 enum ServicesNames {
     OS = 'OpenSubtitles',
-    YIFY = 'YIFY Subtitles'
+    YIFY = 'YIFY Subtitles',
 }
 
 enum StreamServiceId {
@@ -25,10 +25,23 @@ type StreamService = {
     code: StreamServiceCode;
 };
 
+type ServiceSearchResult = {
+    [key: string]: {
+        url: string;
+        langcode: string;
+        filename: string;
+        format?: string;
+        encoding?: string;
+    }[];
+};
+
 type Service = {
     code: ServicesCodes;
     name: ServicesNames;
-    search: (searchParams: SearchParams, limit: number) => any;
+    search: (
+        searchParams: SearchParams,
+        limit: number
+    ) => Promise<ServiceSearchResult>;
 };
 
 export {
@@ -39,4 +52,5 @@ export {
     StreamServiceId,
     StreamServiceCode,
     StreamService,
+    ServiceSearchResult,
 };

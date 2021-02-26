@@ -17,8 +17,7 @@ type FileInfoResult = {
     fileName: string;
     format: string;
     encoding?: string;
-    languageName?: string;
-    languageCode?: string;
+    language: string;
 };
 
 type SearchService = {

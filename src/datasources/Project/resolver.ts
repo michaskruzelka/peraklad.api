@@ -59,17 +59,6 @@ const isSubtitlesResponseValid = (
     response: FileInfoResult,
     dataSources: DataSources
 ): boolean => {
-    let languageCode;
-
-    try {
-        languageCode =
-            response.languageCode ||
-            dataSources.language.getByName(response.languageName || '', false)
-                .code;
-    } catch (e) {
-        return false;
-    }
-
     const fileFormats = dataSources.resource.getFileFormats(
         Category.SUBTITLES,
         SubCategory.MOVIE
@@ -79,7 +68,7 @@ const isSubtitlesResponseValid = (
         fileFormats
             .map((fileFormat) => fileFormat.code)
             .includes(response.format as FileFormatCode) &&
-        dataSources.language.isValidCodes([languageCode])
+        dataSources.language.isValidCodes([response.language])
     );
 };
 
@@ -154,19 +143,14 @@ const resolver = {
                     format: fileFormats.find(
                         (fileFormat) => fileFormat.code === fileInfo.format
                     ),
-                    language: fileInfo.languageCode
-                        ? dataSources.language.get(fileInfo.languageCode)
-                        : dataSources.language.getByName(
-                              fileInfo.languageName || '',
-                              false
-                          ),
+                    language: dataSources.language.get(fileInfo.language),
                 }));
         },
     },
     ImdbSubtitlesFile: {
         encoding: (fileInfo: any) => {
             return fileInfo.encoding || null;
-        }
+        },
     },
     MovieSubtitles: {
         level: (

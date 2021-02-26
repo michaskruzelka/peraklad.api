@@ -5,6 +5,7 @@ import path from 'path';
 import {
     range,
     stringLength,
+    listLength,
     ValidateDirectiveVisitor,
 } from '@profusion/apollo-validation-directives';
 import {
@@ -20,6 +21,7 @@ const getSchema = async (): Promise<GraphQLSchema> => {
         ...(await loadFiles(path.join(__dirname, '../../../src/**/*.graphql'))),
         ...range.getTypeDefs(),
         ...stringLength.getTypeDefs(),
+        ...listLength.getTypeDefs(),
         ...ValidateDirectiveVisitor.getMissingCommonTypeDefs(),
     ];
     const typeDefsAsOne: DocumentNode = mergeTypeDefs(typeDefsList);
@@ -55,7 +57,7 @@ const getSchema = async (): Promise<GraphQLSchema> => {
     const schemaOptions: makeAugmentedSchemaOptions = {
         typeDefs: typeDefsAsOne,
         resolvers: await getResolvers(),
-        schemaDirectives: { range, stringLength },
+        schemaDirectives: { range, stringLength, listLength },
         config: {
             query: {
                 exclude: typesToIgnore,

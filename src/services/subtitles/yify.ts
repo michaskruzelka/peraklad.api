@@ -1,67 +1,97 @@
 import cheerio from 'cheerio';
 import got from 'got';
 
-import { Service, SearchParams, ServicesCodes, ServicesNames } from './types';
+import langMap from './yifyLangMap.json';
+import {
+    Service,
+    SearchParams,
+    ServicesCodes,
+    ServicesNames,
+    ServiceSearchResult,
+} from './types';
 import { YIFY_SEARCH_URL, YIFY_DOWNLOAD_URL } from './config';
 
-const rearrange = (subtitles: any, limit: number) => {
-    const result: any = {};
-    subtitles.sort(
-        (a: { rating: number }, b: { rating: number }) => b.rating - a.rating
-    );
+const retrieveLanguage = ($el: cheerio.Cheerio): string => {
+    const languageMap: any = langMap;
+    const language = $el.find('.flag-cell .sub-lang').text() || '';
 
-    for (const i in subtitles) {
-        const lang = subtitles[i].language;
-        if (!result[lang]) {
-            result[lang] = [];
-        }
-        if (limit > result[lang].length) {
-            result[lang].push(subtitles[i]);
-        }
-    }
+    return languageMap[language.toLowerCase()] || '';
+};
 
-    return result;
+const retrieveUrl = ($el: cheerio.Cheerio): string => {
+    const hrefAttr = $el.find('.download-cell a').attr('href');
+
+    return hrefAttr
+        ? YIFY_DOWNLOAD_URL +
+              hrefAttr.replace('subtitles/', 'subtitle/') +
+              '.zip'
+        : '';
+};
+
+const retrieveFileName = ($el: cheerio.Cheerio): string => {
+    return $el
+        .find('.text-muted')
+        .parent()
+        .text()
+        .slice(9)
+        .replace('subtitle ', '')
+        .trim();
+};
+
+const retrieveRating = ($el: cheerio.Cheerio): number => {
+    return Number($el.find('.rating-cell').text());
 };
 
 const service: Service = {
     code: ServicesCodes.YIFY,
     name: ServicesNames.YIFY,
-    search: async (searchParams: SearchParams, limit: number) => {
+    search: async (
+        searchParams: SearchParams,
+        limit: number
+    ): Promise<ServiceSearchResult> => {
         const response = await got(
             `${YIFY_SEARCH_URL}/movie-imdb/tt${searchParams.imdbId}`
         );
 
         const $ = cheerio.load(response.body);
-        let subtitles: any = $('tbody tr')
+        let subtitles = $('tbody tr')
             .map((_, el) => {
                 const $el = $(el);
-                const language = $el.find('.flag-cell .sub-lang').text() || '';
-                const hrefAttr = $el.find('.download-cell a').attr('href');
-                const url = hrefAttr
-                    ? YIFY_DOWNLOAD_URL +
-                      hrefAttr.replace('subtitles/', 'subtitle/') +
-                      '.zip'
-                    : '';
 
                 return {
-                    rating: Number($el.find('.rating-cell').text()),
-                    filename: $el
-                        .find('.text-muted')
-                        .parent()
-                        .text()
-                        .slice(9)
-                        .trim(),
-                    language,
-                    url,
+                    langcode: retrieveLanguage($el),
+                    url: retrieveUrl($el),
+                    filename: retrieveFileName($el),
+                    rating: retrieveRating($el),
                 };
             })
             .get();
 
-        subtitles = subtitles.filter((subtitle: any) => {
-            return subtitle.url && subtitle.language && subtitle.filename;
+        subtitles = subtitles.filter((subtitle) => {
+            return subtitle.url && subtitle.langcode && subtitle.filename;
         });
+        subtitles.sort((a, b) => b.rating - a.rating);
 
-        return rearrange(subtitles, limit);
+        const result: ServiceSearchResult = {};
+
+        const languageCodesThatMatter = searchParams.languages.map(
+            (language) => language.code
+        );
+
+        for (const i in subtitles) {
+            const lang = subtitles[i].langcode;
+            if (!languageCodesThatMatter.includes(lang)) {
+                continue;
+            }
+            if (!result[lang]) {
+                result[lang] = [];
+            }
+            if (limit > result[lang].length) {
+                result[lang].push(subtitles[i]);
+            }
+        }
+
+        return result;
     },
 };
 

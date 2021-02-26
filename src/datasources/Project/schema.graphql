@@ -3,7 +3,9 @@ type Query {
     defaultProjectAccessType: ProjectAccessType!
     imdbSubtitles(
         service: SubtitlesService
-        languages: [String!]! @stringLength(min: 2, max: 2)
+        languages: [String!]!
+            @stringLength(min: 2, max: 2)
+            @listLength(min: 1, max: 10)
         imdbId: String! @stringLength(min: 7, max: 9)
         season: Int @range(min: 0, max: 100)
         episode: Int @range(min: 0, max: 100)
