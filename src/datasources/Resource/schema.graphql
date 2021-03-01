@@ -61,7 +61,7 @@ type Duration {
 }
 
 type TimingFormat {
-    fileFormat: FileFormat!
+    fileFormat: FileFormat! @neo4j_ignore
     text: String!
 }
 
@@ -108,11 +108,30 @@ type Timing {
             }
             """
         )
-    # get start and ends and traverse to resourceItemContext and get labels to determine the category
-    # and thus to get a list of specific formats (srt, sbv, etc.).
-    # If not traversable, ignore, return null.
-    # formatted: [TimingFormat!] @cypher(statement: """
-    # """)
+    formatted: [TimingFormat!]
+        @cypher(
+            statement: """
+            MATCH (this)-[*]-(p:Project)
+            WITH DISTINCT p, this
+            RETURN { 
+                text: {
+                    labels: labels(p),
+                    startsAt: { 
+                        hours: this.startsAt.hours,
+                        minutes: this.startsAt.minutesOfHour,
+                        seconds: this.startsAt.secondsOfMinute,
+                        milliseconds: this.startsAt.millisecondsOfSecond
+                    },
+                    endsAt: {
+                        hours: this.endsAt.hours,
+                        minutes: this.endsAt.minutesOfHour,
+                        seconds: this.endsAt.secondsOfMinute,
+                        milliseconds: this.endsAt.millisecondsOfSecond
+                    }
+                }
+            }
+            """
+        )
 }
 
 type Recommendation {
@@ -155,8 +174,10 @@ type Comment {
 }
 
 input ResourceItemFilter {
-    status: [Int!]
-    text: String
+    statuses: [Int]! = [] @listLength(max: 10) @range(min: 1, max: 10)
+    text: String! = "" @stringLength(max: 100)
+    withCommentsOnly: Boolean
+    withSuggestionsOnly: Boolean
 }
 
 type ResourceItem {
@@ -165,18 +186,42 @@ type ResourceItem {
     status: ResourceItemStatus! @cypher(statement: "RETURN { id: this.status }")
     nextItem: ResourceItem @relation(name: "NEXT", direction: OUT)
     prevItem: ResourceItem @relation(name: "NEXT", direction: IN)
-    nextItems(limit: Int! = 50 @range(min: 1, max: 100)): [ResourceItem]
+    nextItems(
+        filter: ResourceItemFilter!
+        limit: Int! = 50 @range(min: 1, max: 100)
+    ): [ResourceItem]
         @cypher(
             statement: """
             MATCH (this)-[:NEXT*1..100]->(ni:ResourceItem)
-            RETURN ni LIMIT toInteger($limit)
+            OPTIONAL MATCH (ni)<-[:FOR]-(t:Translation)
+            WITH ni, t
+            WHERE ($filter.statuses IS NULL
+                OR size($filter.statuses) = 0
+                OR ni.status IN $filter.statuses)
+            AND (ni.text =~ '(?iu).*' + coalesce($filter.text, '') + '.*'
+                OR t.text =~ '(?iu).*' + coalesce($filter.text, '') + '.*')
+            AND (NOT coalesce($filter.withSuggestionsOnly, false) OR EXISTS((ni)<-[:FOR]-(:Translation)))
+            AND (NOT coalesce($filter.withCommentsOnly, false) OR EXISTS((ni)<-[:IN]-(:Comment)))
+            RETURN DISTINCT ni LIMIT toInteger($limit)
             """
         )
-    prevItems(limit: Int! = 50 @range(min: 1, max: 100)): [ResourceItem]
+    prevItems(
+        filter: ResourceItemFilter!
+        limit: Int! = 50 @range(min: 1, max: 100)
+    ): [ResourceItem]
         @cypher(
             statement: """
             MATCH (this)<-[:NEXT*1..100]-(pi:ResourceItem)
-            RETURN pi LIMIT toInteger($limit)
+            OPTIONAL MATCH (pi)<-[:FOR]-(t:Translation)
+            WITH pi, t
+            WHERE ($filter.statuses IS NULL
+                OR size($filter.statuses) = 0
+                OR pi.status IN $filter.statuses)
+            AND (pi.text =~ '(?iu).*' + coalesce($filter.text, '') + '.*'
+                OR t.text =~ '(?iu).*' + coalesce($filter.text, '') + '.*')
+            AND (NOT coalesce($filter.withSuggestionsOnly, false) OR EXISTS((pi)<-[:FOR]-(:Translation)))
+            AND (NOT coalesce($filter.withCommentsOnly, false) OR EXISTS((pi)<-[:IN]-(:Comment)))
+            RETURN DISTINCT pi LIMIT toInteger($limit)
             """
         )
     translation: [Translation] @relation(name: "FOR", direction: IN)
@@ -202,11 +247,20 @@ type Resource {
         )
     firstItem: ResourceItem @relation(name: "FIRST_ITEM", direction: OUT)
     lastItem: ResourceItem @relation(name: "LAST_ITEM", direction: OUT)
-    foundItem(filter: ResourceItemFilter): ResourceItem
+    foundItem(filter: ResourceItemFilter!): ResourceItem
         @cypher(
             statement: """
             MATCH (this)-[:FIRST_ITEM]->(:ResourceItem)-[:NEXT*0..]->(ri:ResourceItem)
-            RETURN ri LIMIT 1
+            OPTIONAL MATCH (ri)<-[:FOR]-(t:Translation)
+            WITH ri, t
+            WHERE ($filter.statuses IS NULL
+                OR size($filter.statuses) = 0
+                OR ri.status IN $filter.statuses)
+            AND (ri.text =~ '(?iu).*' + coalesce($filter.text, '') + '.*'
+                OR t.text =~ '(?iu).*' + coalesce($filter.text, '') + '.*')
+            AND (NOT coalesce($filter.withSuggestionsOnly, false) OR EXISTS((ri)<-[:FOR]-(:Translation)))
+            AND (NOT coalesce($filter.withCommentsOnly, false) OR EXISTS((ri)<-[:IN]-(:Comment)))
+            RETURN DISTINCT ri LIMIT 1
             """
         )
 }

@@ -179,6 +179,32 @@ type ResolvedResourceItem = IResourceItem & {
     status: ItemStatus;
 };
 
+interface IDuration {
+    hours: number;
+    minutes: number;
+    seconds: number;
+    milliseconds: number;
+    total?: number;
+    formatted?: string;
+}
+
+type TimingFormat = {
+    text: {
+        labels: string[];
+        startsAt: IDuration;
+        endsAt: IDuration;
+    };
+    fileFormat: FileFormat;
+};
+
+type ResolvedTimingFormat = TimingFormat & {
+    text: string;
+};
+
+interface ITiming {
+    formatted: TimingFormat[];
+}
+
 interface IDataSource {
     getFileFormats(category: Category, subCategory?: SubCategory): FileFormat[];
     getFileFormatByCode(
@@ -223,4 +249,7 @@ export {
     ResolvedTranslation,
     IRecommendation,
     ResolvedRecommendation,
+    ITiming,
+    TimingFormat,
+    ResolvedTimingFormat,
 };

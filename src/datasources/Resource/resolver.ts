@@ -11,6 +11,8 @@ import {
     TranslationType,
     TranslationService,
     IRecommendation,
+    ITiming,
+    TimingFormat,
 } from './types';
 import { ILanguage } from '../Language/types';
 import RequiredFieldError from '../../services/errors/RequiredSelectionFieldError';
@@ -151,6 +153,38 @@ const resolver = {
     FileFormat: {
         description: (fileFormat: FileFormat): string | null => {
             return fileFormat.description || null;
+        },
+    },
+    Timing: {
+        formatted: (
+            timing: ITiming,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): TimingFormat[] => {
+            const formattedSettings = timing.formatted[0];
+
+            if (!formattedSettings.text) {
+                throw new RequiredFieldError('timing { formatted { text } }');
+            }
+
+            return dataSources.resource
+                .getFileFormats(
+                    determine.category(formattedSettings.text.labels),
+                    determine.subCategory(formattedSettings.text.labels)
+                )
+                .map((fileFormat: FileFormat) => {
+                    return {
+                        fileFormat: fileFormat,
+                        text: formattedSettings.text,
+                    };
+                });
+        },
+    },
+    TimingFormat: {
+        text: (timingFormat: TimingFormat): string => {
+            console.log(timingFormat);
+
+            return 'test';
         },
     },
 };
