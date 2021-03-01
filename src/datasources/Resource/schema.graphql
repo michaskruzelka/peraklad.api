@@ -3,7 +3,8 @@ type Query {
         category: ProjectCategory!
         subCategory: ProjectSubCategory
     ): [FileFormat!]!
-    ResourceItem: [ResourceItem] @listLength(max: 500)
+    ResourceItem(id: ID!): ResourceItem
+    resourceItemStatuses: [ResourceItemStatus]!
 }
 
 type FileFormat {
@@ -56,12 +57,12 @@ type Duration {
     seconds: Int!
     milliseconds: Int!
     total: Int!
-    format: string!
+    formatted: String!
 }
 
 type TimingFormat {
     fileFormat: FileFormat!
-    formatted: String!
+    text: String!
 }
 
 type Timing {
@@ -94,7 +95,9 @@ type Timing {
     difference: Duration!
         @cypher(
             statement: """
-            WITH duration({ milliseconds: this.endsAt.milliseconds - this.startsAt.milliseconds }) AS diff
+            WITH duration({
+                milliseconds: this.endsAt.milliseconds - this.startsAt.milliseconds
+            }) AS diff
             RETURN {
                 hours: diff.hours,
                 minutes: diff.minutesOfHour,
@@ -120,11 +123,11 @@ type Recommendation {
 }
 
 type SRT {
-    coordinates: String;
+    coordinates: String
 }
 
 type VTT {
-    cueSettings: String;
+    cueSettings: String
 }
 
 # add XLIFF and others
@@ -132,17 +135,28 @@ type VTT {
 union Format = SRT | VTT
 
 interface ResourceItemContext {
-    formats: [Format]
+    formats: [Format] @relation(name: "SPECIFIC_FOR", direction: OUT)
 }
 
 type Subtitle implements ResourceItemContext {
-    formats: [Format]
+    formats: [Format] @relation(name: "SPECIFIC_FOR", direction: OUT)
     timing: Timing! @relation(name: "HAS_TIMING", direction: OUT)
 }
 
-type SoftwareElement {
-    formats: [Format]
+type SoftwareElement implements ResourceItemContext {
+    formats: [Format] @relation(name: "SPECIFIC_FOR", direction: OUT)
     key: String
+}
+
+type Comment {
+    id: ID!
+    text: String!
+    resourceItem: ResourceItem @relation(name: "IN", direction: OUT)
+}
+
+input ResourceItemFilter {
+    status: [Int!]
+    text: String
 }
 
 type ResourceItem {
@@ -151,8 +165,25 @@ type ResourceItem {
     status: ResourceItemStatus! @cypher(statement: "RETURN { id: this.status }")
     nextItem: ResourceItem @relation(name: "NEXT", direction: OUT)
     prevItem: ResourceItem @relation(name: "NEXT", direction: IN)
+    nextItems(limit: Int! = 50 @range(min: 1, max: 100)): [ResourceItem]
+        @cypher(
+            statement: """
+            MATCH (this)-[:NEXT*1..100]->(ni:ResourceItem)
+            RETURN ni LIMIT toInteger($limit)
+            """
+        )
+    prevItems(limit: Int! = 50 @range(min: 1, max: 100)): [ResourceItem]
+        @cypher(
+            statement: """
+            MATCH (this)<-[:NEXT*1..100]-(pi:ResourceItem)
+            RETURN pi LIMIT toInteger($limit)
+            """
+        )
     translation: [Translation] @relation(name: "FOR", direction: IN)
-    context: ResourceItemContext! @relation(name: "HAS_CONTEXT")
+    context: ResourceItemContext! @relation(name: "HAS_CONTEXT", direction: OUT)
+    comment: [Comment] @relation(name: "IN", direction: IN)
+    recommendation: [Recommendation] @relation(name: "FOR", direction: IN)
+    similar: [ResourceItem]
 }
 
 type Resource {
@@ -171,4 +202,11 @@ type Resource {
         )
     firstItem: ResourceItem @relation(name: "FIRST_ITEM", direction: OUT)
     lastItem: ResourceItem @relation(name: "LAST_ITEM", direction: OUT)
+    foundItem(filter: ResourceItemFilter): ResourceItem
+        @cypher(
+            statement: """
+            MATCH (this)-[:FIRST_ITEM]->(:ResourceItem)-[:NEXT*0..]->(ri:ResourceItem)
+            RETURN ri LIMIT 1
+            """
+        )
 }

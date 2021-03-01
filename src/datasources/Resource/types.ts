@@ -141,6 +141,15 @@ type ResolvedTranslation = ITranslation & {
     service?: TranslationService;
 };
 
+interface IRecommendation {
+    language: { code?: string | null };
+    text: string;
+}
+
+type ResolvedRecommendation = IRecommendation & {
+    language: ILanguage;
+};
+
 enum ItemStatusID {
     NEW = 1,
     TRANSLATING = 2,
@@ -212,4 +221,6 @@ export {
     TranslationServiceCode,
     ITranslation,
     ResolvedTranslation,
+    IRecommendation,
+    ResolvedRecommendation,
 };

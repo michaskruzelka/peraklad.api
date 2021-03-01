@@ -25,6 +25,7 @@ const typesToIgnoreDBAugmentation = [
     'ProjectStatus',
     'ResourceStatus',
     'ResourceItemStatus',
+    'Translation',
     'TranslationStatus',
     'TranslationType',
     'TranslationService',
@@ -36,6 +37,10 @@ const typesToIgnoreDBAugmentation = [
     'VTT',
     'SoftwareElement',
     'Subtitle',
+    'Duration',
+    'Recommendation',
+    'Comment',
+    'ResourceItem',
 ];
 
 export { typesToIgnoreDBAugmentation };

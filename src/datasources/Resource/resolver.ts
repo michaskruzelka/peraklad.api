@@ -10,6 +10,7 @@ import {
     TranslationStatus,
     TranslationType,
     TranslationService,
+    IRecommendation,
 } from './types';
 import { ILanguage } from '../Language/types';
 import RequiredFieldError from '../../services/errors/RequiredSelectionFieldError';
@@ -26,6 +27,13 @@ const resolver = {
                 args.category,
                 args.subCategory
             );
+        },
+        resourceItemStatuses: (
+            _: any,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ) => {
+            return dataSources.resource.getItemStatuses();
         },
     },
     Resource: {
@@ -125,6 +133,19 @@ const resolver = {
             return dataSources.resource.getTranslationServiceById(
                 translation.service.id
             );
+        },
+    },
+    Recommendation: {
+        language: (
+            recommendation: IRecommendation,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ) => {
+            if (!recommendation.language.code) {
+                throw new RequiredFieldError('language { code }');
+            }
+
+            return dataSources.language.get(recommendation.language.code);
         },
     },
     FileFormat: {

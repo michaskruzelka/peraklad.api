@@ -87,6 +87,10 @@ class Resource extends DataSource implements IDataSource {
         return itemStatus;
     }
 
+    public getItemStatuses(): ItemStatus[] {
+        return ITEM_STATUSES;
+    }
+
     public getTranslationStatusById(id: number): TranslationStatus {
         const translationStatus = TRANSLATION_STATUSES.find(
             (status) => status.id === id
