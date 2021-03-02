@@ -7,6 +7,16 @@ type Query {
     resourceItemStatuses: [ResourceItemStatus]!
 }
 
+type Mutation {
+    CreateResources(
+        language: String! @stringLength(min: 2, max: 2)
+        file: Upload
+        fileUrl: String @stringLength(max: 500)
+        fileName: String @stringLength(max: 50)
+        encoding: String @stringLength(max: 100)
+    ): Boolean!
+}
+
 type FileFormat {
     code: String!
     name: String!
@@ -113,10 +123,10 @@ type Timing {
             statement: """
             MATCH (this)-[*]-(p:Project)
             WITH DISTINCT p, this
-            RETURN { 
+            RETURN {
                 text: {
                     labels: labels(p),
-                    startsAt: { 
+                    startsAt: {
                         hours: this.startsAt.hours,
                         minutes: this.startsAt.minutesOfHour,
                         seconds: this.startsAt.secondsOfMinute,

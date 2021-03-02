@@ -126,6 +126,14 @@ class Resource extends DataSource implements IDataSource {
 
         return translationService;
     }
+
+    // public readRemoteFile(fileUrl: string) {
+
+    // }
+
+    // public readLocalFile(file: string) {
+
+    // }
 }
 
 export { Resource };

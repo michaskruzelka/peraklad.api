@@ -17,6 +17,7 @@ import {
 import { ILanguage } from '../Language/types';
 import RequiredFieldError from '../../services/errors/RequiredSelectionFieldError';
 import { determine } from '../Project/category';
+import { ValidationError } from 'apollo-server';
 
 const resolver = {
     Query: {
@@ -36,6 +37,29 @@ const resolver = {
             { dataSources }: { dataSources: DataSources }
         ) => {
             return dataSources.resource.getItemStatuses();
+        },
+    },
+    Mutation: {
+        CreateResources: (
+            _: any,
+            args: any,
+            { dataSources }: { dataSources: DataSources }
+        ) => {
+            dataSources.language.validateCode(args.language);
+            if (!(args.file || args.fileUrl) || (args.file && args.fileUrl)) {
+                throw new ValidationError(
+                    'Please provide either file or fileUrl.'
+                );
+            }
+
+            
+
+            // Implement
+            console.log(args);
+
+            // dataSources.abc.getDefaultABC();
+
+            return true;
         },
     },
     Resource: {
