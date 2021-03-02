@@ -1,4 +1,5 @@
 import { DataSource } from 'apollo-datasource';
+import { ValidationError } from 'apollo-server-lambda';
 
 import { IDataSource, IABC } from './types';
 import { ABC_LIST, DEFAULT_ABC } from './config';
@@ -39,6 +40,14 @@ class ABC extends DataSource implements IDataSource {
         }
 
         return abc;
+    }
+
+    public validateId(id: number): void {
+        try {
+            this.getABCById(id);
+        } catch (e) {
+            throw new ValidationError('ABC ID is not valid.');
+        }
     }
 }
 

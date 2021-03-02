@@ -1,5 +1,5 @@
 import { RESTDataSource, RequestOptions } from 'apollo-datasource-rest';
-import { ValidationError } from 'apollo-server';
+import { ValidationError } from 'apollo-server-lambda';
 
 import {
     APIParams,

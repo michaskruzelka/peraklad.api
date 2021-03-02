@@ -121,7 +121,7 @@ interface IVideoInfo {
     };
     service: {
         id?: number;
-    }
+    };
 }
 
 interface IDataSource {
@@ -132,6 +132,41 @@ interface IDataSource {
     getLevelById: (id: number) => Level;
     getStatusById: (id: number) => Status;
 }
+
+type IMDBArgs = {
+    title: string;
+    imdbId?: string;
+    imdbRating?: number;
+    posterSrc?: string;
+};
+
+type IMDBMovieArgs = IMDBArgs & {
+    language: string;
+    year?: number;
+};
+
+type ProjectArgs = {
+    name: string;
+    description?: string;
+};
+
+type CreateIMDBMovieProjectArgs = {
+    project: ProjectArgs;
+    imdb: IMDBMovieArgs;
+};
+
+type ProjectSettingsArgs = {
+    access?: number;
+    abc?: number;
+    spelling?: number;
+};
+
+type UpdateIMDBMovieProjectArgs = {
+    id: string;
+    project?: ProjectArgs;
+    imdb?: IMDBMovieArgs;
+    settings?: ProjectSettingsArgs;
+};
 
 export {
     AccessTypeID,
@@ -153,4 +188,6 @@ export {
     IMovie,
     ISeries,
     IVideoInfo,
+    CreateIMDBMovieProjectArgs,
+    UpdateIMDBMovieProjectArgs
 };

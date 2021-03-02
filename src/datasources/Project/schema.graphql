@@ -13,6 +13,55 @@ type Query {
     ): ImdbSubtitlesResponse
 }
 
+type Mutation {
+    CreateIMDBMovieProject(project: ProjectInput!, imdb: IMDBMovieInput!): ID
+    UpdateIMDBMovieProject(
+        id: ID! @stringLength(min: 36, max: 36)
+        project: ProjectInput
+        imdb: IMDBSeriesInput
+        settings: ProjectSettingsInput
+    ): ID
+}
+
+input ProjectInput {
+    name: String! @stringLength(min: 1, max: 100)
+    description: String @stringLength(max: 1000)
+}
+
+input ProjectSettingsInput {
+    status: Int @range(min: 1, max: 10)
+    access: Int @range(min: 1, max: 10)
+    abc: Int @range(min: 1, max: 10)
+    spelling: Int @range(min: 1, max: 10)
+}
+
+input IMDBMovieInput {
+    title: String! @stringLength(min: 1, max: 100)
+    language: String! @stringLength(min: 2, max: 2)
+    year: Int @range(min: 1880, max: 2100)
+    imdbId: String
+    imdbRating: Float
+    posterSrc: String
+}
+
+input IMDBSeriesInput {
+    title: String! @stringLength(min: 1, max: 100)
+    language: String! @stringLength(min: 2, max: 2)
+    imdbId: String
+    imdbRating: Float
+    posterSrc: String
+}
+
+input IMDBEpisodeInput {
+    title: String! @stringLength(min: 1, max: 100)
+    episodeNum: Int! @range(min: 1, max: 100)
+    seasonNum: Int! @range(min: 1, max: 100)
+    year: Int @range(min: 1880, max: 2100)
+    imdbId: String
+    imdbRating: Float
+    posterSrc: String
+}
+
 type ImdbSubtitlesResponse {
     service: SubtitlesSearchService!
     filesInfo: [ImdbSubtitlesFile]!

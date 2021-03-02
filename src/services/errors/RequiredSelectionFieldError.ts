@@ -1,4 +1,4 @@
-import { ValidationError } from 'apollo-server';
+import { ValidationError } from 'apollo-server-lambda';
 
 class RequiredSelectionFieldError extends ValidationError {
     constructor(selectionField: string) {

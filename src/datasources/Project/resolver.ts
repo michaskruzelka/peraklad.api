@@ -1,4 +1,4 @@
-import { ValidationError } from 'apollo-server';
+import { ValidationError } from 'apollo-server-lambda';
 
 import RequiredFieldError from '../../services/errors/RequiredSelectionFieldError';
 import { DataSources } from '../types';
@@ -18,6 +18,8 @@ import {
     IMovie,
     ISeries,
     IVideoInfo,
+    CreateIMDBMovieProjectArgs,
+    UpdateIMDBMovieProjectArgs,
 } from './types';
 import { IABC } from '../ABC/types';
 import { Spelling } from '../Spelling/types';
@@ -121,6 +123,50 @@ const resolver = {
                 );
                 throw new Error('Error while searching for project files.');
             }
+        },
+    },
+    Mutation: {
+        CreateIMDBMovieProject: async (
+            _: any,
+            args: CreateIMDBMovieProjectArgs,
+            { dataSources }: { dataSources: DataSources }
+        ): Promise<string> => {
+            dataSources.language.validateCode(args.imdb.language);
+
+            if (args.imdb.imdbId) {
+                dataSources.omdb.validateImdbId(args.imdb.imdbId);
+            }
+
+            return dataSources.movieSubtitlesProject.createIMDBMovieProject(
+                args
+            );
+        },
+        UpdateIMDBMovieProject: async (
+            _: any,
+            args: UpdateIMDBMovieProjectArgs,
+            { dataSources }: { dataSources: DataSources }
+        ): Promise<boolean> => {
+            if (args.imdb?.language) {
+                dataSources.language.validateCode(args.imdb.language);
+            }
+
+            if (args.settings?.access) {
+                dataSources.movieSubtitlesProject.validateAccessTypeId(
+                    args.settings.access
+                );
+            }
+
+            if (args.settings?.abc) {
+                dataSources.abc.validateId(args.settings.abc);
+            }
+
+            if (args.settings?.spelling) {
+                dataSources.spelling.validateId(args.settings.spelling);
+            }
+
+            return dataSources.movieSubtitlesProject.updateIMDBMovieProject(
+                args
+            );
         },
     },
     ImdbSubtitlesResponse: {

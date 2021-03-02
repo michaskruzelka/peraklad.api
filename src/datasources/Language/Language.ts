@@ -1,4 +1,6 @@
 import { DataSource } from 'apollo-datasource';
+import { ValidationError } from 'apollo-server-lambda';
+
 import languages from './languages.json';
 import * as config from './config';
 import { ILanguage, IDataSource, Locale, ListType } from './types';
@@ -112,6 +114,12 @@ class Language extends DataSource implements IDataSource {
         const allLanguagesCodes = languages.map((language) => language.code);
 
         return codes && codes.every((code) => allLanguagesCodes.includes(code));
+    }
+
+    public validateCode(code: string): void {
+        if (this.isValidCodes([code])) {
+            throw new ValidationError('Language code is not valid.');
+        }
     }
 
     /**

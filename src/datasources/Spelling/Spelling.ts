@@ -1,4 +1,5 @@
 import { DataSource } from 'apollo-datasource';
+import { ValidationError } from 'apollo-server-lambda';
 
 import { IDataSource, Spelling as TypeSpelling } from './types';
 import { SPELLINGS, DEFAULT_SPELLING } from './config';
@@ -42,6 +43,14 @@ class Spelling extends DataSource implements IDataSource {
         }
 
         return spelling;
+    }
+
+    public validateId(id: number): void {
+        try {
+            this.getById(id);
+        } catch (e) {
+            throw new ValidationError('Spelling ID is not valid.')
+        }
     }
 }
 
