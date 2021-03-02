@@ -1,4 +1,5 @@
 type Query {
+    projectStatuses: [ProjectStatus!]!
     projectAccessTypes: [ProjectAccessType!]!
     defaultProjectAccessType: ProjectAccessType!
     imdbSubtitles(
@@ -14,30 +15,52 @@ type Query {
 }
 
 type Mutation {
-    CreateIMDBMovieProject(project: ProjectInput!, imdb: IMDBMovieInput!): ID
+    CreateIMDBMovieProject(
+        project: CreateProjectInput!
+        imdb: CreateIMDBMovieInput!
+    ): ID
     UpdateIMDBMovieProject(
         id: ID! @stringLength(min: 36, max: 36)
-        project: ProjectInput
-        imdb: IMDBSeriesInput
-        settings: ProjectSettingsInput
-    ): ID
+        project: UpdateProjectInput
+        imdb: UpdateIMDBMovieInput
+    ): Boolean!
+    UpdateProjectSettings(
+        id: ID! @stringLength(min: 36, max: 36)
+        settings: ProjectSettingsInput!
+    ): Boolean!
+    FailProject(id: ID! @stringLength(min: 36, max: 36)): Boolean!
+    ResumeProject(id: ID! @stringLength(min: 36, max: 36)): Boolean!
+    DeleteProject(id: ID! @stringLength(min: 36, max: 36)): Boolean!
 }
 
-input ProjectInput {
+input CreateProjectInput {
     name: String! @stringLength(min: 1, max: 100)
     description: String @stringLength(max: 1000)
 }
 
+input UpdateProjectInput {
+    name: String @stringLength(min: 1, max: 100)
+    description: String @stringLength(max: 1000)
+}
+
 input ProjectSettingsInput {
-    status: Int @range(min: 1, max: 10)
     access: Int @range(min: 1, max: 10)
     abc: Int @range(min: 1, max: 10)
     spelling: Int @range(min: 1, max: 10)
 }
 
-input IMDBMovieInput {
+input CreateIMDBMovieInput {
     title: String! @stringLength(min: 1, max: 100)
     language: String! @stringLength(min: 2, max: 2)
+    year: Int @range(min: 1880, max: 2100)
+    imdbId: String
+    imdbRating: Float
+    posterSrc: String
+}
+
+input UpdateIMDBMovieInput {
+    title: String @stringLength(min: 1, max: 100)
+    language: String @stringLength(min: 2, max: 2)
     year: Int @range(min: 1880, max: 2100)
     imdbId: String
     imdbRating: Float

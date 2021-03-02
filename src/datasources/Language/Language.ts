@@ -117,7 +117,7 @@ class Language extends DataSource implements IDataSource {
     }
 
     public validateCode(code: string): void {
-        if (this.isValidCodes([code])) {
+        if (!this.isValidCodes([code])) {
             throw new ValidationError('Language code is not valid.');
         }
     }

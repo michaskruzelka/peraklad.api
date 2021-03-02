@@ -1,5 +1,6 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import { ValidationError } from 'apollo-server-lambda';
+import { Record } from 'neo4j-driver';
 
 import { ICategory } from './Category/types';
 import {
@@ -11,6 +12,7 @@ import {
     StatusID,
     CreateIMDBMovieProjectArgs,
     UpdateIMDBMovieProjectArgs,
+    UpdateProjectSettingsArgs,
 } from './types';
 import { ACCESS_TYPES, DEFAULT_ACCESS_TYPE, LEVELS, STATUSES } from './config';
 import { DEFAULT_ABC } from '../ABC/config';
@@ -118,6 +120,10 @@ class Project extends DataSource implements IDataSource {
         return status;
     }
 
+    public getStatuses(): Status[] {
+        return STATUSES;
+    }
+
     public async createIMDBMovieProject(
         args: CreateIMDBMovieProjectArgs
     ): Promise<string> {
@@ -165,12 +171,7 @@ class Project extends DataSource implements IDataSource {
             RETURN p.id AS id;
         `;
 
-        const records = await request.perform(
-            cql,
-            params,
-            this.context.driver,
-            this.context.logger
-        );
+        const records = await this.performDBRequest(cql, params);
 
         return records.map((record: any) => record.get('id'))[0];
     }
@@ -181,8 +182,6 @@ class Project extends DataSource implements IDataSource {
         const cql = `
             MATCH (p:Project:MovieSubtitles { id: $id })-[:HAS_INFO]->(i:IMDB:Movie)
             WITH p, i
-            MATCH (p)-[:HAS_SETTINGS]->(ps:ProjectSettings)
-            WITH p, i, ps
             SET p.name = coalesce($project.name, p.name),
                 p.description = coalesce($project.description, p.description),
                 p.updatedAt = datetime(),
@@ -195,7 +194,26 @@ class Project extends DataSource implements IDataSource {
                 END,
                 i.imdbId = coalesce($imdb.imdbId, i.imdbId),
                 i.imdbRating = coalesce($imdb.imdbRating, i.imdbRating),
-                i.posterSrc = coalesce($imdb.posterSrc, i.posterSrc),
+                i.posterSrc = coalesce($imdb.posterSrc, i.posterSrc)
+        `;
+
+        await this.performDBRequest(cql, args);
+
+        return true;
+    }
+
+    public async updateProjectSettings(
+        args: UpdateProjectSettingsArgs
+    ): Promise<boolean> {
+        const cql = `
+            MATCH (p:Project { id: $id })-[:HAS_SETTINGS]->(ps:ProjectSettings)
+            WITH p, ps
+            SET p.updatedAt = datetime(),
+                ps.status = CASE
+                    WHEN $settings.status IS NULL
+                    THEN ps.status
+                    ELSE toInteger($settings.status)
+                END,
                 ps.access = CASE 
                     WHEN $settings.access IS NULL 
                     THEN ps.access 
@@ -205,20 +223,52 @@ class Project extends DataSource implements IDataSource {
                     WHEN $settings.abc IS NULL
                     THEN ps.abc
                     ELSE toInteger($settings.abc)
+                END,
                 ps.spelling = CASE
                     WHEN $settings.spelling IS NULL
                     THEN ps.spelling
                     ELSE toInteger($settings.spelling)
+                END
         `;
 
-        await request.perform(
+        await this.performDBRequest(cql, args);
+
+        return true;
+    }
+
+    public async deleteProject(id: string): Promise<boolean> {
+        const cql = `
+            MATCH (p:Project { id: $id })
+            OPTIONAL MATCH (p)-[:IS_PARENT_OF]->(cp:Project)
+            OPTIONAL MATCH (p)-[:TRANSLATING]->(r:Resource)
+            CALL apoc.do.case([
+                cp IS NOT NULL, 'RETURN false AS deleted',
+                r IS NOT NULL, 'MATCH (p)-[:HAS_SETTINGS]->(ps:ProjectSettings) 
+                    SET ps.status = ${StatusID.DELETED},
+                        p.updatedAt = datetime()
+                    RETURN true AS deleted'],
+                'MATCH path = (p)-[*]-(:IMDB|:VideoInfo) DETACH DELETE path RETURN true AS deleted',
+                { p:p, cp:cp, r:r }
+            )
+            YIELD value
+            RETURN value.deleted AS deleted
+        `;
+
+        const records = await this.performDBRequest(cql, { id });
+
+        return records.map((record: any) => record.get('deleted'))[0];
+    }
+
+    private async performDBRequest(
+        cql: string,
+        args: object
+    ): Promise<Record[]> {
+        return request.perform(
             cql,
             args,
             this.context.driver,
             this.context.logger
         );
-
-        return true;
     }
 }
 

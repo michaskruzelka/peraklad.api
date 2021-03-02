@@ -20,6 +20,9 @@ import {
     IVideoInfo,
     CreateIMDBMovieProjectArgs,
     UpdateIMDBMovieProjectArgs,
+    StatusID,
+    UpdateProjectSettingsArgs,
+    IMDBMovieArgs,
 } from './types';
 import { IABC } from '../ABC/types';
 import { Spelling } from '../Spelling/types';
@@ -124,6 +127,13 @@ const resolver = {
                 throw new Error('Error while searching for project files.');
             }
         },
+        projectStatuses: (
+            _: any,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): Status[] => {
+            return dataSources.movieSubtitlesProject.getStatuses();
+        },
     },
     Mutation: {
         CreateIMDBMovieProject: async (
@@ -146,27 +156,82 @@ const resolver = {
             args: UpdateIMDBMovieProjectArgs,
             { dataSources }: { dataSources: DataSources }
         ): Promise<boolean> => {
-            if (args.imdb?.language) {
-                dataSources.language.validateCode(args.imdb.language);
+            if (!(args.imdb || args.project)) {
+                throw new ValidationError('Nothing to update.');
             }
 
-            if (args.settings?.access) {
+            const imdb = args.imdb as IMDBMovieArgs;
+            if (imdb?.language) {
+                dataSources.language.validateCode(imdb.language);
+            }
+
+            const params = {
+                id: args.id,
+                project: args.project || {},
+                imdb: imdb || {},
+            };
+
+            return dataSources.movieSubtitlesProject.updateIMDBMovieProject(
+                params
+            );
+        },
+        UpdateProjectSettings: async (
+            _: any,
+            args: UpdateProjectSettingsArgs,
+            { dataSources }: { dataSources: DataSources }
+        ): Promise<boolean> => {
+            if (args.settings.access) {
                 dataSources.movieSubtitlesProject.validateAccessTypeId(
                     args.settings.access
                 );
             }
 
-            if (args.settings?.abc) {
+            if (args.settings.abc) {
                 dataSources.abc.validateId(args.settings.abc);
             }
 
-            if (args.settings?.spelling) {
+            if (args.settings.spelling) {
                 dataSources.spelling.validateId(args.settings.spelling);
             }
 
-            return dataSources.movieSubtitlesProject.updateIMDBMovieProject(
+            return dataSources.movieSubtitlesProject.updateProjectSettings(
                 args
             );
+        },
+        FailProject: async (
+            _: any,
+            args: { id: string },
+            { dataSources }: { dataSources: DataSources }
+        ): Promise<boolean> => {
+            const params = {
+                id: args.id,
+                settings: { status: StatusID.FAILED },
+            };
+
+            return dataSources.movieSubtitlesProject.updateProjectSettings(
+                params
+            );
+        },
+        ResumeProject: async (
+            _: any,
+            args: { id: string },
+            { dataSources }: { dataSources: DataSources }
+        ): Promise<boolean> => {
+            const params = {
+                id: args.id,
+                settings: { status: StatusID.IN_PROGRESS },
+            };
+
+            return dataSources.movieSubtitlesProject.updateProjectSettings(
+                params
+            );
+        },
+        DeleteProject: async (
+            _: any,
+            args: { id: string },
+            { dataSources }: { dataSources: DataSources }
+        ): Promise<boolean> => {
+            return dataSources.movieSubtitlesProject.deleteProject(args.id);
         },
     },
     ImdbSubtitlesResponse: {

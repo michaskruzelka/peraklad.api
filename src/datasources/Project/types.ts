@@ -156,6 +156,7 @@ type CreateIMDBMovieProjectArgs = {
 };
 
 type ProjectSettingsArgs = {
+    status?: number;
     access?: number;
     abc?: number;
     spelling?: number;
@@ -163,9 +164,13 @@ type ProjectSettingsArgs = {
 
 type UpdateIMDBMovieProjectArgs = {
     id: string;
-    project?: ProjectArgs;
-    imdb?: IMDBMovieArgs;
-    settings?: ProjectSettingsArgs;
+    project?: ProjectArgs | {};
+    imdb?: IMDBMovieArgs | {};
+};
+
+type UpdateProjectSettingsArgs = {
+    id: string;
+    settings: ProjectSettingsArgs;
 };
 
 export {
@@ -189,5 +194,8 @@ export {
     ISeries,
     IVideoInfo,
     CreateIMDBMovieProjectArgs,
-    UpdateIMDBMovieProjectArgs
+    UpdateIMDBMovieProjectArgs,
+    ProjectSettingsArgs,
+    UpdateProjectSettingsArgs,
+    IMDBMovieArgs,
 };
