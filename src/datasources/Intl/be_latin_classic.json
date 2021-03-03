@@ -4,5 +4,48 @@
             "cyrillic": "kirylica",
             "latin": "łacinka"
         }
+    },
+    "Spelling": {
+        "name": {
+            "academic": "akademičny",
+            "classic": "klasyčny"
+        }
+    },
+    "OMDBType": {
+        "name": {
+            "movie": "film",
+            "series": "seryjał",
+            "episode": "seryja"
+        }
+    },
+    "ProjectStatus": {
+        "name": {
+            "new": "novy",
+            "in_progress": "u pracy",
+            "completed": "zavieršany",
+            "failed": "niaŭdały",
+            "deleted": "vydaleny"
+        }
+    },
+    "ProjectAccessType": {
+        "name": {
+            "public": "adkryty",
+            "restricted": "abmiežavany",
+            "private": "zakryty"
+        }
+    },
+    "ResourceItemStatus": {
+        "name": {
+            "new": "biez pierakładaŭ",
+            "translating": "pierakładajecca",
+            "translated": "pierakładzieny"
+        }
+    },
+    "ResourceStatus": {
+        "name": {
+            "started": "u pracy",
+            "finished": "zavieršany",
+            "deleted": "vydaleny"
+        }
     }
 }

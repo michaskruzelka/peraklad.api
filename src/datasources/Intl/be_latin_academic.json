@@ -4,5 +4,48 @@
             "cyrillic": "kirylica",
             "latin": "lacinka"
         }
+    },
+    "Spelling": {
+        "name": {
+            "academic": "akademičny",
+            "classic": "klasičny"
+        }
+    },
+    "OMDBType": {
+        "name": {
+            "movie": "fiĺm",
+            "series": "sieryjal",
+            "episode": "sieryja"
+        }
+    },
+    "ProjectStatus": {
+        "name": {
+            "new": "novy",
+            "in_progress": "u pracy",
+            "completed": "zavieršany",
+            "failed": "niaŭdaly",
+            "deleted": "vydalieny"
+        }
+    },
+    "ProjectAccessType": {
+        "name": {
+            "public": "adkryty",
+            "restricted": "abmiežavany",
+            "private": "zakryty"
+        }
+    },
+    "ResourceItemStatus": {
+        "name": {
+            "new": "biez pierakladaŭ",
+            "translating": "pierakladajecca",
+            "translated": "pierakladzieny"
+        }
+    },
+    "ResourceStatus": {
+        "name": {
+            "started": "u pracy",
+            "finished": "zavieršany",
+            "deleted": "vydalieny"
+        }
     }
 }
