@@ -8,18 +8,24 @@ import { Spelling } from './Spelling';
 import { DataSources } from './types';
 import { Resource } from './Resource';
 import { Project } from './Project';
+import { Intl } from './Intl';
 
 const getDataSources = (): DataSources => {
+    const language = new Language();
+    const spelling = new Spelling(language.getCurrentLocale());
+    const abc = new ABC(language.getCurrentLocale());
+
     return {
-        language: new Language(),
+        language,
+        abc,
+        spelling,
         omdb: new OMDB(),
         movieSubtitlesProject: new Project(new Subtitles(new Movie())),
         videoStreamSubtitlesProject: new Project(
             new Subtitles(new VideoStream())
         ),
-        abc: new ABC(),
-        spelling: new Spelling(),
         resource: new Resource(),
+        intl: new Intl(language.getCurrentLocale(), spelling, abc),
     };
 };
 

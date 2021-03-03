@@ -1,3 +1,5 @@
+import { Locale } from '../Language/types';
+
 enum SpellingID {
     ACADEMIC = 1,
     CLASSIC = 2,
@@ -11,11 +13,17 @@ enum SpellingCode {
 type Spelling = {
     id: SpellingID;
     code: SpellingCode;
+    name: string;
 };
 
 type ResolvedSpelling = Spelling & {
     isDefault: boolean;
 };
+
+interface ISpellingList {
+    [Locale.BE]: Spelling[];
+    [Locale.UK]: Spelling[];
+}
 
 interface IDataSource {
     getSpellings: () => Spelling[];
@@ -28,5 +36,6 @@ export {
     SpellingCode,
     Spelling,
     ResolvedSpelling,
+    ISpellingList,
     IDataSource,
 };

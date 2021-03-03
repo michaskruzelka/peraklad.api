@@ -1,3 +1,4 @@
 directive @cost(value: Int) on FIELD_DEFINITION
 directive @costFactor(value: Int) on FIELD_DEFINITION
+directive @intl on FIELD_DEFINITION
 scalar Upload

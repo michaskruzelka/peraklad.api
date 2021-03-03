@@ -84,12 +84,6 @@
         "native": "Български"
     },
     {
-        "code": "bh",
-        "iso639_2": "bih",
-        "name": "Bihari",
-        "native": "भोजपुरी"
-    },
-    {
         "code": "bi",
         "iso639_2": "bis",
         "name": "Bislama",
@@ -148,12 +142,6 @@
         "iso639_2": "cos",
         "name": "Corsican",
         "native": "Corsu"
-    },
-    {
-        "code": "cr",
-        "iso639_2": "cre",
-        "name": "Cree",
-        "native": "Nehiyaw"
     },
     {
         "code": "cs",
@@ -400,12 +388,6 @@
         "iso639_2": "ili",
         "name": "Sichuan Yi",
         "native": "ꆇꉙ / 四川彝语"
-    },
-    {
-        "code": "ik",
-        "iso639_2": "ipk",
-        "name": "Inupiak",
-        "native": "Iñupiak"
     },
     {
         "code": "io",

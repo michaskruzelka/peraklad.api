@@ -16,6 +16,7 @@ import {
 import { getResolvers } from './resolvers';
 import { resolveTypes } from './typeResolver';
 import { typesToIgnoreDBAugmentation } from './config';
+import { intl } from './directives';
 
 const getSchema = async (): Promise<GraphQLSchema> => {
     const typeDefsList: DocumentNode[] = [
@@ -30,7 +31,7 @@ const getSchema = async (): Promise<GraphQLSchema> => {
     const schemaOptions: makeAugmentedSchemaOptions = {
         typeDefs: typeDefsAsOne,
         resolvers: await getResolvers(),
-        schemaDirectives: { range, stringLength, listLength },
+        schemaDirectives: { range, stringLength, listLength, intl },
         config: {
             query: {
                 exclude: typesToIgnoreDBAugmentation,
