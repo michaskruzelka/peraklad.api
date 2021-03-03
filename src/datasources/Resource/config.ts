@@ -87,14 +87,17 @@ const STATUSES: Status[] = [
     {
         id: StatusID.STARTED,
         code: StatusCode.STARTED,
+        name: StatusCode.STARTED,
     },
     {
         id: StatusID.FINISHED,
         code: StatusCode.FINISHED,
+        name: StatusCode.FINISHED,
     },
     {
         id: StatusID.DELETED,
         code: StatusCode.DELETED,
+        name: StatusCode.DELETED,
     },
 ];
 
@@ -102,14 +105,17 @@ const ITEM_STATUSES: ItemStatus[] = [
     {
         id: ItemStatusID.NEW,
         code: ItemStatusCode.NEW,
+        name: ItemStatusCode.NEW,
     },
     {
         id: ItemStatusID.TRANSLATING,
         code: ItemStatusCode.TRANSLATING,
+        name: ItemStatusCode.TRANSLATING,
     },
     {
         id: ItemStatusID.TRANSLATED,
         code: ItemStatusCode.TRANSLATED,
+        name: ItemStatusCode.TRANSLATED,
     },
 ];
 

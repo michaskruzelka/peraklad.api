@@ -28,11 +28,13 @@ type FileFormat {
 type ResourceStatus {
     id: Int!
     code: String!
+    name: String! @intl
 }
 
 type ResourceItemStatus {
     id: Int!
     code: String!
+    name: String! @intl
 }
 
 type TranslationType {

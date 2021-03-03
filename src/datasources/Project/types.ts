@@ -23,6 +23,7 @@ enum StatusCode {
 type Status = {
     id: StatusID;
     code: StatusCode;
+    name: string;
 };
 
 enum AccessTypeID {
@@ -40,6 +41,7 @@ enum AccessTypeCode {
 type AccessType = {
     id: AccessTypeID;
     code: AccessTypeCode;
+    name: string;
 };
 
 type ResolvedAccessType = AccessType & {

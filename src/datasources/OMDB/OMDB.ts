@@ -12,6 +12,7 @@ import {
     IDataSource,
     IOMDB,
     OMDBType,
+    OMDBTypeCode,
 } from './types';
 
 import { OMDB_API_KEY, OMDB_API_HOSTNAME, OMDB_TYPES } from './config';
@@ -150,7 +151,7 @@ class OMDB extends RESTDataSource implements IDataSource {
     public createEmptyBaseMovieObject(): IOMDB {
         return {
             Response: ResponseType.TRUE,
-            Type: OMDBType.MOVIE,
+            Type: OMDBTypeCode.MOVIE,
             Title: '',
             Year: '',
             imdbID: '',
@@ -158,10 +159,27 @@ class OMDB extends RESTDataSource implements IDataSource {
             Language: '',
             imdbRating: '',
             imdbId: '',
-            type: OMDBType.MOVIE,
             title: '',
             posterSrc: '',
         };
+    }
+
+    public getOMDBTypeByCode(code: OMDBTypeCode): OMDBType {
+        const omdbType = OMDB_TYPES.find((omdbType) => omdbType.code === code);
+
+        if (!omdbType) {
+            throw new ValidationError('OMDB type not found.');
+        }
+
+        return omdbType;
+    }
+
+    public validateOMDBTypeCode(code: OMDBTypeCode): void {
+        try {
+            this.getOMDBTypeByCode(code);
+        } catch (e) {
+            throw new ValidationError(`OMDB type code is not valid: ${code}`);
+        }
     }
 
     /**
@@ -257,10 +275,7 @@ class OMDB extends RESTDataSource implements IDataSource {
      */
     private async searchForIMDB(params: APIParams): Promise<IOMDB> {
         const response = (await this.performRequest(params)) as APIOMDB;
-
-        if (!OMDB_TYPES.includes(response.Type)) {
-            throw new Error('Unrecognized IMDB type: ' + response.Type);
-        }
+        this.validateOMDBTypeCode(response.Type);
 
         return this.enrichResponseWithBaseIMDBInfo(response);
     }
@@ -298,7 +313,6 @@ class OMDB extends RESTDataSource implements IDataSource {
         return {
             ...response,
             imdbId: response.imdbID,
-            type: response.Type,
             title: response.Title,
             posterSrc: this.asEmpty(response.Poster),
             plot: response.Plot ? this.asEmpty(response.Plot) : '',

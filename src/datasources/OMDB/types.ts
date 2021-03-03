@@ -43,11 +43,16 @@ enum ResponseType {
     FALSE = 'False',
 }
 
-enum OMDBType {
+enum OMDBTypeCode {
     MOVIE = 'movie',
     SERIES = 'series',
     EPISODE = 'episode',
 }
+
+type OMDBType = {
+    code: OMDBTypeCode;
+    name: string;
+};
 
 interface APIResponse {
     Response: ResponseType;
@@ -68,7 +73,7 @@ interface APIEpisodes extends APIResponse {
 }
 
 interface APIOMDB extends APIResponse {
-    Type: OMDBType;
+    Type: OMDBTypeCode;
     Title: string;
     Year: string;
     imdbID: string;
@@ -80,14 +85,14 @@ interface APIOMDB extends APIResponse {
 
 interface IOMDB extends APIOMDB {
     imdbId: string;
-    type: OMDBType;
+    type?: OMDBType;
     title: string;
     posterSrc: string;
     plot?: string;
 }
 
 interface IMovie extends IOMDB {
-    type: OMDBType.MOVIE;
+    Type: OMDBTypeCode.MOVIE;
     language: string;
     year: number;
 }
@@ -96,7 +101,7 @@ interface IEpisode extends IOMDB {
     seriesID: string;
     Episode: string;
     Season: string;
-    type: OMDBType.EPISODE;
+    Type: OMDBTypeCode.EPISODE;
     series: ISeries;
     seasonNum: number;
     episodeNum: number;
@@ -104,7 +109,7 @@ interface IEpisode extends IOMDB {
 }
 
 interface ISeries extends IOMDB {
-    type: OMDBType.SERIES;
+    Type: OMDBTypeCode.SERIES;
     language: string;
     totalSeasons: string;
     episodes: IEpisode[];
@@ -138,6 +143,7 @@ export {
     APIEpisodes,
     APIError,
     APIOMDB,
+    OMDBTypeCode,
     OMDBType,
     ResponseType,
     IMovie,

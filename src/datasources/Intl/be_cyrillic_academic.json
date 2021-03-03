@@ -11,6 +11,43 @@
             "classic": "класічны"
         }
     },
+    "OMDBType": {
+        "name": {
+            "movie": "фільм",
+            "series": "серыял",
+            "episode": "серыя"
+        }
+    },
+    "ProjectStatus": {
+        "name": {
+            "new": "новы",
+            "in_progress": "у працы",
+            "completed": "завершаны",
+            "failed": "няўдалы",
+            "deleted": "выдалены"
+        }
+    },
+    "ProjectAccessType": {
+        "name": {
+            "public": "адкрыты",
+            "restricted": "абмежаваны",
+            "private": "закрыты"
+        }
+    },
+    "ResourceItemStatus": {
+        "name": {
+            "new": "без перакладаў",
+            "translating": "перакладаецца",
+            "translated": "перакладзены"
+        }
+    },
+    "ResourceStatus": {
+        "name": {
+            "started": "у працы",
+            "finished": "завершаны",
+            "deleted": "выдалены"
+        }
+    },
     "Language": {
         "name": {
             "afar": "афарская",

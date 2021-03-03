@@ -1,17 +1,23 @@
-import { DataSource } from 'apollo-datasource';
+import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import { ValidationError } from 'apollo-server-lambda';
 
 import { IDataSource, Spelling as TypeSpelling } from './types';
 import { Locale } from '../Language/types';
 import { SPELLINGS, DEFAULT_SPELLING, ACADEMIC_SPELLING } from './config';
+import { IContext } from '../../services/graphql/types';
 
 class Spelling extends DataSource implements IDataSource {
     private locale: Locale;
+    private context: IContext;
 
     constructor(locale: Locale) {
         super();
 
         this.locale = locale;
+    }
+
+    initialize(config: DataSourceConfig<IContext>): void {
+        this.context = config.context;
     }
 
     /**
@@ -24,7 +30,19 @@ class Spelling extends DataSource implements IDataSource {
     }
 
     public getCurrentSpelling(): TypeSpelling {
-        // Take from token, validate, get default if not valid
+        const spellingId = this.context.spelling;
+
+        if (spellingId) {
+            try {
+                return this.getById(spellingId);
+            } catch (e) {
+                this.context.logger.log(
+                    'info',
+                    `Could not get current spelling by id: ${spellingId}`
+                );
+            }
+        }
+
         return this.getDefaultSpelling();
     }
 

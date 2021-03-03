@@ -4,14 +4,19 @@ import { getDataSources } from '../../datasources';
 import { logger, neo4j } from '../../services';
 import { getSchema } from './schema';
 import { validationRules } from './validation';
+import { authorize } from '../auth';
 
 const getConfig = async (): Promise<Config> => ({
     context: ({ req }: Neo4jContext) => {
+        const { abc, spelling } = authorize(req.headers.authorization || '');
+
         return {
             req,
             driver: neo4j.driver,
             neo4jDatabase: process.env.NEO4J_DATABASE,
             logger: logger.getLogger(),
+            abc,
+            spelling,
         };
     },
     schema: await getSchema(),

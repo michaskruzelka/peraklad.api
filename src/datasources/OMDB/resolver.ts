@@ -6,10 +6,12 @@ import {
     IMovie,
     ISeries,
     OMDBType,
+    OMDBTypeCode,
     SearchByIdArgs,
     SearchByTitlePlusYearArgs,
     EpisodesArgs,
 } from './types';
+import { ILanguage } from '../Language/types';
 
 const getImdbRating = (omdb: IOMDB, dataSources: DataSources) => {
     const validRating = dataSources.omdb.asEmpty(omdb.imdbRating);
@@ -23,8 +25,15 @@ const getYear = (omdb: IEpisode | IMovie, dataSources: DataSources) => {
     return validYear ? dataSources.omdb.asInt(validYear) : null;
 };
 
-const getLanguage = (omdb: IMovie | ISeries, dataSources: DataSources) => {
-    return dataSources.language.getByName(omdb.Language).code;
+const getType = (omdb: IOMDB, dataSources: DataSources): OMDBType => {
+    return dataSources.omdb.getOMDBTypeByCode(omdb.Type);
+};
+
+const getLanguage = (
+    omdb: IMovie | ISeries,
+    dataSources: DataSources
+): ILanguage => {
+    return dataSources.language.getByName(omdb.Language);
 };
 
 const resolver = {
@@ -52,6 +61,13 @@ const resolver = {
         },
     },
     OMDBEpisode: {
+        type: (
+            episode: IEpisode,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): OMDBType => {
+            return getType(episode, dataSources);
+        },
         series: async (
             episode: IEpisode,
             __: any,
@@ -76,8 +92,7 @@ const resolver = {
                 );
                 series = dataSources.omdb.createEmptyBaseMovieObject();
                 series.imdbId = dataSources.omdb.asEmpty(episode.seriesID);
-                series.type = OMDBType.SERIES;
-                series.Type = OMDBType.SERIES;
+                series.Type = OMDBTypeCode.SERIES;
             }
 
             return series;
@@ -112,11 +127,18 @@ const resolver = {
         },
     },
     OMDBMovie: {
+        type: (
+            movie: IMovie,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): OMDBType => {
+            return getType(movie, dataSources);
+        },
         language: (
             movie: IMovie,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ): string => {
+        ): ILanguage => {
             return getLanguage(movie, dataSources);
         },
         year: (
@@ -135,11 +157,18 @@ const resolver = {
         },
     },
     OMDBSeries: {
+        type: (
+            series: ISeries,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): OMDBType => {
+            return getType(series, dataSources);
+        },
         language: (
             series: ISeries,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ): string => {
+        ): ILanguage => {
             return getLanguage(series, dataSources);
         },
         episodes: async (

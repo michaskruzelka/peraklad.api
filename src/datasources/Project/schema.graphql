@@ -106,6 +106,7 @@ type SubtitlesSearchService {
 type ProjectAccessType {
     id: Int!
     code: String!
+    name: String! @intl
     isDefault: Boolean!
 }
 
@@ -117,6 +118,7 @@ type ProjectLevel {
 type ProjectStatus {
     id: Int!
     code: String!
+    name: String! @intl
 }
 
 type ProjectSettings {

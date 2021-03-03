@@ -26,6 +26,7 @@ enum StatusCode {
 type Status = {
     id: StatusID;
     code: StatusCode;
+    name: string;
 };
 
 type FileFormat = {
@@ -165,6 +166,7 @@ enum ItemStatusCode {
 type ItemStatus = {
     id: ItemStatusID;
     code: ItemStatusCode;
+    name: ItemStatusCode;
 };
 
 interface IResourceItem {
