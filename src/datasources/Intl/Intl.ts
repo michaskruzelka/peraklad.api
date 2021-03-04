@@ -5,6 +5,7 @@ import { Spelling } from '../Spelling';
 import { ABC } from '../ABC';
 import { MethodName } from './types';
 import { Converter } from '../../services/lacinka';
+import { SpellingCode } from 'datasources/Spelling/types';
 
 class Intl extends DataSource {
     private locale: Locale;
@@ -47,8 +48,14 @@ class Intl extends DataSource {
         return text;
     }
 
-    public convertToLatin(text: string): Promise<string> {
-        return this.latinConverter.convert(text);
+    public convertToLatin(
+        text: string,
+        spelling?: SpellingCode
+    ): Promise<string> {
+        const spellingCode =
+            spelling || this.spelling.getCurrentSpelling().code;
+
+        return this.latinConverter.convert(text, spellingCode);
     }
 
     private getLocalizationObject() {

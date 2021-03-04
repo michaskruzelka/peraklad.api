@@ -1,3 +1,5 @@
+import { SpellingCode } from "datasources/Spelling/types";
+
 enum Direction {
     BACK = 'back',
     FORTH = 'forth',
@@ -8,6 +10,7 @@ interface IRule {
     sort: number;
     search: string;
     replace: string;
+    spellings?: SpellingCode[];
     description?: string;
 }
 

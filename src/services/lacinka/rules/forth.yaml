@@ -9,11 +9,225 @@ rules:
         const pairs = {'І': 'Ji', 'і': 'ji'};
         return `${p1}${pairs[p3]}`;
       }
-  - name: simple_equivalents
+  - name: li
+    description: заўсёды "лі"
+    sort: 10
+    search: !!js/regexp /(л{1})(і{1})/gim
+    replace: !!js/function >
+      function replace(match, p1, p2) {
+        const pairs = {'л': 'l', 'Л': 'L'};
+        return `${pairs[p1]}${p2}`;
+      }
+  - name: l_classic_solid
+    description: Замена цвёрдай літары "л" на "ł" адпаведна з класічным правапісам
+    sort: 15
+    spellings:
+      - classic
+    search: !!js/regexp /(л){1}([^ьеёюя]{1})/gim
+    replace: !!js/function >
+      function replace(match, p1, p2) {
+        const pairs = {
+          'л': 'ł',
+          'Л': 'Ł',
+        };
+        return `${pairs[p1] || p1}${p2}`;
+      }
+  - name: l_academic_solid
+    description: Замена цвёрдай літары "л" на "l" адпаведна з акадэмічным правапісам
+    sort: 20
+    spellings:
+      - academic
+    search: !!js/regexp /(л){1}([^ьеёюя]{1})/gim
+    replace: !!js/function >
+      function replace(match, p1, p2) {
+        const pairs = {
+          'л': 'l',
+          'Л': 'L',
+        };
+        return `${pairs[p1] || p1}${p2}`;
+      }
+  - name: l_classic_palatalization
+    description: Змякчэнне літары "л" адпаведна з класічным правапісам
+    sort: 25
+    spellings:
+      - classic
+    search: !!js/regexp /(л){1}([ьеёюя]){1}/gim
+    replace: !!js/function >
+      function replace(match, p1, p2) {
+        const p1Pairs = {
+          'л': 'l',
+          'Л': 'L',
+        };
+        const p2Pairs = {
+          'ь': '',
+          'Ь': '',
+          'е': 'e',
+          'E': 'E',
+          'ё': 'o',
+          'Ё': 'O',
+          'ю': 'u',
+          'Ю': 'U',
+          'я': 'a',
+          'Я': 'A',
+        };
+        return `${p1Pairs[p1]}${p2Pairs[p2]}`;
+      }
+  - name: l_academic_palatalization
+    description: Змякчэнне літары "л" адпаведна з акадэмічным правапісам
+    sort: 30
+    spellings:
+      - academic
+    search: !!js/regexp /(л){1}(ь)+/gim
+    replace: !!js/function >
+      function replace(match, p1) {
+        const pairs = {
+          'л': 'ĺ',
+          'Л': 'Ĺ',
+        };
+        return pairs[p1] || p1;
+      }
+  - name: l_and_vowel_academic_palatalization
+    description: Змякчэнне літары "л" і наступнай галоснай адпаведна з акадэмічным правапісам
+    sort: 35
+    spellings:
+      - academic
+    search: !!js/regexp /(л){1}([еёюя]{1})+/gim
+    replace: !!js/function >
+      function replace(match, p1, p2) {
+        const p1Pairs = {
+          'л': 'l',
+          'Л': 'L',
+        };
+        const p2Pairs = {
+          'е': 'ie',
+          'Е': 'IE',
+          'ё': 'io',
+          'Ё': 'IO',
+          'ю': 'iu',
+          'Ю': 'IU',
+          'я': 'ia',
+          'Я': 'IA',
+        };
+        return `${p1Pairs[p1]}${p2Pairs[p2]}`;
+      }
+  - name: l_end_palatalization_classic
+    description: літара "л" напрыканцы (цвёрдая) - класічным правапіс
+    sort: 40
+    spellings:
+      - classic
+    search: !!js/regexp /(л){1}$/gim
+    replace: !!js/function >
+      function replace(match, p1) {
+        const pairs = {
+          'л': 'ł',
+          'Л': 'Ł',
+        };
+        return pairs[p1] || p1;
+      }
+  - name: l_end_palatalization_academic
+    description: літара "л" напрыканцы (цвёрдая) - акадэмічны правапіс
+    sort: 45
+    spellings:
+      - academic
+    search: !!js/regexp /(л){1}$/gim
+    replace: !!js/function >
+      function replace(match, p1) {
+        const pairs = {
+          'л': 'l',
+          'Л': 'L',
+        };
+        return pairs[p1] || p1;
+      }
+  - name: vowel_palatalization_after_a_consonant
+    description: Змякчэнне галоснай пасля зычнай, акрамя "л"
+    sort: 50
+    search: !!js/regexp /([бвгзкмнпсфхц]{1})([яеёю]{1})/gim
+    replace: !!js/function >
+      function replace(match, p1, p2) {
+        const pairs = {
+          'е': 'ie',
+          'Е': 'IE',
+          'ё': 'io',
+          'Ё': 'IO',
+          'ю': 'iu',
+          'Ю': 'IU',
+          'я': 'ia',
+          'Я': 'IA',
+        };
+        return `${p1}${pairs[p2] || p2}`;
+      }
+  - name: vowel_palatalization
+    description: Змякчэнне галоснай у іншых выпадках, акрамя "л"
+    sort: 55
+    search: !!js/regexp /([^бвгзкмнпсфхц]{1})([яеёю]{1})/gim
+    replace: !!js/function >
+      function replace(match, p1, p2) {
+        const pairs = {
+          'е': 'je',
+          'Е': 'JE',
+          'ё': 'jo',
+          'Ё': 'JO',
+          'ю': 'ju',
+          'Ю': 'JU',
+          'я': 'ja',
+          'Я': 'JA',
+        };
+        return `${p1}${pairs[p2] || p2}`;
+      }
+  - name: vowel_palatalization_at_the_beginning
+    description: Змякчэнне першай літары-галоснай
+    sort: 60
+    search: !!js/regexp /^([яеёю]{1})/gim
+    replace: !!js/function >
+      function replace(match, p1) {
+        const pairs = {
+          'е': 'ie',
+          'Е': 'Ie',
+          'ё': 'jo',
+          'Ё': 'Jo',
+          'ю': 'ju',
+          'Ю': 'Ju',
+          'я': 'ja',
+          'Я': 'Ja',
+        };
+        return pairs[p1] || p1;
+      }
+  - name: palatalization
     description: >
-      Простая замена: 
-    sort: 1000
-    search: !!js/regexp /([ґэышчцфў]{1})/gim
+      Змякчэнне зычных літар: замест "ць", "зь", "нь", "сь" 
+      -> "ć", "ź", "ń", "ś" адпаведна
+    sort: 65
+    search: !!js/regexp /([цзнс]{1})(ь)+/gim
+    replace: !!js/function >
+      function replace(match, p1, p2) {
+        const pairs = {
+          'ц': 'ć',
+          'Ц': 'Ć',
+          'з': 'ź',
+          'З': 'Ź',
+          'н': 'ń',
+          'Н': 'Ń',
+          'с': 'ś',
+          'С': 'Ś',
+        };
+        return pairs[p1] || p1;
+      }
+  - name: ch_replation
+    description: Замена "х" на "ch"
+    sort: 70
+    search: !!js/regexp /(х{1})/gim
+    replace: !!js/function >
+      function replace(match, p1) {
+        const pairs = {
+          'х': 'ch',
+          'Х': 'Ch',
+        };
+        return pairs[p1] || p1;
+      } 
+  - name: simple_equivalents
+    description: Простая замена
+    sort: 75
+    search: !!js/regexp /([ґэышчцфўутсрпонмкйізждгвба]{1})/gim
     replace: !!js/function >
       function replace(match, p1) {
         const pairs = {
@@ -33,6 +247,47 @@ rules:
           'Ф': 'F',
           'ў': 'ŭ',
           'Ў': 'Ǔ',
+          'у': 'u',
+          'У': 'U',
+          'т': 't',
+          'Т': 'T',
+          'с': 's',
+          'С': 'S',
+          'р': 'r',
+          'Р': 'R',
+          'п': 'p',
+          'П': 'P',
+          'о': 'o',
+          'О': 'O',
+          'н': 'n',
+          'Н': 'N',
+          'м': 'm',
+          'М': 'M',
+          'к': 'k',
+          'К': 'K',
+          'й': 'j',
+          'Й': 'J',
+          'і': 'i',
+          'І': 'I',
+          'з': 'z',
+          'З': 'Z',
+          'ж': 'ž',
+          'Ж': 'Ž',
+          'д': 'd',
+          'Д': 'D',
+          'г': 'h',
+          'Г': 'H',
+          'в': 'v',
+          'В': 'V',
+          'б': 'b',
+          'Б': 'B',
+          'а': 'a',
+          'А': 'A',
         };
         return pairs[p1] || p1;
       }
+  - name: remove_apostrophe_and_soft_sign
+    description: Выдаліць апостраф і мяккі знак, калі засталіся
+    sort: 80
+    search: !!js/regexp /([бвгдзмпфжклнрстцчшхbcdfghklmnpsrtzv]+)(['’‘ь]{1})([a-zа-яі]+)/gim
+    replace: $1$3

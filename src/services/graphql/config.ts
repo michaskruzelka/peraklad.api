@@ -41,6 +41,7 @@ const typesToIgnoreDBAugmentation = [
     'Recommendation',
     'Comment',
     'ResourceItem',
+    'OMDBType',
 ];
 
 export { typesToIgnoreDBAugmentation };

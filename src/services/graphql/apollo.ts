@@ -8,6 +8,10 @@ import { authorize } from '../auth';
 
 const getConfig = async (): Promise<Config> => ({
     context: ({ req }: Neo4jContext) => {
+        if (req.body.operationName === 'IntrospectionQuery') {
+            return { req };
+        }
+
         const { abc, spelling } = authorize(req.headers.authorization || '');
 
         return {
