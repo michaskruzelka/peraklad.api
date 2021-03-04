@@ -3,6 +3,7 @@ import { DataSource } from 'apollo-datasource';
 import { Locale } from '../Language/types';
 import { Spelling } from '../Spelling';
 import { ABC } from '../ABC';
+import { ABCCode } from '../ABC/types';
 
 class Intl extends DataSource {
     private locale: Locale;
@@ -19,24 +20,44 @@ class Intl extends DataSource {
 
     public getLocalizedText(text: string, path: string[]): string {
         const intl = this.getLocalizationObject();
+        let localizedText = this.accesLocalizationObject(intl, [
+            ...path,
+            text.toLowerCase(),
+        ]);
 
-        return (
-            this.accesLocalizationObject(intl, [...path, text.toLowerCase()]) ||
-            text
-        );
+        if (localizedText) {
+            const abc = this.abc.getCurrentABC().code;
+
+            if (abc === ABCCode.LATIN) {
+                localizedText = this.convertToLatin(localizedText);
+            }
+
+            return localizedText;
+        }
+
+        return text;
     }
 
     private getLocalizationObject() {
-        const abc = this.abc.getCurrentABC().code;
         const spelling = this.spelling.getCurrentSpelling().code;
 
-        return require(`./${this.locale}_${abc}_${spelling}.json`);
+        return require(`./${this.locale}_${spelling}.json`);
     }
 
-    private accesLocalizationObject(nestedObj: any, pathArr: string[]) {
+    private accesLocalizationObject(
+        nestedObj: any,
+        pathArr: string[]
+    ): string | undefined {
         return pathArr.reduce((obj, key) => {
             return obj && obj[key] !== 'undefined' ? obj[key] : undefined;
         }, nestedObj);
+    }
+
+    private convertToLatin(text: string): string {
+        // const spelling = this.spelling.getCurrentSpelling().code;
+        // convert via service
+
+        return text;
     }
 }
 
