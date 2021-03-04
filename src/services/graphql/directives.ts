@@ -9,7 +9,10 @@ class IntlDirective extends SchemaDirectiveVisitor {
             const defaultText = await resolve.apply(this, args);
             const path = [details.objectType.name, field.name];
 
-            return context.dataSources.intl.getLocalizedText(defaultText, path);
+            return context.dataSources.intl.getLocalizedText(
+                defaultText,
+                path
+            );
         };
     }
 }

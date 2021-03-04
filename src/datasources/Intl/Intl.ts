@@ -4,11 +4,13 @@ import { Locale } from '../Language/types';
 import { Spelling } from '../Spelling';
 import { ABC } from '../ABC';
 import { MethodName } from './types';
+import { Converter } from '../../services/lacinka';
 
 class Intl extends DataSource {
     private locale: Locale;
     private spelling: Spelling;
     private abc: ABC;
+    private latinConverter: Converter;
 
     constructor(locale: Locale, spelling: Spelling, abc: ABC) {
         super();
@@ -16,9 +18,13 @@ class Intl extends DataSource {
         this.locale = locale;
         this.spelling = spelling;
         this.abc = abc;
+        this.latinConverter = new Converter();
     }
 
-    public getLocalizedText(text: string, path: string[]): string {
+    public async getLocalizedText(
+        text: string,
+        path: string[]
+    ): Promise<string> {
         const intl = this.getLocalizationObject();
         let localizedText = this.accesLocalizationObject(intl, [
             ...path,
@@ -31,7 +37,7 @@ class Intl extends DataSource {
             if (abc !== this.abc.getDefaultABC().code) {
                 const methodName = this.constructMethodName(abc);
                 if (this.isCallable(methodName)) {
-                    localizedText = this[methodName](localizedText);
+                    localizedText = await this[methodName](localizedText);
                 }
             }
 
@@ -39,6 +45,10 @@ class Intl extends DataSource {
         }
 
         return text;
+    }
+
+    public convertToLatin(text: string): Promise<string> {
+        return this.latinConverter.convert(text);
     }
 
     private getLocalizationObject() {
@@ -54,13 +64,6 @@ class Intl extends DataSource {
         return pathArr.reduce((obj, key) => {
             return obj && obj[key] !== 'undefined' ? obj[key] : undefined;
         }, nestedObj);
-    }
-
-    private convertToLatin(text: string): string {
-        // const spelling = this.spelling.getCurrentSpelling().code;
-        // convert via service
-
-        return text;
     }
 
     private constructMethodName(abcCode: string): MethodName {

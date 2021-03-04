@@ -1,0 +1,38 @@
+description: Правілы канвертацыі тэксту з кірыліцы ў лацінку
+rules:
+  - name: i_palatalization_after_apostrophe
+    description: Замест апострафа + "і" пішам "ji"
+    sort: 5
+    search: !!js/regexp /([бвгдзмпфжклнрстцчшх]{1})(['’‘])([іІ]{1})/gim
+    replace: !!js/function >
+      function replace(match, p1, p2, p3) {
+        const pairs = {'І': 'Ji', 'і': 'ji'};
+        return `${p1}${pairs[p3]}`;
+      }
+  - name: simple_equivalents
+    description: >
+      Простая замена: 
+    sort: 1000
+    search: !!js/regexp /([ґэышчцфў]{1})/gim
+    replace: !!js/function >
+      function replace(match, p1) {
+        const pairs = {
+          'ґ': 'g',
+          'Ґ': 'G',
+          'э': 'e',
+          'Э': 'E',
+          'ы': 'y',
+          'Ы': 'Y',
+          'ш': 'š',
+          'Ш': 'Š',
+          'ч': 'č',
+          'Ч': 'Č',
+          'ц': 'c',
+          'Ц': 'C',
+          'ф': 'f',
+          'Ф': 'F',
+          'ў': 'ŭ',
+          'Ў': 'Ǔ',
+        };
+        return pairs[p1] || p1;
+      }
