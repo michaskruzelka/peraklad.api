@@ -3,7 +3,7 @@ import { DataSource } from 'apollo-datasource';
 import { Locale } from '../Language/types';
 import { Spelling } from '../Spelling';
 import { ABC } from '../ABC';
-import { ABCCode } from '../ABC/types';
+import { MethodName } from './types';
 
 class Intl extends DataSource {
     private locale: Locale;
@@ -28,8 +28,11 @@ class Intl extends DataSource {
         if (localizedText) {
             const abc = this.abc.getCurrentABC().code;
 
-            if (abc === ABCCode.LATIN) {
-                localizedText = this.convertToLatin(localizedText);
+            if (abc !== this.abc.getDefaultABC().code) {
+                const methodName = this.constructMethodName(abc);
+                if (this.isCallable(methodName)) {
+                    localizedText = this[methodName](localizedText);
+                }
             }
 
             return localizedText;
@@ -58,6 +61,18 @@ class Intl extends DataSource {
         // convert via service
 
         return text;
+    }
+
+    private constructMethodName(abcCode: string): MethodName {
+        const methodName = `convertTo${
+            abcCode.charAt(0).toUpperCase() + abcCode.slice(1)
+        }`;
+
+        return methodName as MethodName;
+    }
+
+    private isCallable(methodName: MethodName): boolean {
+        return typeof this[methodName] === 'function';
     }
 }
 
