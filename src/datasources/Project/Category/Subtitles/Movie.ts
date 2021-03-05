@@ -11,9 +11,11 @@ class Movie implements ISubCategory {
     public async searchForFiles(
         searchParams: MovieSubtitlesSearchParams,
         limit: number = 5,
-        service: ServicesCodes | null = ServicesCodes.OS
+        serviceCode: ServicesCodes | null = ServicesCodes.OS
     ): Promise<SearchResult> {
-        const subtitlesService = getService(service || ServicesCodes.OS);
+        const subtitlesService = getService(
+            (service) => service.code === serviceCode
+        );
         const result: ServiceSearchResult = await subtitlesService.search(
             searchParams,
             limit

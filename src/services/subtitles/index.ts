@@ -1,17 +1,14 @@
-import os from './os';
-import yify from './yify';
-import { ServicesCodes, Service } from './types';
+import { Service } from './types';
+import { SUBTITLES_SERVICES } from './config';
 
-const getService = (serviceCode: ServicesCodes): Service => {
-    if (os.code === serviceCode) {
-        return os;
+const getService = (filter: (service: Service) => boolean): Service => {
+    const service = SUBTITLES_SERVICES.find(filter);
+    
+    if (!service) {
+        throw new Error('Subtitles service not found.');
     }
 
-    if (yify.code === serviceCode) {
-        return yify;
-    }
-
-    throw new Error('Subtitles service not found.');
-}
+    return service;
+};
 
 export { getService };

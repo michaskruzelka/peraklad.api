@@ -24,6 +24,7 @@ const getDataSources = async () => {
             abc,
             spelling,
             omdb: new OMDB(),
+            project: new Project(),
             movieSubtitlesProject: new Project(new Subtitles(new Movie())),
             videoStreamSubtitlesProject: new Project(
                 new Subtitles(new VideoStream())

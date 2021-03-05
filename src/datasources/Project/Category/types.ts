@@ -12,7 +12,7 @@ interface ISubCategory {
     searchForFiles: (
         searchParams: SearchParams,
         limit?: number,
-        service?: ServicesCodes | null
+        serviceCode?: ServicesCodes | null
     ) => Promise<any>;
     getServiceById: (id: number) => any;
 }

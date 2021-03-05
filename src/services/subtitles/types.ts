@@ -38,6 +38,7 @@ type ServiceSearchResult = {
 type Service = {
     code: ServicesCodes;
     name: ServicesNames;
+    downloadDomain: string;
     search: (
         searchParams: SearchParams,
         limit: number

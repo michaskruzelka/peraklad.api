@@ -127,7 +127,7 @@ interface IVideoInfo {
 }
 
 interface IDataSource {
-    readonly category: ICategory;
+    readonly category?: ICategory;
     getAccessTypes: () => AccessType[];
     getDefaultAccessType: () => AccessType;
     getAccessTypeById: (id: number) => AccessType;

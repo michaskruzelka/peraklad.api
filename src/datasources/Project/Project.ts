@@ -24,10 +24,12 @@ class Project extends DataSource implements IDataSource {
     public readonly category: ICategory;
     private context: IContext;
 
-    constructor(category: ICategory) {
+    constructor(category?: ICategory) {
         super();
 
-        this.category = category;
+        if (category) {
+            this.category = category;
+        }
     }
 
     initialize(config: DataSourceConfig<IContext>): void {
@@ -257,6 +259,24 @@ class Project extends DataSource implements IDataSource {
         const records = await this.performDBRequest(cql, { id });
 
         return records.map((record: any) => record.get('deleted'))[0];
+    }
+
+    public async getProjectById(id: string): Promise<any> {
+        const cql = `
+            MATCH (p:Project { id: $id })-[:HAS_SETTINGS]->(ps:ProjectSettings)
+            WITH p, ps
+            MATCH (p)-[:HAS_INFO]->(i)
+            RETURN { labels: labels(p), project: p, info: i, settings: ps } AS project
+        `;
+
+        const records = await this.performDBRequest(cql, { id });
+        const project = records.map((record: any) => record.get('project'))[0];
+
+        if (!project) {
+            throw new Error(`Project not found: ${id}`);
+        }
+
+        return project;
     }
 
     private async performDBRequest(

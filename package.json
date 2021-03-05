@@ -9,6 +9,7 @@
         "apollo-datasource-rest": "^0.9.7",
         "apollo-server-lambda": "^2.19.0",
         "cheerio": "^1.0.0-rc.5",
+        "file-type": "^16.2.0",
         "got": "^11.8.1",
         "graphql-depth-limit": "^1.1.0",
         "graphql-validation-complexity": "^0.4.2",
@@ -18,6 +19,7 @@
         "neo4j-driver": "^4.2.1",
         "neo4j-graphql-js": "2.18.0",
         "opensubtitles-api": "^5.1.2",
+        "subtitle": "^4.0.1",
         "winston": "^3.3.3",
         "winston-logzio": "^5.1.2"
     },

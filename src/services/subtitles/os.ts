@@ -16,6 +16,7 @@ import {
 const service: Service = {
     code: ServicesCodes.OS,
     name: ServicesNames.OS,
+    downloadDomain: 'opensubtitles.org',
     search: async (
         searchParams: SearchParams,
         limit: number

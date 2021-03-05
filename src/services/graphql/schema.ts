@@ -32,6 +32,7 @@ const getSchema = async (): Promise<GraphQLSchema> => {
         typeDefs: typeDefsAsOne,
         resolvers: await getResolvers(),
         schemaDirectives: { range, stringLength, listLength, intl },
+        // uploads: {},
         config: {
             query: {
                 exclude: typesToIgnoreDBAugmentation,

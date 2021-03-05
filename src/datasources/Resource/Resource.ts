@@ -1,4 +1,7 @@
 import { DataSource } from 'apollo-datasource';
+import got from 'got';
+import FileType from 'file-type';
+import path from 'path';
 
 import { Category, SubCategory } from 'datasources/Project/types';
 import {
@@ -127,9 +130,22 @@ class Resource extends DataSource implements IDataSource {
         return translationService;
     }
 
-    // public readRemoteFile(fileUrl: string) {
+    public async readRemoteFile(fileUrl: string): Promise<any> {
+        const response = await got(fileUrl, {
+            method: 'HEAD',
+            followRedirect: true,
+        });
 
-    // }
+        const fileType = await FileType.fromBuffer(response.rawBody);
+
+        console.log(path.extname(response.requestUrl).substr(1));
+        console.log(response.headers["content-length"]);
+        console.log(response.headers);
+        console.log(fileType);
+        console.log(response.body);
+
+        return response;
+    }
 
     // public readLocalFile(file: string) {
 

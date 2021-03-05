@@ -9,6 +9,7 @@ import { Intl } from './Intl';
 type DataSources = {
     language: Language;
     omdb: OMDB;
+    project: Project;
     movieSubtitlesProject: Project;
     videoStreamSubtitlesProject: Project;
     abc: ABC;

@@ -4,11 +4,9 @@ import { ISubCategory, SearchParams } from '../types';
 
 class VideoStream implements ISubCategory {
     public async searchForFiles(
-        searchParams: SearchParams,
-        limit: number = 5
+        _: SearchParams,
+        __: number = 5
     ): Promise<any> {
-        console.log(searchParams);
-        console.log(limit);
         throw new Error('Method searchForFiles is not implemented.');
     }
 

@@ -9,7 +9,7 @@ import {
     ServicesNames,
     ServiceSearchResult,
 } from './types';
-import { YIFY_SEARCH_URL, YIFY_DOWNLOAD_URL } from './config';
+import { YIFY_SEARCH_URL } from './config';
 
 const retrieveLanguage = ($el: cheerio.Cheerio): string => {
     const languageMap: any = langMap;
@@ -18,14 +18,10 @@ const retrieveLanguage = ($el: cheerio.Cheerio): string => {
     return languageMap[language.toLowerCase()] || '';
 };
 
-const retrieveUrl = ($el: cheerio.Cheerio): string => {
+const retrieveUri = ($el: cheerio.Cheerio): string => {
     const hrefAttr = $el.find('.download-cell a').attr('href');
 
-    return hrefAttr
-        ? YIFY_DOWNLOAD_URL +
-              hrefAttr.replace('subtitles/', 'subtitle/') +
-              '.zip'
-        : '';
+    return hrefAttr ? hrefAttr.replace('subtitles/', 'subtitle/') + '.zip' : '';
 };
 
 const retrieveFileName = ($el: cheerio.Cheerio): string => {
@@ -45,6 +41,7 @@ const retrieveRating = ($el: cheerio.Cheerio): number => {
 const service: Service = {
     code: ServicesCodes.YIFY,
     name: ServicesNames.YIFY,
+    downloadDomain: 'yifysubtitles.org',
     search: async (
         searchParams: SearchParams,
         limit: number
@@ -57,10 +54,11 @@ const service: Service = {
         let subtitles = $('tbody tr')
             .map((_, el) => {
                 const $el = $(el);
+                const uri = retrieveUri($el);
 
                 return {
                     langcode: retrieveLanguage($el),
-                    url: retrieveUrl($el),
+                    url: uri ? `https://${service.downloadDomain}/${uri}`: '',
                     filename: retrieveFileName($el),
                     rating: retrieveRating($el),
                 };

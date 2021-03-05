@@ -40,7 +40,7 @@ const resolver = {
         },
     },
     Mutation: {
-        CreateResources: (
+        CreateResources: async (
             _: any,
             args: any,
             { dataSources }: { dataSources: DataSources }
@@ -52,10 +52,26 @@ const resolver = {
                 );
             }
 
+            const project = await dataSources.project.getProjectById(args.id);
+            if (!project) {
+                throw new ValidationError('Project not found.');
+            }
             
+            const projectDataSource = determine.dataSource(
+                project.labels,
+                dataSources
+            );
+
+            if (args.fileUrl) {
+                const fileContents = await dataSources.resource.readRemoteFile(
+                    args.fileUrl
+                );
+
+                console.log(fileContents.statusCode);
+            }
 
             // Implement
-            console.log(args);
+            // console.log(args);
 
             // dataSources.abc.getDefaultABC();
 

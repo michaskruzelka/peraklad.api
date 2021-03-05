@@ -9,6 +9,7 @@ type Query {
 
 type Mutation {
     CreateResources(
+        projectID: String! @stringLength(min: 36, max: 36)
         language: String! @stringLength(min: 2, max: 2)
         file: Upload
         fileUrl: String @stringLength(max: 500)
