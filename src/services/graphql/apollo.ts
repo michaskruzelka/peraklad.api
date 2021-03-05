@@ -24,7 +24,7 @@ const getConfig = async (): Promise<Config> => ({
         };
     },
     schema: await getSchema(),
-    dataSources: getDataSources,
+    dataSources: await getDataSources(),
     introspection: true,
     playground: true,
     validationRules,

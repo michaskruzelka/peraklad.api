@@ -5,16 +5,23 @@ import { SpellingCode } from 'datasources/Spelling/types';
 class Converter {
     private rulesCollection: RulesCollection;
 
-    constructor() {
-        this.rulesCollection = new RulesCollection();
+    constructor(rulesCollection: RulesCollection) {
+        this.rulesCollection = rulesCollection;
     }
 
-    public async convert(
+    public static async getInstance() {
+        const rulesCollection = new RulesCollection();
+        await rulesCollection.initRules();
+    
+        return new Converter(rulesCollection);
+    }
+
+    public convert(
         text: string,
         spelling: SpellingCode,
         direction: Direction = Direction.FORTH
-    ): Promise<string> {
-        const rules: IRule[] = await this.rulesCollection.getRules(direction);
+    ): string {
+        const rules: IRule[] = this.rulesCollection.getRules(direction);
         let convertedText = text.trim();
 
         for (const rule of rules) {

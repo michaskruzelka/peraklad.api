@@ -2,10 +2,10 @@ import { DataSource } from 'apollo-datasource';
 
 import { Locale } from '../Language/types';
 import { Spelling } from '../Spelling';
+import { SpellingCode } from '../Spelling/types';
 import { ABC } from '../ABC';
 import { MethodName } from './types';
 import { Converter } from '../../services/lacinka';
-import { SpellingCode } from 'datasources/Spelling/types';
 
 class Intl extends DataSource {
     private locale: Locale;
@@ -13,19 +13,24 @@ class Intl extends DataSource {
     private abc: ABC;
     private latinConverter: Converter;
 
-    constructor(locale: Locale, spelling: Spelling, abc: ABC) {
+    constructor(
+        locale: Locale,
+        spelling: Spelling,
+        abc: ABC,
+        latinConverter: Converter
+    ) {
         super();
 
         this.locale = locale;
         this.spelling = spelling;
         this.abc = abc;
-        this.latinConverter = new Converter();
+        this.latinConverter = latinConverter;
     }
 
-    public async getLocalizedText(
+    public getLocalizedText(
         text: string,
         path: string[]
-    ): Promise<string> {
+    ): string {
         const intl = this.getLocalizationObject();
         let localizedText = this.accesLocalizationObject(intl, [
             ...path,
@@ -38,7 +43,7 @@ class Intl extends DataSource {
             if (abc !== this.abc.getDefaultABC().code) {
                 const methodName = this.constructMethodName(abc);
                 if (this.isCallable(methodName)) {
-                    localizedText = await this[methodName](localizedText);
+                    localizedText = this[methodName](localizedText);
                 }
             }
 
@@ -51,7 +56,7 @@ class Intl extends DataSource {
     public convertToLatin(
         text: string,
         spelling?: SpellingCode
-    ): Promise<string> {
+    ): string {
         const spellingCode =
             spelling || this.spelling.getCurrentSpelling().code;
 

@@ -11,13 +11,7 @@ const yarnSchema = yaml.DEFAULT_SCHEMA.extend(yamlTypes.all);
 class RulesCollection {
     private rules: IRuleCollection = {};
 
-    constructor() {
-        this.initRules();
-    }
-
-    public async getRules(direction: Direction): Promise<IRule[]> {
-        console.log(this.rules);
-        
+    public getRules(direction: Direction): IRule[] {
         if (!this.rules[direction]) {
             return [];
         }
@@ -25,8 +19,8 @@ class RulesCollection {
         return this.rules[direction];
     }
 
-    private async initRules(): Promise<void> {
-        AVAILABLE_DIRECTIONS.map((direction) =>
+    public async initRules(): Promise<void> {
+        AVAILABLE_DIRECTIONS.map(async (direction) =>
             this.initRulePerDirection(direction)
         );
     }
@@ -39,7 +33,6 @@ class RulesCollection {
             const fileContents = await this.readFile(fileName);
             yamlData = yaml.load(fileContents, { schema: yarnSchema }) as any;
         } catch (e) {
-            console.log(e.message);
             throw new Error('No rules file found.');
         }
 
@@ -50,8 +43,7 @@ class RulesCollection {
         let rules = yamlData.rules;
         rules = rules.filter(this.isRuleValid);
         this.sortRules(rules);
-
-        console.log('inited');
+        this.rules[direction] = rules;
     }
 
     private isRuleValid(rule: IRule): boolean {
