@@ -133,6 +133,7 @@ interface IDataSource {
     getAccessTypeById: (id: number) => AccessType;
     getLevelById: (id: number) => Level;
     getStatusById: (id: number) => Status;
+    downloadRemoteFile: (fileUrl: string) => Promise<Buffer>;
 }
 
 type IMDBArgs = {

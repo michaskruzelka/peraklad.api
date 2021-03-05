@@ -1,8 +1,9 @@
-import { ServicesCodes } from '../../../services/subtitles/types';
+import { ServicesCodes, Service } from '../../../services/subtitles/types';
 import { MovieSubtitlesSearchParams } from './Subtitles/types';
 
 interface ICategory {
     readonly subCategory: ISubCategory;
+    downloadRemoteFile: (fileUrl: string) => any;
 }
 
 // It will be a union type in future
@@ -14,6 +15,7 @@ interface ISubCategory {
         limit?: number,
         serviceCode?: ServicesCodes | null
     ) => Promise<any>;
+    getSubtitlesService: (filter: (service: Service) => boolean) => Service;
     getServiceById: (id: number) => any;
 }
 

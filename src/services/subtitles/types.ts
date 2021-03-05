@@ -38,11 +38,12 @@ type ServiceSearchResult = {
 type Service = {
     code: ServicesCodes;
     name: ServicesNames;
-    downloadDomain: string;
+    downloadDomains: string[];
     search: (
         searchParams: SearchParams,
         limit: number
     ) => Promise<ServiceSearchResult>;
+    download: (fileUrl: string) => Promise<Buffer>;
 };
 
 export {

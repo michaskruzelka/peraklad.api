@@ -6,6 +6,17 @@ class Subtitles implements ICategory {
     constructor(subCategory: ISubCategory) {
         this.subCategory = subCategory;
     }
+
+    public async downloadRemoteFile(
+        fileUrl: string
+    ): Promise<Buffer> {
+        const fileUrlInfo = new URL(fileUrl);
+        const subtitlesService = this.subCategory.getSubtitlesService(
+            (service) => service.downloadDomains.includes(fileUrlInfo.hostname)
+        );
+
+        return subtitlesService.download(fileUrl);
+    }
 }
 
 export { Subtitles };

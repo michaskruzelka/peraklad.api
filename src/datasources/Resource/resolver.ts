@@ -40,7 +40,7 @@ const resolver = {
         },
     },
     Mutation: {
-        CreateResources: async (
+        CreateResource: async (
             _: any,
             args: any,
             { dataSources }: { dataSources: DataSources }
@@ -52,28 +52,43 @@ const resolver = {
                 );
             }
 
-            const project = await dataSources.project.getProjectById(args.id);
-            if (!project) {
-                throw new ValidationError('Project not found.');
-            }
-            
-            const projectDataSource = determine.dataSource(
-                project.labels,
-                dataSources
+            const project = await dataSources.project.getProjectById(
+                args.projectId
             );
 
+            let buffer: Buffer;
+
             if (args.fileUrl) {
-                const fileContents = await dataSources.resource.readRemoteFile(
+                const projectDataSource = determine.dataSource(
+                    project.labels,
+                    dataSources
+                );
+                // rename method to readRemoteFile
+                buffer = await projectDataSource.downloadRemoteFile(
                     args.fileUrl
                 );
-
-                console.log(fileContents.statusCode);
+            } else {
+                // local file:
+                // - size validation
+                // - get buffer
+                buffer = Buffer.from('');
             }
 
-            // Implement
-            // console.log(args);
+            if (!buffer.length) {
+                throw new Error('Could not download the file.');
+            }
 
-            // dataSources.abc.getDefaultABC();
+            const importOptions = {
+                projectId: project.id,
+                projectCategory: determine.category(project.labels),
+                projectSubCategory: determine.subCategory(project.labels),
+                fileName: args.fileName,
+                language: dataSources.language.get(args.language),
+                encoding: args.encoding,
+            };
+            dataSources.resource.import(buffer, importOptions);
+
+            // return resource ID
 
             return true;
         },

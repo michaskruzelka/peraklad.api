@@ -11,4 +11,8 @@ const getService = (filter: (service: Service) => boolean): Service => {
     return service;
 };
 
-export { getService };
+const getServices = (): Service[] => {
+    return SUBTITLES_SERVICES;
+} 
+
+export { getService, getServices };

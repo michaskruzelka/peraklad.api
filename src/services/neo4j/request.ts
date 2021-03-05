@@ -14,6 +14,7 @@ const request = {
         try {
             result = await session.run(cql, params);
         } catch (e) {
+            // console.log(e.message);
             logger.log('error', `createIMDBMovieProject: ${e.message}`);
             throw new Error('Could not perform a request to DB.');
         } finally {

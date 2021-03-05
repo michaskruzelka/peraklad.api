@@ -1,12 +1,9 @@
-import { StreamService } from '../../../../services/subtitles/types';
+import { Service, StreamService } from '../../../../services/subtitles/types';
 import { STREAM_SERVICES } from '../../../../services/subtitles/config';
 import { ISubCategory, SearchParams } from '../types';
 
 class VideoStream implements ISubCategory {
-    public async searchForFiles(
-        _: SearchParams,
-        __: number = 5
-    ): Promise<any> {
+    public async searchForFiles(_: SearchParams, __: number = 5): Promise<any> {
         throw new Error('Method searchForFiles is not implemented.');
     }
 
@@ -20,6 +17,12 @@ class VideoStream implements ISubCategory {
         }
 
         return service;
+    }
+
+    public getSubtitlesService(
+        _filter: (service: Service) => boolean
+    ): Service {
+        throw new Error('Not subtitles service found.');
     }
 }
 

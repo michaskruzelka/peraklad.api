@@ -1,5 +1,6 @@
 import cheerio from 'cheerio';
 import got from 'got';
+import AdmZip from 'adm-zip';
 
 import langMap from './yifyLangMap.json';
 import {
@@ -41,7 +42,7 @@ const retrieveRating = ($el: cheerio.Cheerio): number => {
 const service: Service = {
     code: ServicesCodes.YIFY,
     name: ServicesNames.YIFY,
-    downloadDomain: 'yifysubtitles.org',
+    downloadDomains: ['yifysubtitles.org'],
     search: async (
         searchParams: SearchParams,
         limit: number
@@ -58,7 +59,9 @@ const service: Service = {
 
                 return {
                     langcode: retrieveLanguage($el),
-                    url: uri ? `https://${service.downloadDomain}/${uri}`: '',
+                    url: uri
+                        ? `https://${service.downloadDomains[0]}/${uri}`
+                        : '',
                     filename: retrieveFileName($el),
                     rating: retrieveRating($el),
                 };
@@ -90,6 +93,20 @@ const service: Service = {
         }
 
         return result;
+    },
+    download: async (fileUrl: string): Promise<Buffer> => {
+        let buffer;
+
+        try {
+            const response = await got(fileUrl);
+            buffer = response.rawBody;
+        } catch (e) {
+            throw new Error(`Could not download the file: ${fileUrl}`);
+        }
+
+        const zip = new AdmZip(buffer);
+        
+        return zip.getEntries().shift()?.getData() || Buffer.from('');
     },
 };
 

@@ -279,6 +279,14 @@ class Project extends DataSource implements IDataSource {
         return project;
     }
 
+    public downloadRemoteFile(fileUrl: string): Promise<Buffer> {
+        if (!this.category) {
+            throw new Error('File cannot be downloaded.');
+        }
+
+        return this.category.downloadRemoteFile(fileUrl);
+    }
+
     private async performDBRequest(
         cql: string,
         args: object

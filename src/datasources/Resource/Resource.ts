@@ -1,7 +1,6 @@
 import { DataSource } from 'apollo-datasource';
-import got from 'got';
-import FileType from 'file-type';
-import path from 'path';
+import jschardet from 'jschardet';
+import iconv from 'iconv-lite';
 
 import { Category, SubCategory } from 'datasources/Project/types';
 import {
@@ -130,21 +129,24 @@ class Resource extends DataSource implements IDataSource {
         return translationService;
     }
 
-    public async readRemoteFile(fileUrl: string): Promise<any> {
-        const response = await got(fileUrl, {
-            method: 'HEAD',
-            followRedirect: true,
-        });
+    public import(buffer: Buffer, options: any) {
+        // 1) decode buffer
+        // 2) determine and validate file format
+        // 3) call file format parser and get js list
+        // 4) create resource node
+        // 5) create resourceItem nodes
+        
+        const charset = (
+            jschardet.detect(buffer, { minimumThreshold: 0.5 }).encoding ||
+            options.encoding ||
+            'UTF-8'
+        ).toUpperCase();
 
-        const fileType = await FileType.fromBuffer(response.rawBody);
+        const contents = iconv.decode(buffer, charset);
+        
 
-        console.log(path.extname(response.requestUrl).substr(1));
-        console.log(response.headers["content-length"]);
-        console.log(response.headers);
-        console.log(fileType);
-        console.log(response.body);
 
-        return response;
+        console.log(contents);
     }
 
     // public readLocalFile(file: string) {

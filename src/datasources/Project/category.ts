@@ -37,12 +37,13 @@ const determine = {
                         : dataSources.videoStreamSubtitlesProject;
                 break;
             }
-            // case Category.SOFTWARE: {
-            //     dataSources = dataSources.softwareProject
-            //     break;
-            // }
+            case Category.SOFTWARE: {
+                dataSource = dataSources.project;
+                // dataSources = dataSources.softwareProject
+                break;
+            }
             default: {
-                throw new Error('Unknown project data source');
+                dataSource = dataSources.project;
             }
         }
 

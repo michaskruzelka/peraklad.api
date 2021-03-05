@@ -1,4 +1,7 @@
 import OS from 'opensubtitles-api';
+import got from 'got';
+import { ungzip } from 'node-gzip';
+import path from 'path';
 
 import {
     Service,
@@ -16,7 +19,7 @@ import {
 const service: Service = {
     code: ServicesCodes.OS,
     name: ServicesNames.OS,
-    downloadDomain: 'opensubtitles.org',
+    downloadDomains: ['dl.opensubtitles.org'],
     search: async (
         searchParams: SearchParams,
         limit: number
@@ -50,6 +53,24 @@ const service: Service = {
         };
 
         return await client.search(input);
+    },
+    download: async (fileUrl: string): Promise<Buffer> => {
+        let buffer;
+
+        try {
+            const response = await got(fileUrl);
+            buffer = response.rawBody;
+        } catch (e) {
+            throw new Error(`Could not download the file: ${fileUrl}`);
+        }
+
+        const ext = path.extname(fileUrl).substr(1);
+        if ('gz' === ext) {
+            buffer = await ungzip(buffer);
+
+        }
+
+        return buffer || Buffer.from('');
     },
 };
 

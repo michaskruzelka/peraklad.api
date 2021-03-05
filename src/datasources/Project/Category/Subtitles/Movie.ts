@@ -1,5 +1,6 @@
 import { FileFormatCode } from '../../../Resource/types';
 import {
+    Service,
     ServicesCodes,
     ServiceSearchResult,
 } from '../../../../services/subtitles/types';
@@ -40,8 +41,11 @@ class Movie implements ISubCategory {
         };
     }
 
-    public getServiceById(id: number) {
-        console.log(id);
+    public getSubtitlesService(filter: (service: Service) => boolean): Service {
+        return getService(filter);
+    }
+
+    public getServiceById(_id: number) {
         throw new Error('Method getServiceById is not implemented.');
     }
 }
