@@ -27,10 +27,7 @@ class Intl extends DataSource {
         this.latinConverter = latinConverter;
     }
 
-    public getLocalizedText(
-        text: string,
-        path: string[]
-    ): string {
+    public getLocalizedText(text: string, path: string[]): string {
         const intl = this.getLocalizationObject();
         let localizedText = this.accesLocalizationObject(intl, [
             ...path,
@@ -53,10 +50,7 @@ class Intl extends DataSource {
         return text;
     }
 
-    public convertToLatin(
-        text: string,
-        spelling?: SpellingCode
-    ): string {
+    public convertToLatin(text: string, spelling?: SpellingCode): string {
         const spellingCode =
             spelling || this.spelling.getCurrentSpelling().code;
 

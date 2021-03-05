@@ -13,27 +13,30 @@ import { Converter } from '../services/lacinka/Converter';
 
 const getDataSources = async () => {
     const latinConverter = await Converter.getInstance();
-    const language = new Language();
-    const spelling = new Spelling(language.getCurrentLocale());
-    const abc = new ABC(language.getCurrentLocale());
 
-    return (): DataSources => ({
-        language,
-        abc,
-        spelling,
-        omdb: new OMDB(),
-        movieSubtitlesProject: new Project(new Subtitles(new Movie())),
-        videoStreamSubtitlesProject: new Project(
-            new Subtitles(new VideoStream())
-        ),
-        resource: new Resource(),
-        intl: new Intl(
-            language.getCurrentLocale(),
-            spelling,
+    return (): DataSources => {
+        const language = new Language();
+        const spelling = new Spelling(language.getCurrentLocale());
+        const abc = new ABC(language.getCurrentLocale());
+
+        return {
+            language,
             abc,
-            latinConverter
-        ),
-    });
+            spelling,
+            omdb: new OMDB(),
+            movieSubtitlesProject: new Project(new Subtitles(new Movie())),
+            videoStreamSubtitlesProject: new Project(
+                new Subtitles(new VideoStream())
+            ),
+            resource: new Resource(),
+            intl: new Intl(
+                language.getCurrentLocale(),
+                spelling,
+                abc,
+                latinConverter
+            ),
+        };
+    };
 };
 
 export { getDataSources };
