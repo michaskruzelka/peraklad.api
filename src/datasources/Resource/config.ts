@@ -19,12 +19,16 @@ import {
     TranslationServiceID,
     TranslationServiceCode,
 } from './types';
+import SRT from '../../services/parser/SRT';
 
 const SRT_FILE_FORMAT: FileFormat = {
     code: FileFormatCode.SRT,
     name: 'SRT',
     longName: 'SubRip',
     extensions: ['.srt'],
+    parser: () => {
+        return new SRT();
+    },
 };
 
 const VTT_FILE_FORMAT: FileFormat = {
@@ -32,6 +36,9 @@ const VTT_FILE_FORMAT: FileFormat = {
     name: 'WebVTT',
     longName: 'Web Video Text Tracks',
     extensions: ['.vtt'],
+    parser: () => {
+        return new SRT(); // to change
+    },
 };
 
 const SBV_FILE_FORMAT: FileFormat = {
@@ -39,6 +46,9 @@ const SBV_FILE_FORMAT: FileFormat = {
     name: 'SBV',
     longName: 'Youtube Captions',
     extensions: ['.sbv'],
+    parser: () => {
+        return new SRT(); // to change
+    },
 };
 
 const SMI_FILE_FORMAT: FileFormat = {
@@ -46,18 +56,27 @@ const SMI_FILE_FORMAT: FileFormat = {
     name: 'SAMI',
     longName: 'Synchronized Accessible Media Interchange',
     extensions: ['.smi', '.sami'],
+    parser: () => {
+        return new SRT(); // to change
+    },
 };
 
 const JSON_FILE_FORMAT: FileFormat = {
     code: FileFormatCode.JSON,
     name: 'JSON',
     extensions: ['.json'],
+    parser: () => {
+        return new SRT(); // to change
+    },
 };
 
 const YML_FILE_FORMAT: FileFormat = {
     code: FileFormatCode.YML,
     name: 'YAML',
     extensions: ['.yaml', '.yml'],
+    parser: () => {
+        return new SRT(); // to change
+    },
 };
 
 const XLIFF_FILE_FORMAT: FileFormat = {
@@ -65,6 +84,9 @@ const XLIFF_FILE_FORMAT: FileFormat = {
     name: 'XLIFF',
     longName: 'XML Localization Interchange File Format',
     extensions: ['.xlf'],
+    parser: () => {
+        return new SRT(); // to change
+    },
 };
 
 const FILE_FORMATS: CategoryFileFormats = {

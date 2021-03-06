@@ -266,7 +266,7 @@ class Project extends DataSource implements IDataSource {
             MATCH (p:Project { id: $id })-[:HAS_SETTINGS]->(ps:ProjectSettings)
             WITH p, ps
             MATCH (p)-[:HAS_INFO]->(i)
-            RETURN { labels: labels(p), project: p, info: i, settings: ps } AS project
+            RETURN { id: p.id, labels: labels(p), project: p, info: i, settings: ps } AS project
         `;
 
         const records = await this.performDBRequest(cql, { id });
@@ -279,12 +279,12 @@ class Project extends DataSource implements IDataSource {
         return project;
     }
 
-    public downloadRemoteFile(fileUrl: string): Promise<Buffer> {
+    public readRemoteFile(fileUrl: string): Promise<Buffer> {
         if (!this.category) {
             throw new Error('File cannot be downloaded.');
         }
 
-        return this.category.downloadRemoteFile(fileUrl);
+        return this.category.readRemoteFile(fileUrl);
     }
 
     private async performDBRequest(

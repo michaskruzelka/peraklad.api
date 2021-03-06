@@ -7,7 +7,7 @@ class Subtitles implements ICategory {
         this.subCategory = subCategory;
     }
 
-    public async downloadRemoteFile(
+    public async readRemoteFile(
         fileUrl: string
     ): Promise<Buffer> {
         const fileUrlInfo = new URL(fileUrl);

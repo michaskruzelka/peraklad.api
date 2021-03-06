@@ -3,7 +3,7 @@ import { MovieSubtitlesSearchParams } from './Subtitles/types';
 
 interface ICategory {
     readonly subCategory: ISubCategory;
-    downloadRemoteFile: (fileUrl: string) => any;
+    readRemoteFile: (fileUrl: string) => any;
 }
 
 // It will be a union type in future

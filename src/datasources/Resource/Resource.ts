@@ -1,7 +1,6 @@
 import { DataSource } from 'apollo-datasource';
-import jschardet from 'jschardet';
-import iconv from 'iconv-lite';
 
+import { getFileContents } from '../../services/file';
 import { Category, SubCategory } from 'datasources/Project/types';
 import {
     FileFormat,
@@ -12,6 +11,7 @@ import {
     TranslationStatus,
     TranslationType,
     TranslationService,
+    ImportOptions,
 } from './types';
 import {
     FILE_FORMATS,
@@ -59,6 +59,23 @@ class Resource extends DataSource implements IDataSource {
         const fileFormat = this.getFileFormats(category, subCategory).find(
             (fileFormat) => fileFormat.code === code
         );
+
+        if (!fileFormat) {
+            throw new Error('File format not found');
+        }
+
+        return fileFormat;
+    }
+
+    public getFileFormatByExtension(
+        extension: string,
+        category: Category,
+        subCategory?: SubCategory | null
+    ): FileFormat {
+        const fileFormat = this.getFileFormats(
+            category,
+            subCategory
+        ).find((fileFormat) => fileFormat.extensions.includes(extension));
 
         if (!fileFormat) {
             throw new Error('File format not found');
@@ -129,24 +146,33 @@ class Resource extends DataSource implements IDataSource {
         return translationService;
     }
 
-    public import(buffer: Buffer, options: any) {
-        // 1) decode buffer
+    public async import(buffer: Buffer, options: ImportOptions) {
+        // 1) decode buffer to string
         // 2) determine and validate file format
         // 3) call file format parser and get js list
         // 4) create resource node
         // 5) create resourceItem nodes
-        
-        const charset = (
-            jschardet.detect(buffer, { minimumThreshold: 0.5 }).encoding ||
-            options.encoding ||
-            'UTF-8'
-        ).toUpperCase();
 
-        const contents = iconv.decode(buffer, charset);
-        
+        // --- 1 --- //
+        const contents = getFileContents(buffer, options.encoding);
+        const extension = contents.extension || options.extension;
+        if (!extension) {
+            throw new Error('Could not recognize file format.');
+        }
 
+        // --- 2 --- //
+        const fileFormat = this.getFileFormatByExtension(
+            extension,
+            options.projectCategory,
+            options.projectSubCategory
+        );
 
-        console.log(contents);
+        // --- 3 --- //
+        const elements = await fileFormat.parser().parse(contents.contents);
+
+        console.log(elements);
+
+        return elements;
     }
 
     // public readLocalFile(file: string) {

@@ -13,6 +13,8 @@ import {
     IRecommendation,
     ITiming,
     TimingFormat,
+    FileFormatCode,
+    ImportOptions,
 } from './types';
 import { ILanguage } from '../Language/types';
 import RequiredFieldError from '../../services/errors/RequiredSelectionFieldError';
@@ -57,36 +59,36 @@ const resolver = {
             );
 
             let buffer: Buffer;
+            let extension: FileFormatCode | undefined;
 
             if (args.fileUrl) {
                 const projectDataSource = determine.dataSource(
                     project.labels,
                     dataSources
                 );
-                // rename method to readRemoteFile
-                buffer = await projectDataSource.downloadRemoteFile(
-                    args.fileUrl
-                );
+                buffer = await projectDataSource.readRemoteFile(args.fileUrl);
             } else {
                 // local file:
                 // - size validation
+                // - ext validation
                 // - get buffer
                 buffer = Buffer.from('');
             }
 
             if (!buffer.length) {
-                throw new Error('Could not download the file.');
+                throw new Error('Could not read the file.');
             }
 
-            const importOptions = {
+            const importOptions: ImportOptions = {
                 projectId: project.id,
                 projectCategory: determine.category(project.labels),
                 projectSubCategory: determine.subCategory(project.labels),
                 fileName: args.fileName,
                 language: dataSources.language.get(args.language),
                 encoding: args.encoding,
+                extension: extension,
             };
-            dataSources.resource.import(buffer, importOptions);
+            await dataSources.resource.import(buffer, importOptions);
 
             // return resource ID
 
@@ -236,9 +238,8 @@ const resolver = {
         },
     },
     TimingFormat: {
-        text: (timingFormat: TimingFormat): string => {
-            console.log(timingFormat);
-
+        text: (_timingFormat: TimingFormat): string => {
+            // return timingFormat.fileFormat.parser().formatElement({});
             return 'test';
         },
     },

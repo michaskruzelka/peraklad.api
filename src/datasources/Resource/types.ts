@@ -1,15 +1,7 @@
 import { ILanguage } from '../Language/types';
 import { Category, IProject, SubCategory } from '../Project/types';
-
-enum FileFormatCode {
-    SRT = 'srt',
-    VTT = 'vtt',
-    SMI = 'smi',
-    SBV = 'sbv',
-    JSON = 'json',
-    YML = 'yml',
-    XLIFF = 'xliff',
-}
+import { FileFormatCode } from '../../services/file/types';
+import { IParser } from '../../services/parser/types';
 
 enum StatusID {
     STARTED = 1,
@@ -35,6 +27,7 @@ type FileFormat = {
     name: string;
     longName?: string;
     description?: string | null;
+    parser: () => IParser;
 };
 
 type SubtitlesFileFormats = {
@@ -207,6 +200,16 @@ interface ITiming {
     formatted: TimingFormat[];
 }
 
+type ImportOptions = {
+    language: ILanguage;
+    projectId: string;
+    projectCategory: Category;
+    projectSubCategory?: SubCategory;
+    fileName?: string;
+    encoding?: string;
+    extension?: FileFormatCode;
+};
+
 interface IDataSource {
     getFileFormats(category: Category, subCategory?: SubCategory): FileFormat[];
     getFileFormatByCode(
@@ -254,4 +257,5 @@ export {
     ITiming,
     TimingFormat,
     ResolvedTimingFormat,
+    ImportOptions,
 };
