@@ -1,9 +1,24 @@
 import { parse, map, Node, NodeCue } from 'subtitle';
 
-import { filterStream, promisifyStream, createStream } from './utils';
+import {
+    filterStream,
+    promisifyStream,
+    createStream,
+    formatText,
+} from './utils';
 import { IElement, IParser } from './types';
 
 class SRT implements IParser {
+    private static instance: SRT;
+    
+    public static getInstance(): SRT {
+        if (!this.instance) {
+            this.instance = new SRT();
+        }
+
+        return this.instance;
+    }
+    
     public parse(contents: string): Promise<IElement[]> {
         const stream = createStream(contents)
             .pipe(parse())
@@ -14,6 +29,9 @@ class SRT implements IParser {
     }
 
     public format(_elements: IElement[]): string {
+        // const cues = elements.map(this.elementToCue);
+
+        // return stringify();
         return '';
     }
 
@@ -27,12 +45,19 @@ class SRT implements IParser {
 
     private cueToElement(node: NodeCue): IElement {
         return {
-            // strip tags & trim
-            // let strippedString = originalString.replace(/(<([^>]+)>)/gi, "").trim();
-            // move the logic to utils
-            text: node.data.text,
+            text: formatText(node.data.text),
+            context: {
+                timing: {
+                    startsAt: node.data.start,
+                    endsAt: node.data.end,
+                },
+            },
         };
     }
+
+    // private elementToCue(_element: IElement): string {
+    //     return '';
+    // }
 }
 
 export default SRT;

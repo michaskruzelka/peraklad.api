@@ -1,3 +1,5 @@
+import { ValidationError } from 'apollo-server';
+
 import { DataSources } from '../types';
 import {
     FileFormat,
@@ -19,7 +21,7 @@ import {
 import { ILanguage } from '../Language/types';
 import RequiredFieldError from '../../services/errors/RequiredSelectionFieldError';
 import { determine } from '../Project/category';
-import { ValidationError } from 'apollo-server';
+import { LevelID } from '../Project/types';
 
 const resolver = {
     Query: {
@@ -46,7 +48,7 @@ const resolver = {
             _: any,
             args: any,
             { dataSources }: { dataSources: DataSources }
-        ) => {
+        ): Promise<string> => {
             dataSources.language.validateCode(args.language);
             if (!(args.file || args.fileUrl) || (args.file && args.fileUrl)) {
                 throw new ValidationError(
@@ -57,6 +59,12 @@ const resolver = {
             const project = await dataSources.project.getProjectById(
                 args.projectId
             );
+
+            if (project.project.type === LevelID.PARENT) {
+                throw new Error(
+                    'Cannot attach any resources to a project with parent level.'
+                );
+            }
 
             let buffer: Buffer;
             let extension: FileFormatCode | undefined;
@@ -88,11 +96,8 @@ const resolver = {
                 encoding: args.encoding,
                 extension: extension,
             };
-            await dataSources.resource.import(buffer, importOptions);
 
-            // return resource ID
-
-            return true;
+            return dataSources.resource.import(buffer, importOptions);
         },
     },
     Resource: {

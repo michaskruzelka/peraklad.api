@@ -11,11 +11,11 @@ type Mutation {
     CreateResource(
         projectId: String! @stringLength(min: 36, max: 36)
         language: String! @stringLength(min: 2, max: 2)
+        fileName: String! @stringLength(max: 50)
         file: Upload
         fileUrl: String @stringLength(max: 500)
-        fileName: String @stringLength(max: 50)
         encoding: String @stringLength(max: 100)
-    ): Boolean!
+    ): String!
 }
 
 type FileFormat {

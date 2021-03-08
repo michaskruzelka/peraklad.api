@@ -18,8 +18,11 @@ import {
     TranslationService,
     TranslationServiceID,
     TranslationServiceCode,
+    ItemContextLabel,
 } from './types';
 import SRT from '../../services/parser/SRT';
+
+const FILE_ELEMENTS_LIMIT = 10000;
 
 const SRT_FILE_FORMAT: FileFormat = {
     code: FileFormatCode.SRT,
@@ -27,7 +30,7 @@ const SRT_FILE_FORMAT: FileFormat = {
     longName: 'SubRip',
     extensions: ['.srt'],
     parser: () => {
-        return new SRT();
+        return SRT.getInstance();
     },
 };
 
@@ -37,7 +40,7 @@ const VTT_FILE_FORMAT: FileFormat = {
     longName: 'Web Video Text Tracks',
     extensions: ['.vtt'],
     parser: () => {
-        return new SRT(); // to change
+        return SRT.getInstance(); // to change
     },
 };
 
@@ -47,7 +50,7 @@ const SBV_FILE_FORMAT: FileFormat = {
     longName: 'Youtube Captions',
     extensions: ['.sbv'],
     parser: () => {
-        return new SRT(); // to change
+        return SRT.getInstance(); // to change
     },
 };
 
@@ -57,7 +60,7 @@ const SMI_FILE_FORMAT: FileFormat = {
     longName: 'Synchronized Accessible Media Interchange',
     extensions: ['.smi', '.sami'],
     parser: () => {
-        return new SRT(); // to change
+        return SRT.getInstance(); // to change
     },
 };
 
@@ -66,7 +69,7 @@ const JSON_FILE_FORMAT: FileFormat = {
     name: 'JSON',
     extensions: ['.json'],
     parser: () => {
-        return new SRT(); // to change
+        return SRT.getInstance(); // to change
     },
 };
 
@@ -75,7 +78,7 @@ const YML_FILE_FORMAT: FileFormat = {
     name: 'YAML',
     extensions: ['.yaml', '.yml'],
     parser: () => {
-        return new SRT(); // to change
+        return SRT.getInstance(); // to change
     },
 };
 
@@ -85,7 +88,7 @@ const XLIFF_FILE_FORMAT: FileFormat = {
     longName: 'XML Localization Interchange File Format',
     extensions: ['.xlf'],
     parser: () => {
-        return new SRT(); // to change
+        return SRT.getInstance(); // to change
     },
 };
 
@@ -176,6 +179,11 @@ const TRANSLATION_SERVICES: TranslationService[] = [
     },
 ];
 
+const ITEM_CONTEXT_LABELS = {
+    [Category.SUBTITLES]: ItemContextLabel.SUBTITLE,
+    [Category.SOFTWARE]: ItemContextLabel.SOFTWARE_ELEMENT,
+};
+
 export {
     FILE_FORMATS,
     STATUSES,
@@ -183,4 +191,6 @@ export {
     TRANSLATION_STATUSES,
     TRANSLATION_TYPES,
     TRANSLATION_SERVICES,
+    ITEM_CONTEXT_LABELS,
+    FILE_ELEMENTS_LIMIT,
 };

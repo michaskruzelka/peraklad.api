@@ -55,4 +55,8 @@ const promisifyStream = (stream: Readable): Promise<IElement[]> => {
     });
 };
 
-export { filterStream, promisifyStream, createStream };
+const formatText = (text: string): string => {
+    return text.replace(/(<([^>]+)>)/gi, "").trim();
+}
+
+export { filterStream, promisifyStream, createStream, formatText };

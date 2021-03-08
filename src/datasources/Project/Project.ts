@@ -246,7 +246,7 @@ class Project extends DataSource implements IDataSource {
             CALL apoc.do.case([
                 cp IS NOT NULL, 'RETURN false AS deleted',
                 r IS NOT NULL, 'MATCH (p)-[:HAS_SETTINGS]->(ps:ProjectSettings) 
-                    SET ps.status = ${StatusID.DELETED},
+                    SET ps.status = toInteger($status),
                         p.updatedAt = datetime()
                     RETURN true AS deleted'],
                 'MATCH path = (p)-[*]-(:IMDB|:VideoInfo) DETACH DELETE path RETURN true AS deleted',
@@ -256,7 +256,10 @@ class Project extends DataSource implements IDataSource {
             RETURN value.deleted AS deleted
         `;
 
-        const records = await this.performDBRequest(cql, { id });
+        const records = await this.performDBRequest(cql, {
+            id,
+            status: StatusID.DELETED,
+        });
 
         return records.map((record: any) => record.get('deleted'))[0];
     }

@@ -40,6 +40,11 @@ type CategoryFileFormats = {
     [Category.SOFTWARE]: FileFormat[];
 };
 
+enum ItemContextLabel {
+    SOFTWARE_ELEMENT = 'SoftwareElement',
+    SUBTITLE = 'Subtitle',
+}
+
 type FileFormatsArgs = {
     category: Category;
     subCategory?: SubCategory | null;
@@ -204,8 +209,8 @@ type ImportOptions = {
     language: ILanguage;
     projectId: string;
     projectCategory: Category;
+    fileName: string;
     projectSubCategory?: SubCategory;
-    fileName?: string;
     encoding?: string;
     extension?: FileFormatCode;
 };
@@ -258,4 +263,5 @@ export {
     TimingFormat,
     ResolvedTimingFormat,
     ImportOptions,
+    ItemContextLabel,
 };

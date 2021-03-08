@@ -1,7 +1,15 @@
-import { DataSource } from 'apollo-datasource';
+import { DataSource, DataSourceConfig } from 'apollo-datasource';
+import { Record } from 'neo4j-driver';
+import { format } from 'util';
 
+import request from '../../services/neo4j/request';
 import { getFileContents } from '../../services/file';
-import { Category, SubCategory } from 'datasources/Project/types';
+import {
+    Category,
+    SubCategory,
+    StatusID as ProjectStatusID,
+} from '../Project/types';
+import { IContext } from '../../services/graphql/types';
 import {
     FileFormat,
     IDataSource,
@@ -12,6 +20,9 @@ import {
     TranslationType,
     TranslationService,
     ImportOptions,
+    StatusID,
+    ItemStatusID,
+    ItemContextLabel,
 } from './types';
 import {
     FILE_FORMATS,
@@ -20,9 +31,18 @@ import {
     TRANSLATION_STATUSES,
     TRANSLATION_TYPES,
     TRANSLATION_SERVICES,
+    ITEM_CONTEXT_LABELS,
+    FILE_ELEMENTS_LIMIT,
 } from './config';
+import { IMPORT_RESOURCE_QUERY } from './queries';
 
 class Resource extends DataSource implements IDataSource {
+    private context: IContext;
+
+    initialize(config: DataSourceConfig<IContext>): void {
+        this.context = config.context;
+    }
+
     public getFileFormats(
         category: Category,
         subCategory?: SubCategory | null
@@ -146,33 +166,67 @@ class Resource extends DataSource implements IDataSource {
         return translationService;
     }
 
-    public async import(buffer: Buffer, options: ImportOptions) {
-        // 1) decode buffer to string
-        // 2) determine and validate file format
-        // 3) call file format parser and get js list
-        // 4) create resource node
-        // 5) create resourceItem nodes
-
-        // --- 1 --- //
+    public async import(
+        buffer: Buffer,
+        options: ImportOptions
+    ): Promise<string> {
         const contents = getFileContents(buffer, options.encoding);
         const extension = contents.extension || options.extension;
         if (!extension) {
             throw new Error('Could not recognize file format.');
         }
 
-        // --- 2 --- //
         const fileFormat = this.getFileFormatByExtension(
             extension,
             options.projectCategory,
             options.projectSubCategory
         );
 
-        // --- 3 --- //
         const elements = await fileFormat.parser().parse(contents.contents);
+        if (!elements) {
+            throw new Error('Nothing to translate.');
+        }
+        if (elements.length > FILE_ELEMENTS_LIMIT) {
+            throw new Error(
+                `Too many elements. Maximum allowed: ${FILE_ELEMENTS_LIMIT}`
+            );
+        }
 
-        console.log(elements);
+        const firstElement = elements.shift();
+        const label = this.getItemContextLabel(options.projectCategory);
+        const cql = format(IMPORT_RESOURCE_QUERY, label, label);
 
-        return elements;
+        const params = {
+            projectId: options.projectId,
+            projectStatus: ProjectStatusID.IN_PROGRESS,
+            resourceName: options.fileName,
+            resourceLanguage: options.language.code,
+            resourceFormat: fileFormat.code,
+            resourceStatus: StatusID.STARTED,
+            resourceItemStatus: ItemStatusID.NEW,
+            firstElement,
+            elements,
+        };
+
+        const records = await this.performDBRequest(cql, params);
+
+        return records.map((record: any) => record.get('id'))[0];
+    }
+
+    private async performDBRequest(
+        cql: string,
+        args: object
+    ): Promise<Record[]> {
+        return request.perform(
+            cql,
+            args,
+            this.context.driver,
+            this.context.logger
+        );
+    }
+
+    private getItemContextLabel(projectCategory: Category): ItemContextLabel {
+        return ITEM_CONTEXT_LABELS[projectCategory];
     }
 
     // public readLocalFile(file: string) {

@@ -1,5 +1,17 @@
+interface ISubtitleElementContext {
+    timing: {
+        startsAt: number;
+        endsAt: number;
+    };
+}
+
+interface ISoftwareElementContext {
+    key: string;
+}
+
 interface IElement {
     text: string;
+    context: ISubtitleElementContext | ISoftwareElementContext;
 }
 
 interface IParser {
