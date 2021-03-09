@@ -3,15 +3,25 @@ import { Transform, Readable } from 'stream';
 import { IElement } from './types';
 import { DEFAULT_CHARSET } from '../file/config';
 
-const createStream = (contents: string): Readable => {
-    return Readable.from([contents], { encoding: DEFAULT_CHARSET });
+const createStream = (contents: Iterable<any>): Readable => {
+    return Readable.from(contents, { encoding: DEFAULT_CHARSET });
+};
+
+const mapElementStream = (mapper: (element: IElement, index: number) => any) => {
+  let index = 0
+
+  return new Transform({
+    objectMode: true,
+    autoDestroy: false,
+    transform(chunk: IElement, _encoding, callback) {
+      callback(null, mapper(chunk, index++))
+    }
+  })
 }
 
-const filterStream = (fn: any, options = {}) =>
+const filterNodeStream = (fn: any) =>
     new Transform({
         objectMode: true,
-        ...options,
-
         transform(chunk, _encoding, callback) {
             let take;
 
@@ -39,7 +49,7 @@ const filterStream = (fn: any, options = {}) =>
         3) see below:
     
 */
-const promisifyStream = (stream: Readable): Promise<IElement[]> => {
+const promisifyElementsStream = (stream: Readable): Promise<IElement[]> => {
     return new Promise((resolve, reject) => {
         const chunks: IElement[] = [];
 
@@ -55,8 +65,25 @@ const promisifyStream = (stream: Readable): Promise<IElement[]> => {
     });
 };
 
-const formatText = (text: string): string => {
-    return text.replace(/(<([^>]+)>)/gi, "").trim();
-}
+const promisifyStringStream = async (stream: Readable): Promise<string> => {
+    let result = '';
 
-export { filterStream, promisifyStream, createStream, formatText };
+    for await (const chunk of stream) {
+        result += chunk;
+    }
+
+    return result;
+};
+
+const formatText = (text: string): string => {
+    return text.replace(/(<([^>]+)>)/gi, '').trim();
+};
+
+export {
+    filterNodeStream,
+    mapElementStream,
+    promisifyElementsStream,
+    promisifyStringStream,
+    createStream,
+    formatText,
+};

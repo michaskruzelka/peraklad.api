@@ -16,8 +16,7 @@ interface IElement {
 
 interface IParser {
     parse: (contents: string) => Promise<IElement[]>;
-    format: (elements: IElement[]) => string;
-    formatElement: (element: IElement) => string;
+    format: (elements: IElement[]) => Promise<string>;
 }
 
-export { IParser, IElement };
+export { IParser, IElement, ISubtitleElementContext };

@@ -184,7 +184,7 @@ interface IDuration {
     minutes: number;
     seconds: number;
     milliseconds: number;
-    total?: number;
+    total: number;
     formatted?: string;
 }
 
@@ -213,6 +213,15 @@ type ImportOptions = {
     projectSubCategory?: SubCategory;
     encoding?: string;
     extension?: FileFormatCode;
+};
+
+type CreateResourceArgs = {
+    projectId: string;
+    language: string;
+    fileName: string;
+    file?: Buffer;
+    fileUrl?: string;
+    encoding?: string;
 };
 
 interface IDataSource {
@@ -264,4 +273,5 @@ export {
     ResolvedTimingFormat,
     ImportOptions,
     ItemContextLabel,
+    CreateResourceArgs,
 };

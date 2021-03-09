@@ -11,7 +11,7 @@ type Mutation {
     CreateResource(
         projectId: String! @stringLength(min: 36, max: 36)
         language: String! @stringLength(min: 2, max: 2)
-        fileName: String! @stringLength(max: 50)
+        fileName: String! @stringLength(min: 1, max: 50)
         file: Upload
         fileUrl: String @stringLength(max: 500)
         encoding: String @stringLength(max: 100)
@@ -133,13 +133,15 @@ type Timing {
                         hours: this.startsAt.hours,
                         minutes: this.startsAt.minutesOfHour,
                         seconds: this.startsAt.secondsOfMinute,
-                        milliseconds: this.startsAt.millisecondsOfSecond
+                        milliseconds: this.startsAt.millisecondsOfSecond,
+                        total: this.startsAt.milliseconds
                     },
                     endsAt: {
                         hours: this.endsAt.hours,
                         minutes: this.endsAt.minutesOfHour,
                         seconds: this.endsAt.secondsOfMinute,
-                        milliseconds: this.endsAt.millisecondsOfSecond
+                        milliseconds: this.endsAt.millisecondsOfSecond,
+                        total: this.endsAt.milliseconds
                     }
                 }
             }

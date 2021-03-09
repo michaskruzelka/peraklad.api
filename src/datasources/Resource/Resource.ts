@@ -186,13 +186,13 @@ class Resource extends DataSource implements IDataSource {
         if (!elements) {
             throw new Error('Nothing to translate.');
         }
+
         if (elements.length > FILE_ELEMENTS_LIMIT) {
             throw new Error(
                 `Too many elements. Maximum allowed: ${FILE_ELEMENTS_LIMIT}`
             );
         }
 
-        const firstElement = elements.shift();
         const label = this.getItemContextLabel(options.projectCategory);
         const cql = format(IMPORT_RESOURCE_QUERY, label, label);
 
@@ -204,7 +204,6 @@ class Resource extends DataSource implements IDataSource {
             resourceFormat: fileFormat.code,
             resourceStatus: StatusID.STARTED,
             resourceItemStatus: ItemStatusID.NEW,
-            firstElement,
             elements,
         };
 

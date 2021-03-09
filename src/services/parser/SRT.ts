@@ -1,12 +1,14 @@
-import { parse, map, Node, NodeCue } from 'subtitle';
+import { parse, stringify, map, Node, NodeCue } from 'subtitle';
 
 import {
-    filterStream,
-    promisifyStream,
+    filterNodeStream,
+    mapElementStream,
+    promisifyElementsStream,
     createStream,
     formatText,
+    promisifyStringStream,
 } from './utils';
-import { IElement, IParser } from './types';
+import { IElement, IParser, ISubtitleElementContext } from './types';
 
 class SRT implements IParser {
     private static instance: SRT;
@@ -20,23 +22,20 @@ class SRT implements IParser {
     }
     
     public parse(contents: string): Promise<IElement[]> {
-        const stream = createStream(contents)
+        const stream = createStream([contents])
             .pipe(parse())
-            .pipe(filterStream(this.isCueNode))
+            .pipe(filterNodeStream(this.isCueNode))
             .pipe(map((node: Node) => this.cueToElement(node as NodeCue)));
 
-        return promisifyStream(stream);
+        return promisifyElementsStream(stream);
     }
 
-    public format(_elements: IElement[]): string {
-        // const cues = elements.map(this.elementToCue);
+    public format(elements: IElement[]): Promise<string> {
+        const stream = createStream(elements)
+            .pipe(mapElementStream(this.elementToCue))
+            .pipe(stringify({ format: 'SRT' }))
 
-        // return stringify();
-        return '';
-    }
-
-    public formatElement(_element: IElement): string {
-        return '';
+        return promisifyStringStream(stream);
     }
 
     private isCueNode(node: Node): boolean {
@@ -55,9 +54,16 @@ class SRT implements IParser {
         };
     }
 
-    // private elementToCue(_element: IElement): string {
-    //     return '';
-    // }
+    private elementToCue(element: IElement): NodeCue {
+        return {
+            type: 'cue',
+            data: {
+                text: element.text,
+                start: (element.context as ISubtitleElementContext).timing.startsAt,
+                end: (element.context as ISubtitleElementContext).timing.endsAt
+            }
+        }
+    }
 }
 
 export default SRT;

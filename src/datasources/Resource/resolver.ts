@@ -17,11 +17,13 @@ import {
     TimingFormat,
     FileFormatCode,
     ImportOptions,
+    CreateResourceArgs,
 } from './types';
 import { ILanguage } from '../Language/types';
 import RequiredFieldError from '../../services/errors/RequiredSelectionFieldError';
 import { determine } from '../Project/category';
 import { LevelID } from '../Project/types';
+import { IElement } from '../../services/parser/types';
 
 const resolver = {
     Query: {
@@ -46,7 +48,7 @@ const resolver = {
     Mutation: {
         CreateResource: async (
             _: any,
-            args: any,
+            args: CreateResourceArgs,
             { dataSources }: { dataSources: DataSources }
         ): Promise<string> => {
             dataSources.language.validateCode(args.language);
@@ -54,6 +56,11 @@ const resolver = {
                 throw new ValidationError(
                     'Please provide either file or fileUrl.'
                 );
+            }
+
+            const fileName = args.fileName.trim().replace(/\s/g, '.');
+            if (!fileName) {
+                throw new ValidationError('File name is not valid.');
             }
 
             const project = await dataSources.project.getProjectById(
@@ -91,7 +98,7 @@ const resolver = {
                 projectId: project.id,
                 projectCategory: determine.category(project.labels),
                 projectSubCategory: determine.subCategory(project.labels),
-                fileName: args.fileName,
+                fileName,
                 language: dataSources.language.get(args.language),
                 encoding: args.encoding,
                 extension: extension,
@@ -243,9 +250,18 @@ const resolver = {
         },
     },
     TimingFormat: {
-        text: (_timingFormat: TimingFormat): string => {
-            // return timingFormat.fileFormat.parser().formatElement({});
-            return 'test';
+        text: (timingFormat: TimingFormat): Promise<string> => {
+            const element: IElement = {
+                text: '',
+                context: {
+                    timing: {
+                        startsAt: timingFormat.text.startsAt.total,
+                        endsAt: timingFormat.text.endsAt.total,
+                    },
+                },
+            };
+
+            return timingFormat.fileFormat.parser().format([element]);
         },
     },
 };

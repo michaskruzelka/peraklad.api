@@ -173,7 +173,7 @@ interface Project {
     subCategory: ProjectSubCategory @neo4j_ignore
     description: String
     settings: ProjectSettings @relation(name: "HAS_SETTINGS", direction: OUT)
-    resource: Resource @relation(name: "TRANSLATING", direction: OUT)
+    resource: [Resource] @relation(name: "TRANSLATING", direction: OUT)
     parent: Project
         @relation(name: "IS_PARENT_OF", direction: IN)
         @cost(value: 2)
@@ -193,7 +193,7 @@ type MovieSubtitles implements Project {
     subCategory: ProjectSubCategory @neo4j_ignore
     description: String
     settings: ProjectSettings @relation(name: "HAS_SETTINGS", direction: OUT)
-    resource: Resource @relation(name: "TRANSLATING", direction: OUT)
+    resource: [Resource] @relation(name: "TRANSLATING", direction: OUT)
     parent: MovieSubtitles
         @relation(name: "IS_PARENT_OF", direction: IN)
         @cost(value: 2)
@@ -226,7 +226,7 @@ type VideoStreamSubtitles implements Project {
     subCategory: ProjectSubCategory @neo4j_ignore
     description: String
     settings: ProjectSettings @relation(name: "HAS_SETTINGS", direction: OUT)
-    resource: Resource @relation(name: "TRANSLATING", direction: OUT)
+    resource: [Resource] @relation(name: "TRANSLATING", direction: OUT)
     parent: VideoStreamSubtitles
         @relation(name: "IS_PARENT_OF", direction: IN)
         @cost(value: 2)
