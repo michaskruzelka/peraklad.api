@@ -1,4 +1,4 @@
-import { Locale } from '../Language/types';
+import { LocaleShort } from '../Language/types';
 
 enum SpellingID {
     ACADEMIC = 1,
@@ -21,8 +21,8 @@ type ResolvedSpelling = Spelling & {
 };
 
 interface ISpellingList {
-    [Locale.BE]: Spelling[];
-    [Locale.UK]: Spelling[];
+    [LocaleShort.BE]: Spelling[];
+    [LocaleShort.UK]: Spelling[];
 }
 
 interface IDataSource {

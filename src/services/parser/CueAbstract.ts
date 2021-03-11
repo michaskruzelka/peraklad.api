@@ -20,7 +20,7 @@ import {
 import { IElement, ISubtitleElementContext } from './types';
 import { TRANSLATION_TEMPLATE, NUMBER_TEMPLATE } from './config';
 
-abstract class SRTVTTAbstract {
+abstract class CueAbstract {
     protected abstract stringifyFormat: Format;
 
     public parse(contents: string): Promise<IElement[]> {
@@ -77,4 +77,4 @@ abstract class SRTVTTAbstract {
     }
 }
 
-export { SRTVTTAbstract };
+export { CueAbstract };

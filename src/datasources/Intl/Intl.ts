@@ -1,6 +1,6 @@
 import { DataSource } from 'apollo-datasource';
 
-import { Locale } from '../Language/types';
+import { LocaleShort } from '../Language/types';
 import { Spelling } from '../Spelling';
 import { SpellingCode } from '../Spelling/types';
 import { ABC } from '../ABC';
@@ -8,13 +8,13 @@ import { MethodName } from './types';
 import { Converter } from '../../services/lacinka';
 
 class Intl extends DataSource {
-    private locale: Locale;
+    private locale: LocaleShort;
     private spelling: Spelling;
     private abc: ABC;
     private latinConverter: Converter;
 
     constructor(
-        locale: Locale,
+        locale: LocaleShort,
         spelling: Spelling,
         abc: ABC,
         latinConverter: Converter

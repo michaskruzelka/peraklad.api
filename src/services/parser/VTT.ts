@@ -1,9 +1,9 @@
 import { Format } from 'subtitle';
 
-import { SRTVTTAbstract } from './SRTVTTAbstract';
+import { CueAbstract } from './CueAbstract';
 import { IParser, IElement } from './types';
 
-class VTT extends SRTVTTAbstract implements IParser {
+class VTT extends CueAbstract implements IParser {
     private static instance: VTT;
     protected stringifyFormat: Format = 'WebVTT';
 

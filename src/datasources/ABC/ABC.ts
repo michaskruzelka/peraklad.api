@@ -2,15 +2,15 @@ import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import { ValidationError } from 'apollo-server-lambda';
 
 import { IDataSource, IABC } from './types';
-import { Locale } from '../Language/types';
+import { LocaleShort } from '../Language/types';
 import { ABC_LIST, DEFAULT_ABC, CYRILLIC_ABC } from './config';
 import { IContext } from '../../services/graphql/types';
 
 class ABC extends DataSource implements IDataSource {
-    private locale: Locale;
+    private locale: LocaleShort;
     private context: IContext;
 
-    constructor(locale: Locale) {
+    constructor(locale: LocaleShort) {
         super();
 
         this.locale = locale;
@@ -23,7 +23,7 @@ class ABC extends DataSource implements IDataSource {
     /**
      * Gets all abcs
      *
-     * @param locale Locale object
+     * @param locale LocaleShort object
      *
      * @returns abc list
      */

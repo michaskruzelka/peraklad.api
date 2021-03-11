@@ -22,7 +22,7 @@
         "neo4j-graphql-js": "2.18.0",
         "node-gzip": "^1.1.2",
         "opensubtitles-api": "^5.1.2",
-        "sami-parser": "^0.5.3",
+        "subsrt": "^1.1.1",
         "subtitle": "^4.0.1",
         "winston": "^3.3.3",
         "winston-logzio": "^5.1.2"

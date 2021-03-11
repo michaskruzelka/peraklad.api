@@ -20,6 +20,7 @@ import {
     CreateResourceArgs,
 } from './types';
 import { ILanguage } from '../Language/types';
+import { LOCALES } from '../Language/config';
 import RequiredFieldError from '../../services/errors/RequiredSelectionFieldError';
 import { determine } from '../Project/category';
 import { LevelID } from '../Project/types';
@@ -249,7 +250,11 @@ const resolver = {
         },
     },
     TimingFormat: {
-        text: (timingFormat: TimingFormat): string => {
+        text: (
+            timingFormat: TimingFormat,
+            __: any,
+            { dataSources }: { dataSources: DataSources }
+        ): string => {
             const element: IElement = {
                 text: '',
                 context: {
@@ -260,9 +265,16 @@ const resolver = {
                 },
             };
 
+            const locale = dataSources.language.getCurrentLocale();
+            const language = dataSources.language.get(locale);
+            const options = {
+                langName: language.name,
+                langCode: LOCALES[locale],
+            };
+
             return timingFormat.fileFormat
                 .parser()
-                .formatElementTemplate(element);
+                .formatElementTemplate(element, options);
         },
     },
 };

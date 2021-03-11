@@ -1,5 +1,5 @@
 import { DataSources } from 'datasources/types';
-import { ILanguage, ListArgs, GetOneArg, ListType, Locale } from './types';
+import { ILanguage, ListArgs, GetOneArg, ListType, LocaleShort } from './types';
 
 const resolver = {
     Query: {
@@ -15,7 +15,7 @@ const resolver = {
             _: any,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ): Locale => {
+        ): LocaleShort => {
             return dataSources.language.getCurrentLocale();
         },
         language: (

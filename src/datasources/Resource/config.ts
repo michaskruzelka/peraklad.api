@@ -23,6 +23,7 @@ import {
 import SRT from '../../services/parser/SRT';
 import VTT from '../../services/parser/VTT';
 import SMI from '../../services/parser/SMI';
+import SBV from '../../services/parser/SBV';
 
 const FILE_ELEMENTS_LIMIT = 10000;
 
@@ -52,7 +53,7 @@ const SBV_FILE_FORMAT: FileFormat = {
     longName: 'Youtube Captions',
     extensions: ['.sbv'],
     parser: () => {
-        return SRT.getInstance(); // to change
+        return SBV.getInstance();
     },
 };
 

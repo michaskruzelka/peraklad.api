@@ -183,7 +183,7 @@ class Resource extends DataSource implements IDataSource {
         );
 
         const elements = await fileFormat.parser().parse(contents.contents);
-        if (!elements) {
+        if (!(elements && elements.length > 0)) {
             throw new Error('Nothing to translate.');
         }
 

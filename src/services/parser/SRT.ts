@@ -1,9 +1,9 @@
 import { Format } from 'subtitle';
 
-import { SRTVTTAbstract } from './SRTVTTAbstract';
+import { CueAbstract } from './CueAbstract';
 import { IParser } from './types';
 
-class SRT extends SRTVTTAbstract implements IParser {
+class SRT extends CueAbstract implements IParser {
     private static instance: SRT;
     protected stringifyFormat: Format = 'SRT';
 

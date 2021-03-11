@@ -36,7 +36,7 @@ const getFileNameWithNoExt = (fileName: string): string => {
 const getFileExt = (fileName: string): string => {
     const commaPosition = fileName.lastIndexOf('.');
 
-    return fileName.substr(commaPosition + 1);
+    return fileName.substr(commaPosition);
 };
 
 export { getFileContents, getFileNameWithNoExt, getFileExt };

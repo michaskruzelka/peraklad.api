@@ -1,4 +1,4 @@
-import { Locale } from '../Language/types';
+import { LocaleShort } from '../Language/types';
 
 enum ABCId {
     CYRILLIC = 1,
@@ -17,8 +17,8 @@ interface IABC {
 }
 
 interface IABCList {
-    [Locale.BE]: IABC[];
-    [Locale.UK]: IABC[];
+    [LocaleShort.BE]: IABC[];
+    [LocaleShort.UK]: IABC[];
 }
 
 interface IResolvedABC extends IABC {

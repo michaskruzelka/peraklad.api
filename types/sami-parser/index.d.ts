@@ -1,1 +1,0 @@
-declare module 'sami-parser';

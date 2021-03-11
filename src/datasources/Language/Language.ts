@@ -3,7 +3,7 @@ import { ValidationError } from 'apollo-server-lambda';
 
 import languages from './languages.json';
 import * as config from './config';
-import { ILanguage, IDataSource, Locale, ListType } from './types';
+import { ILanguage, IDataSource, LocaleShort, ListType } from './types';
 
 class Language extends DataSource implements IDataSource {
     /**
@@ -99,8 +99,8 @@ class Language extends DataSource implements IDataSource {
     /**
      * @returns current language (be|uk)
      */
-    public getCurrentLocale(): Locale {
-        return (process.env.LOCALE ?? this.getDefaultLocale()) as Locale;
+    public getCurrentLocale(): LocaleShort {
+        return (process.env.LOCALE ?? this.getDefaultLocale()) as LocaleShort;
     }
 
     /**
@@ -125,7 +125,7 @@ class Language extends DataSource implements IDataSource {
     /**
      * @returns default language (be|uk)
      */
-    private getDefaultLocale(): Locale {
+    private getDefaultLocale(): LocaleShort {
         return config.DEFAULT_LOCALE;
     }
 }

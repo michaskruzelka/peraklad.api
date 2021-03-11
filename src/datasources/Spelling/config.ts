@@ -1,5 +1,5 @@
 import { Spelling, SpellingID, SpellingCode, ISpellingList } from './types';
-import { Locale } from '../Language/types';
+import { LocaleShort } from '../Language/types';
 
 const ACADEMIC_SPELLING: Spelling = {
     id: SpellingID.ACADEMIC,
@@ -14,13 +14,13 @@ const CLASSIC_SPELLING: Spelling = {
 };
 
 const SPELLINGS: ISpellingList = {
-    [Locale.BE]: [ACADEMIC_SPELLING, CLASSIC_SPELLING],
-    [Locale.UK]: [ACADEMIC_SPELLING],
+    [LocaleShort.BE]: [ACADEMIC_SPELLING, CLASSIC_SPELLING],
+    [LocaleShort.UK]: [ACADEMIC_SPELLING],
 };
 
 const DEFAULT_SPELLING = {
-    [Locale.BE]: ACADEMIC_SPELLING,
-    [Locale.UK]: ACADEMIC_SPELLING,
+    [LocaleShort.BE]: ACADEMIC_SPELLING,
+    [LocaleShort.UK]: ACADEMIC_SPELLING,
 };
 
 export { SPELLINGS, DEFAULT_SPELLING, ACADEMIC_SPELLING };

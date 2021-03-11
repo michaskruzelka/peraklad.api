@@ -5,7 +5,7 @@ import { Category, SubCategory, IDataSource } from './types';
 const determine = {
     category: (labels: string[]): Category => {
         const category = CATEGORIES.find((category) =>
-            category.labels.filter((label) => labels.includes(label))
+            category.labels.some((label) => labels.includes(label))
         );
 
         if (!category) {
@@ -18,7 +18,7 @@ const determine = {
     },
     subCategory: (labels: string[]): SubCategory | undefined => {
         const subCategory = SUBCATEGORIES.find((subCategory) =>
-            subCategory.labels.filter((label) => labels.includes(label))
+            subCategory.labels.some((label) => labels.includes(label))
         );
 
         return subCategory ? subCategory.code : undefined;

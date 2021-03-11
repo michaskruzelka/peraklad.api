@@ -1,7 +1,7 @@
 interface IDataSource {
     getList: (limit: number, type: ListType) => ILanguage[];
     get: (code: string) => ILanguage;
-    getCurrentLocale: () => Locale;
+    getCurrentLocale: () => LocaleShort;
     isValidCodes(codes: string[]): boolean;
 }
 
@@ -12,9 +12,14 @@ interface ILanguage {
     native: string;
 }
 
-enum Locale {
+enum LocaleShort {
     BE = 'be',
     UK = 'uk',
+}
+
+enum LocaleFull {
+    BE = 'be-BY',
+    UK = 'uk-UA',
 }
 
 type ListArgs = {
@@ -32,4 +37,4 @@ enum ListType {
     REMAINING = 'REMAINING',
 }
 
-export { IDataSource, ILanguage, Locale, ListArgs, GetOneArg, ListType };
+export { IDataSource, ILanguage, LocaleShort, LocaleFull, ListArgs, GetOneArg, ListType };

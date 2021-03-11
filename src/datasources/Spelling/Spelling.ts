@@ -2,15 +2,15 @@ import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import { ValidationError } from 'apollo-server-lambda';
 
 import { IDataSource, Spelling as TypeSpelling } from './types';
-import { Locale } from '../Language/types';
+import { LocaleShort } from '../Language/types';
 import { SPELLINGS, DEFAULT_SPELLING, ACADEMIC_SPELLING } from './config';
 import { IContext } from '../../services/graphql/types';
 
 class Spelling extends DataSource implements IDataSource {
-    private locale: Locale;
+    private locale: LocaleShort;
     private context: IContext;
 
-    constructor(locale: Locale) {
+    constructor(locale: LocaleShort) {
         super();
 
         this.locale = locale;

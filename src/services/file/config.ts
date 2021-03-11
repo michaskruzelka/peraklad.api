@@ -12,7 +12,7 @@ const FILE_SIGNATURES: IFileSignature[] = [
     },
     {
         extension: '.vtt',
-        headers: [[0x57, 0x45, 0x42, 0x56, 0x54, 0x54]],
+        headers: [[0x57, 0x45, 0x42, 0x56]],
     },
     {
         extension: '.smi',
@@ -20,7 +20,10 @@ const FILE_SIGNATURES: IFileSignature[] = [
     },
     {
         extension: '.sbv',
-        headers: [[0x46, 0x45, 0x44, 0x46]],
+        headers: [
+            [0x46, 0x45, 0x44, 0x46],
+            [0x30, 0x3a, 0x30, 0x30],
+        ],
     },
 ];
 
