@@ -17,6 +17,15 @@ interface IElement {
 interface IParser {
     parse: (contents: string) => Promise<IElement[]>;
     format: (elements: IElement[]) => Promise<string>;
+    formatElementTemplate: (element: IElement) => string;
 }
 
-export { IParser, IElement, ISubtitleElementContext };
+interface ISMINode {
+    startTime: number;
+    endTime: number;
+    languages: {
+        [key: string]: string;
+    }
+}
+
+export { IParser, IElement, ISubtitleElementContext, ISMINode };

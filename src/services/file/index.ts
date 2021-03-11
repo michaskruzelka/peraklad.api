@@ -27,4 +27,16 @@ const getFileContents = (buffer: Buffer, encoding?: string): IFileContents => {
     };
 };
 
-export { getFileContents };
+const getFileNameWithNoExt = (fileName: string): string => {
+    const commaPosition = fileName.lastIndexOf('.');
+
+    return fileName.substr(0, commaPosition);
+};
+
+const getFileExt = (fileName: string): string => {
+    const commaPosition = fileName.lastIndexOf('.');
+
+    return fileName.substr(commaPosition + 1);
+};
+
+export { getFileContents, getFileNameWithNoExt, getFileExt };

@@ -13,12 +13,25 @@ const check = (buffer: Buffer, headers: number[]) => {
     return true;
 };
 
+const allocateBuffer = (buffer: Buffer): Buffer => {
+    const from =
+        buffer[0] === 0xef && buffer[1] === 0xbb && buffer[2] === 0xbf
+            ? buffer.slice(3)
+            : buffer;
+
+    const allocatedBuffer = Buffer.alloc(8);
+
+    return allocatedBuffer.fill(0).fill(Buffer.from(from));
+};
+
 const retrieveFromBuffer = (buffer: Buffer): string | undefined => {
-    const allocatedBuffer = Buffer.alloc(4).fill(0).fill(buffer);
+    const allocatedBuffer = allocateBuffer(buffer);
 
     for (const fileSignature of FILE_SIGNATURES) {
-        if (check(allocatedBuffer, [0x31, 0x0a, 0x30, 0x30])) {
-            return fileSignature.extension;
+        for (const headers of fileSignature.headers) {
+            if (check(allocatedBuffer, headers)) {
+                return fileSignature.extension;
+            }
         }
     }
 

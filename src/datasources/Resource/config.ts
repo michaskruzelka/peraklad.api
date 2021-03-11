@@ -21,6 +21,8 @@ import {
     ItemContextLabel,
 } from './types';
 import SRT from '../../services/parser/SRT';
+import VTT from '../../services/parser/VTT';
+import SMI from '../../services/parser/SMI';
 
 const FILE_ELEMENTS_LIMIT = 10000;
 
@@ -40,7 +42,7 @@ const VTT_FILE_FORMAT: FileFormat = {
     longName: 'Web Video Text Tracks',
     extensions: ['.vtt'],
     parser: () => {
-        return SRT.getInstance(); // to change
+        return VTT.getInstance();
     },
 };
 
@@ -60,7 +62,7 @@ const SMI_FILE_FORMAT: FileFormat = {
     longName: 'Synchronized Accessible Media Interchange',
     extensions: ['.smi', '.sami'],
     parser: () => {
-        return SRT.getInstance(); // to change
+        return SMI.getInstance();
     },
 };
 

@@ -12,7 +12,7 @@ const IMPORT_RESOURCE_QUERY = `
     CREATE (p)-[:TRANSLATING]->(r)
 
     WITH r, [x IN $elements | apoc.map.merge(x, { id: randomUUID() })] as elements
-    WITH r, elements, tail(elements) as remainingElements, elements[0] as firstElement
+    WITH r, tail(elements) as remainingElements, elements[0] as firstElement
 
     CREATE (fri:ResourceItem {
         id: firstElement.id,
@@ -78,7 +78,7 @@ const IMPORT_RESOURCE_QUERY = `
         RETURN DISTINCT value
     }
 
-    WITH fri, next, r, elements
+    WITH fri, next, r, elements[-1] as lastElement
     CALL apoc.do.when(
         next IS NOT NULL,
         'MATCH (nextItem:ResourceItem { id: next.id }) CREATE (fri)-[:NEXT]->(nextItem) RETURN true',
@@ -87,7 +87,7 @@ const IMPORT_RESOURCE_QUERY = `
     )
     YIELD value
 
-    WITH r, elements[-1] as lastElement
+    WITH r, lastElement
     CALL apoc.do.when(
         lastElement IS NOT NULL,
         '

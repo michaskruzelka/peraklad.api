@@ -1,3 +1,5 @@
+import { FileUpload } from 'graphql-upload';
+
 import { ILanguage } from '../Language/types';
 import { Category, IProject, SubCategory } from '../Project/types';
 import { FileFormatCode } from '../../services/file/types';
@@ -219,7 +221,7 @@ type CreateResourceArgs = {
     projectId: string;
     language: string;
     fileName: string;
-    file?: Buffer;
+    file?: Promise<FileUpload>;
     fileUrl?: string;
     encoding?: string;
 };

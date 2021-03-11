@@ -24,6 +24,8 @@ import RequiredFieldError from '../../services/errors/RequiredSelectionFieldErro
 import { determine } from '../Project/category';
 import { LevelID } from '../Project/types';
 import { IElement } from '../../services/parser/types';
+import { promisifyBufferStream } from '../../services/parser/utils';
+import { getFileExt, getFileNameWithNoExt } from '../../services/file';
 
 const resolver = {
     Query: {
@@ -58,11 +60,6 @@ const resolver = {
                 );
             }
 
-            const fileName = args.fileName.trim().replace(/\s/g, '.');
-            if (!fileName) {
-                throw new ValidationError('File name is not valid.');
-            }
-
             const project = await dataSources.project.getProjectById(
                 args.projectId
             );
@@ -74,7 +71,8 @@ const resolver = {
             }
 
             let buffer: Buffer;
-            let extension: FileFormatCode | undefined;
+            let extension: FileFormatCode;
+            let fileName: string;
 
             if (args.fileUrl) {
                 const projectDataSource = determine.dataSource(
@@ -82,12 +80,13 @@ const resolver = {
                     dataSources
                 );
                 buffer = await projectDataSource.readRemoteFile(args.fileUrl);
+                fileName = getFileNameWithNoExt(args.fileUrl);
+                extension = getFileExt(args.fileUrl) as FileFormatCode;
             } else {
-                // local file:
-                // - size validation
-                // - ext validation
-                // - get buffer
-                buffer = Buffer.from('');
+                const { createReadStream, filename } = await args.file!;
+                buffer = await promisifyBufferStream(createReadStream());
+                fileName = getFileNameWithNoExt(filename);
+                extension = getFileExt(filename) as FileFormatCode;
             }
 
             if (!buffer.length) {
@@ -98,7 +97,7 @@ const resolver = {
                 projectId: project.id,
                 projectCategory: determine.category(project.labels),
                 projectSubCategory: determine.subCategory(project.labels),
-                fileName,
+                fileName: fileName.trim().replace(/\s/g, '.'),
                 language: dataSources.language.get(args.language),
                 encoding: args.encoding,
                 extension: extension,
@@ -250,7 +249,7 @@ const resolver = {
         },
     },
     TimingFormat: {
-        text: (timingFormat: TimingFormat): Promise<string> => {
+        text: (timingFormat: TimingFormat): string => {
             const element: IElement = {
                 text: '',
                 context: {
@@ -261,7 +260,9 @@ const resolver = {
                 },
             };
 
-            return timingFormat.fileFormat.parser().format([element]);
+            return timingFormat.fileFormat
+                .parser()
+                .formatElementTemplate(element);
         },
     },
 };

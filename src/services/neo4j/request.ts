@@ -14,7 +14,7 @@ const request = {
         try {
             result = await session.run(cql, params);
         } catch (e) {
-            console.log(e.message);
+            // console.log(e.message);
             logger.log('error', `DB query: ${e.message}`);
             throw new Error('Could not perform a request to DB.');
         } finally {

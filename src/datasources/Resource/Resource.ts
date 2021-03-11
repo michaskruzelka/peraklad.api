@@ -227,10 +227,6 @@ class Resource extends DataSource implements IDataSource {
     private getItemContextLabel(projectCategory: Category): ItemContextLabel {
         return ITEM_CONTEXT_LABELS[projectCategory];
     }
-
-    // public readLocalFile(file: string) {
-
-    // }
 }
 
 export { Resource };

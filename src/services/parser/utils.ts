@@ -3,21 +3,27 @@ import { Transform, Readable } from 'stream';
 import { IElement } from './types';
 import { DEFAULT_CHARSET } from '../file/config';
 
-const createStream = (contents: Iterable<any>): Readable => {
+const createReadableFromString = (contents: Iterable<any>): Readable => {
     return Readable.from(contents, { encoding: DEFAULT_CHARSET });
 };
 
-const mapElementStream = (mapper: (element: IElement, index: number) => any) => {
-  let index = 0
+const createReadableFromElements = (contents: Iterable<any>): Readable => {
+    return Readable.from(contents);
+};
 
-  return new Transform({
-    objectMode: true,
-    autoDestroy: false,
-    transform(chunk: IElement, _encoding, callback) {
-      callback(null, mapper(chunk, index++))
-    }
-  })
-}
+const mapElementStream = (
+    mapper: (element: any, index: number) => any
+) => {
+    let index = 0;
+
+    return new Transform({
+        objectMode: true,
+        autoDestroy: false,
+        transform(chunk: any, _encoding, callback) {
+            callback(null, mapper(chunk, index++));
+        },
+    });
+};
 
 const filterNodeStream = (fn: any) =>
     new Transform({
@@ -75,6 +81,16 @@ const promisifyStringStream = async (stream: Readable): Promise<string> => {
     return result;
 };
 
+const promisifyBufferStream = async (stream: Readable): Promise<Buffer> => {
+    let chunks: Uint8Array[] = [Buffer.from('')];
+
+    for await (const chunk of stream) {
+        chunks.push(chunk);
+    }
+
+    return Buffer.concat(chunks);
+};
+
 const formatText = (text: string): string => {
     return text.replace(/(<([^>]+)>)/gi, '').trim();
 };
@@ -84,6 +100,8 @@ export {
     mapElementStream,
     promisifyElementsStream,
     promisifyStringStream,
-    createStream,
+    promisifyBufferStream,
+    createReadableFromString,
+    createReadableFromElements,
     formatText,
 };

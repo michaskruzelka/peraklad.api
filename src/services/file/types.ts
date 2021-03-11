@@ -10,7 +10,7 @@ enum FileFormatCode {
 
 interface IFileSignature {
     extension: string;
-    headers: number[];
+    headers: number[][];
 }
 
 interface IFileContents {

@@ -29,6 +29,10 @@ const getConfig = async (): Promise<Config> => ({
     playground: true,
     validationRules,
     debug: ['dev', 'development'].includes(String(process.env.NODE_ENV)),
+    uploads: {
+        maxFileSize: 2097152,
+        maxFiles: 1,
+    },
 });
 
 export { getConfig };
