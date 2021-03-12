@@ -5,6 +5,8 @@ type Query {
     ): [FileFormat!]!
     ResourceItem(id: ID!): ResourceItem
     resourceItemStatuses: [ResourceItemStatus]!
+    translationStatuses: [TranslationStatus]!
+    buildAndDownloadFile: String!
 }
 
 type Mutation {
@@ -16,6 +18,16 @@ type Mutation {
         fileUrl: String @stringLength(max: 500)
         encoding: String @stringLength(max: 100)
     ): String!
+    CreateTranslation(
+        resourceItemId: String! @stringLength(min: 36, max: 36)
+        text: String! @stringLength(min: 1, max: 500)
+        status: Int! @range(min: 1, max: 10)
+    ): String!
+    UpdateTranslation(
+        id: String! @stringLength(min: 36, max: 36)
+        status: Int!
+    ): Boolean!
+    DeleteTranslation(id: String! @stringLength(min: 36, max: 36)): Boolean!
 }
 
 type FileFormat {
