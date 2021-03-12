@@ -226,6 +226,18 @@ type CreateResourceArgs = {
     encoding?: string;
 };
 
+type CreateTranslationArgs = {
+    resourceItemId: string;
+    text: string;
+    status: TranslationStatusID;
+};
+
+type DownloadArgs = {
+    resourceId: string;
+    fileFormat: string;
+    abc: number;
+};
+
 interface IDataSource {
     getFileFormats(category: Category, subCategory?: SubCategory): FileFormat[];
     getFileFormatByCode(
@@ -276,4 +288,6 @@ export {
     ImportOptions,
     ItemContextLabel,
     CreateResourceArgs,
+    CreateTranslationArgs,
+    DownloadArgs,
 };

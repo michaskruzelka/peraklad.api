@@ -18,6 +18,9 @@ import {
     FileFormatCode,
     ImportOptions,
     CreateResourceArgs,
+    CreateTranslationArgs,
+    TranslationTypeID,
+    DownloadArgs,
 } from './types';
 import { ILanguage } from '../Language/types';
 import { LOCALES } from '../Language/config';
@@ -44,8 +47,21 @@ const resolver = {
             _: any,
             __: any,
             { dataSources }: { dataSources: DataSources }
-        ) => {
+        ): ItemStatus[] => {
             return dataSources.resource.getItemStatuses();
+        },
+        download: (
+            _: any,
+            args: DownloadArgs,
+            { dataSources }: { dataSources: DataSources }
+        ): Promise<string> => {
+            dataSources.abc.validateId(args.abc);
+
+            return dataSources.resource.export(
+                args.resourceId,
+                args.fileFormat,
+                args.abc
+            );
         },
     },
     Mutation: {
@@ -105,6 +121,32 @@ const resolver = {
             };
 
             return dataSources.resource.import(buffer, importOptions);
+        },
+        CreateTranslation: async (
+            _: any,
+            args: CreateTranslationArgs,
+            { dataSources }: { dataSources: DataSources }
+        ): Promise<string> => {
+            return dataSources.resource.createTranslation(
+                args.resourceItemId,
+                args.text,
+                args.status,
+                TranslationTypeID.HUMAN
+            );
+        },
+        UpdateTranslation: async (
+            _: any,
+            args: { id: string; status: number },
+            { dataSources }: { dataSources: DataSources }
+        ): Promise<boolean> => {
+            return dataSources.resource.updateTranslation(args.id, args.status);
+        },
+        DeleteTranslation: async (
+            _: any,
+            args: { id: string },
+            { dataSources }: { dataSources: DataSources }
+        ): Promise<boolean> => {
+            return dataSources.resource.deleteTranslation(args.id);
         },
     },
     Resource: {

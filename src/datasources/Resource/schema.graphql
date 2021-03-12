@@ -6,7 +6,11 @@ type Query {
     ResourceItem(id: ID!): ResourceItem
     resourceItemStatuses: [ResourceItemStatus]!
     translationStatuses: [TranslationStatus]!
-    buildAndDownloadFile: String!
+    download(
+        resourceId: String! @stringLength(min: 36, max: 36)
+        fileFormat: String! @stringLength(min: 1, max: 10)
+        abc: Int! @range(min: 1, max: 10)
+    ): String!
 }
 
 type Mutation {

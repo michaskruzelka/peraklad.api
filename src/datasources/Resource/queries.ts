@@ -1,3 +1,51 @@
+const GET_RESOURCE_QUERY = `
+    MATCH (r:Resource { id: $resourceId })<-[:TRANSLATING]-(p:Project)
+    RETURN { resource: r, projectLabels: labels(p) } as resource
+`;
+
+const CREATE_TRANSLATION_QUERY = `
+    MATCH (ri:ResourceItem { id: $resourceItemId })
+    CREATE (t:Translation {
+        id: randomUUID(),
+        text: $text,
+        status: toInteger($status),
+        type: toInteger($type),
+        service: CASE
+            WHEN $service IS NULL
+            THEN 0
+            ELSE toInteger($service)
+        END
+    })
+    CREATE (t)-[:FOR]->(ri)
+    RETURN t.id as id
+`;
+
+const UPDATE_TRANSLATION_QUERY = `
+    MATCH (t:Translation { id: $id })-[:FOR]->(ri:ResourceItem)
+    OPTIONAL MATCH (ri)<-[:FOR]-(ts:Translation)
+    WHERE ts.id <> t.id
+    SET ts.status = CASE
+        WHEN $status = $approvedStatus AND ts.status = toInteger($approvedStatus)
+        THEN toInteger($suggestedStatus)
+        ELSE ts.status
+    END
+    SET t.status = toInteger($status)
+    RETURN true as result
+`;
+
+const DELETE_TRANSLATION_QUERY = `
+    MATCH (t:Translation { id: $id })
+    DETACH DELETE t
+`;
+
+const GET_APPROVED_TRANSLATIONS = `
+    MATCH (r:Resource { id: $resoureId })-[:FIRST_ITEM]->(fri:ResourceItem)
+    OPTIONAL MATCH (fri)<-[:FOR]-(ft:Translation { status: $approvedStatus })
+    WITH fri, ft
+    OPTIONAL MATCH (fri)-[:NEXT*]->(:ResourceItem)<-[:FOR]-(t:Translation { status: $approvedStatus })
+    RETURN collect(t), ft
+`;
+
 const IMPORT_RESOURCE_QUERY = `
     MATCH (p:Project { id: $projectId })-[:HAS_SETTINGS]->(ps:ProjectSettings)
     SET ps.status = toInteger($projectStatus)
@@ -102,4 +150,11 @@ const IMPORT_RESOURCE_QUERY = `
     RETURN r.id AS id
 `;
 
-export { IMPORT_RESOURCE_QUERY };
+export {
+    IMPORT_RESOURCE_QUERY,
+    CREATE_TRANSLATION_QUERY,
+    UPDATE_TRANSLATION_QUERY,
+    DELETE_TRANSLATION_QUERY,
+    GET_APPROVED_TRANSLATIONS,
+    GET_RESOURCE_QUERY,
+};

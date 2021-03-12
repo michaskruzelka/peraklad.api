@@ -1,4 +1,5 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
+import { ValidationError } from 'apollo-server-lambda';
 import { Record } from 'neo4j-driver';
 import { format } from 'util';
 
@@ -23,6 +24,7 @@ import {
     StatusID,
     ItemStatusID,
     ItemContextLabel,
+    TranslationStatusID,
 } from './types';
 import {
     FILE_FORMATS,
@@ -34,8 +36,17 @@ import {
     ITEM_CONTEXT_LABELS,
     FILE_ELEMENTS_LIMIT,
 } from './config';
-import { IMPORT_RESOURCE_QUERY } from './queries';
-import { IElement } from 'services/parser/types';
+import {
+    IMPORT_RESOURCE_QUERY,
+    CREATE_TRANSLATION_QUERY,
+    UPDATE_TRANSLATION_QUERY,
+    DELETE_TRANSLATION_QUERY,
+    GET_RESOURCE_QUERY,
+    GET_APPROVED_TRANSLATIONS,
+} from './queries';
+import { IElement } from '../../services/parser/types';
+import { ABCId } from '../ABC/types';
+import { determine } from '../Project/category';
 
 class Resource extends DataSource implements IDataSource {
     private context: IContext;
@@ -143,6 +154,14 @@ class Resource extends DataSource implements IDataSource {
         return translationStatus;
     }
 
+    public validateTranslationStatusId(id: number): void {
+        try {
+            this.getTranslationStatusById(id);
+        } catch (e) {
+            throw new ValidationError('Translation status ID is not valid.');
+        }
+    }
+
     public getTranslationTypeById(id: number): TranslationType {
         const translationType = TRANSLATION_TYPES.find(
             (type) => type.id === id
@@ -155,6 +174,14 @@ class Resource extends DataSource implements IDataSource {
         return translationType;
     }
 
+    public validateTranslationTypeId(id: number): void {
+        try {
+            this.getTranslationTypeById(id);
+        } catch (e) {
+            throw new ValidationError('Translation type ID is not valid.');
+        }
+    }
+
     public getTranslationServiceById(id: number): TranslationService {
         const translationService = TRANSLATION_SERVICES.find(
             (service) => service.id === id
@@ -165,6 +192,14 @@ class Resource extends DataSource implements IDataSource {
         }
 
         return translationService;
+    }
+
+    public validateTranslationServiceId(id: number): void {
+        try {
+            this.getTranslationServiceById(id);
+        } catch (e) {
+            throw new ValidationError('Translation service ID is not valid.');
+        }
     }
 
     public async import(
@@ -185,11 +220,9 @@ class Resource extends DataSource implements IDataSource {
 
         let elements: IElement[] = [];
         try {
-            elements = await fileFormat
-                .parser()
-                .parse(contents.contents, {
-                    languageCode: options.language.code,
-                });
+            elements = await fileFormat.parser().parse(contents.contents, {
+                languageCode: options.language.code,
+            });
         } catch (e) {
             this.context.logger.log(
                 'error',
@@ -227,6 +260,138 @@ class Resource extends DataSource implements IDataSource {
         return records.map((record: any) => record.get('id'))[0];
     }
 
+    public async createTranslation(
+        resourceItemId: string,
+        text: string,
+        status: number,
+        type: number,
+        service?: number
+    ): Promise<string> {
+        this.validateTranslationStatusId(status);
+        this.validateTranslationTypeId(type);
+
+        if (service) {
+            this.validateTranslationServiceId(service);
+        }
+
+        const params = {
+            resourceItemId,
+            text,
+            status,
+            type,
+            service: service || null,
+        };
+
+        const records = await this.performDBRequest(
+            CREATE_TRANSLATION_QUERY,
+            params
+        );
+
+        const translationId = records.map((record: any) => record.get('id'))[0];
+        if (!translationId) {
+            throw new Error('Could not create translation.');
+        }
+
+        return translationId;
+    }
+
+    public async updateTranslation(
+        id: string,
+        status: number
+    ): Promise<boolean> {
+        this.validateTranslationStatusId(status);
+
+        const params = {
+            id,
+            status,
+            approvedStatus: TranslationStatusID.APPROVED,
+            suggestedStatus: TranslationStatusID.SUGGESTED,
+        };
+
+        const records = await this.performDBRequest(
+            UPDATE_TRANSLATION_QUERY,
+            params
+        );
+
+        return !!records.map((record: any) => record.get('result') || false)[0];
+    }
+
+    public async deleteTranslation(id: string): Promise<boolean> {
+        const records = await this.performDBRequest(DELETE_TRANSLATION_QUERY, {
+            id,
+        });
+
+        return !!records.map((record: any) => record.get('result') || false)[0];
+    }
+
+    public async getApprovedTranslations(resourceId: string): Promise<any[]> {
+        const params = {
+            resourceId,
+            approvedStatus: TranslationStatusID.APPROVED,
+        };
+
+        const records = await this.performDBRequest(
+            GET_APPROVED_TRANSLATIONS,
+            params
+        );
+
+        return records.map((record: any) => record.get('translation'));
+    }
+
+    public async export(
+        resourceId: string,
+        fileFormatCode: string,
+        _abc: ABCId
+    ): Promise<string> {
+        const records = await this.performDBRequest(GET_RESOURCE_QUERY, {
+            resourceId,
+        });
+
+        const resource = records.map((record: any) =>
+            record.get('resource')
+        )[0];
+
+        if (!resource) {
+            throw new Error('Resource not found');
+        }
+
+        const projectCategory = determine.category(resource.projectLabels);
+        const projectSubCategory = determine.subCategory(
+            resource.projectLabels
+        );
+        const contextLabel = this.getItemContextLabel(projectCategory);
+
+        const fileFormat = this.getFileFormatByCode(
+            fileFormatCode,
+            projectCategory,
+            projectSubCategory
+        );
+
+        const resourceStatus = resource.resource.status;
+        if (resourceStatus === StatusID.STARTED) {
+            const translations = await this.getApprovedTranslations(resourceId);
+            if (!translations.length) {
+                throw new Error('No translated items found.');
+            }
+
+            const elements: IElement[] = translations.map(
+                (translation: any) => {
+                    return this.translationToElement(translation, contextLabel);
+                }
+            );
+
+            return fileFormat.parser().format(elements);
+        }
+
+        if (resourceStatus === StatusID.FINISHED) {
+            // get from S3 bucket
+
+            return '';
+        }
+
+        throw new Error('Resource status is not applicable for export.');
+    }
+
     private async performDBRequest(
         cql: string,
         args: object
@@ -241,6 +406,21 @@ class Resource extends DataSource implements IDataSource {
 
     private getItemContextLabel(projectCategory: Category): ItemContextLabel {
         return ITEM_CONTEXT_LABELS[projectCategory];
+    }
+
+    private translationToElement(
+        _translation: any,
+        contextLabel: ItemContextLabel
+    ): IElement {
+        const element: IElement = {
+            text: '',
+            context:
+                contextLabel === ItemContextLabel.SUBTITLE
+                    ? { timing: { startsAt: 0, endsAt: 1 } }
+                    : { key: '' },
+        };
+
+        return element;
     }
 }
 
