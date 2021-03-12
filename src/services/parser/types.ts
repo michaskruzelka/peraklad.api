@@ -15,8 +15,8 @@ interface IElement {
 }
 
 interface IParser {
-    parse: (contents: string) => Promise<IElement[]>;
-    format: (elements: IElement[]) => Promise<string>;
+    parse: (contents: string, options?: any) => Promise<IElement[]>;
+    format: (elements: IElement[], options?: any) => Promise<string>;
     formatElementTemplate: (element: IElement, options?: any) => string;
 }
 
@@ -27,4 +27,12 @@ interface ICaption {
     type: string;
 }
 
-export { IParser, IElement, ISubtitleElementContext, ICaption };
+interface SAMIResultItem {
+    startTime: number;
+    endTime: number;
+    languages: {
+        [key: string]: string;
+    };
+}
+
+export { IParser, IElement, ISubtitleElementContext, ICaption, SAMIResultItem };
