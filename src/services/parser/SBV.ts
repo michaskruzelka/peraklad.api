@@ -1,12 +1,14 @@
 import subsrt from 'subsrt';
+import { Readable } from 'stream';
 
 import { ICaption, IParser, IElement } from './types';
 import { CaptionAbstract } from './CaptionAbstract';
-import { EOL } from './config';
+import { EOL, TRANSLATION_TEMPLATE } from './config';
 import {
     createReadableFromElements,
     mapElementStream,
     promisifyElementsStream,
+    promisifyStringStream,
 } from './utils';
 
 class SBV extends CaptionAbstract implements IParser {
@@ -23,19 +25,49 @@ class SBV extends CaptionAbstract implements IParser {
     }
 
     public parse(contents: string): Promise<IElement[]> {
-        const nodes = this.getCaptions(contents);
-
-        const stream = createReadableFromElements(nodes)
-            .pipe(mapElementStream(this.captionToElement));
+        const stream = this.createCaptionsStream(contents).pipe(
+            mapElementStream(this.captionToElement)
+        );
 
         return promisifyElementsStream(stream);
     }
 
-    private getCaptions(contents: string): ICaption[] {
-        const captions = [];
+    public format(elements: IElement[]): Promise<string> {
+        const stream = createReadableFromElements(elements).pipe(
+            mapElementStream(this.formatElement)
+        );
+
+        return promisifyStringStream(stream);
+    }
+
+    public formatElementTemplate(element: IElement): string {
+        const caption = this.elementToCaption(element);
+        const formattedStart = subsrt.format['sbv'].helper.toTimeString(
+            caption.start
+        );
+        const formattedEnd = subsrt.format['sbv'].helper.toTimeString(
+            caption.end
+        );
+
+        let template = `${formattedStart},${formattedEnd}${EOL}`;
+        template += TRANSLATION_TEMPLATE + EOL;
+
+        return template;
+    }
+
+    private formatElement(element: IElement): string {
+        return this.formatElementTemplate(element).replace(
+            TRANSLATION_TEMPLATE,
+            element.text
+        );
+    }
+
+    private createCaptionsStream(contents: string): Readable {
+        const stream = createReadableFromElements([]);
         const parts = contents.split(/\r?\n\s*\r?\n/);
 
         for (const part of parts) {
+            this.pattern.lastIndex = 0;
             const match = this.pattern.exec(part.trim());
             if (match) {
                 const caption: ICaption = {
@@ -44,14 +76,11 @@ class SBV extends CaptionAbstract implements IParser {
                     end: subsrt.format['sbv'].helper.toMilliseconds(match[3]),
                     text: match[5].split(/\[br\]|\r?\n/gi).join(EOL),
                 };
-                captions.push(caption);
-                continue;
+                stream.push(caption);
             }
-
-            // console.log('WARN: Unknown part', part);
         }
 
-        return captions;
+        return stream;
     }
 }
 

@@ -14,15 +14,16 @@ import {
 abstract class CaptionAbstract {
     protected abstract stringifyFormat: string;
 
-    public parse(contents: string): Promise<IElement[]> {
+    public parse(contents: string, _options: any): Promise<IElement[]> {
         const nodes = subsrt.parse(contents, {
             format: this.stringifyFormat,
             eol: EOL,
             verbose: true,
+            preserveSpaces: true,
         });
 
         const stream = createReadableFromElements(nodes)
-            .pipe(filterNodeStream(this.isCaptionNode))
+            .pipe(filterNodeStream(this.isCaptionValid))
             .pipe(mapElementStream(this.captionToElement));
 
         return promisifyElementsStream(stream);
@@ -53,8 +54,8 @@ abstract class CaptionAbstract {
         return template;
     }
 
-    protected isCaptionNode(node: any): boolean {
-        return node.type && node.type === 'caption';
+    protected isCaptionValid(caption: ICaption): boolean {
+        return !!caption.text && (!caption.type || caption.type === 'caption');
     }
 
     protected captionToElement(resultItem: ICaption): IElement {
