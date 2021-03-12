@@ -26,6 +26,7 @@ abstract class CueAbstract {
     public parse(contents: string): Promise<IElement[]> {
         const stream = createReadableFromString([contents])
             .pipe(parse())
+            .on('error', () => {})
             .pipe(filterNodeStream(this.isCueNode))
             .pipe(map((node: Node) => this.cueToElement(node as NodeCue)));
 

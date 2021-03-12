@@ -35,6 +35,7 @@ import {
     FILE_ELEMENTS_LIMIT,
 } from './config';
 import { IMPORT_RESOURCE_QUERY } from './queries';
+import { IElement } from 'services/parser/types';
 
 class Resource extends DataSource implements IDataSource {
     private context: IContext;
@@ -182,7 +183,21 @@ class Resource extends DataSource implements IDataSource {
             options.projectSubCategory
         );
 
-        const elements = await fileFormat.parser().parse(contents.contents);
+        let elements: IElement[] = [];
+        try {
+            elements = await fileFormat
+                .parser()
+                .parse(contents.contents, {
+                    languageCode: options.language.code,
+                });
+        } catch (e) {
+            this.context.logger.log(
+                'error',
+                `Invalid file (${extension}): ${e.message}`
+            );
+            throw new Error('Invalid file.');
+        }
+
         if (!(elements && elements.length > 0)) {
             throw new Error('Nothing to translate.');
         }
