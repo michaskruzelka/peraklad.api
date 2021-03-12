@@ -27,8 +27,11 @@ class Intl extends DataSource {
         this.latinConverter = latinConverter;
     }
 
-    public getLocalizedText(text: string, path: string[]): string {
-        const intl = this.getLocalizationObject();
+    public async getLocalizedText(
+        text: string,
+        path: string[]
+    ): Promise<string> {
+        const intl = await this.getLocalizationObject();
         let localizedText = this.accesLocalizationObject(intl, [
             ...path,
             text.toLowerCase(),
@@ -57,10 +60,10 @@ class Intl extends DataSource {
         return this.latinConverter.convert(text, spellingCode);
     }
 
-    private getLocalizationObject() {
+    private async getLocalizationObject() {
         const spelling = this.spelling.getCurrentSpelling().code;
 
-        return require(`./${this.locale}_${spelling}.json`);
+        return await import(`./${this.locale}_${spelling}.json`);
     }
 
     private accesLocalizationObject(
